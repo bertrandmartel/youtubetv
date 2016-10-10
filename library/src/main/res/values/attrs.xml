@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <declare-styleable name="YoutubeTvView">
+        <attr name="videoId" format="string" />
+        <attr name="videoQuality" format="enum">
+            <enum name="small" value="0" />
+            <enum name="medium" value="1" />
+            <enum name="large" value="2" />
+            <enum name="hd720" value="3" />
+            <enum name="hd1080" value="4" />
+            <enum name="highres" value="5" />
+            <enum name="auto" value="6" />
+        </attr>
+        <attr name="playerHeight" format="integer" />
+        <attr name="playerWidth" format="integer" />
+        <attr name="showRelatedVideos" format="boolean" />
+        <attr name="showVideoInfo" format="boolean" />
+        <attr name="showControls" format="enum">
+            <enum name="auto" value="1" />
+            <enum name="always" value="2" />
+            <enum name="none" value="0" />
+        </attr>
+        <attr name="autoHide" format="enum">
+            <enum name="auto" value="0" />
+            <enum name="displayAuto" value="1" />
+            <enum name="alwaysVisible" value="2" />
+        </attr>
+        <attr name="closedCaptions" format="boolean" />
+        <attr name="videoAnnotation" format="boolean" />
+    </declare-styleable>
+</resources>
