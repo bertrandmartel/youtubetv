@@ -43,6 +43,8 @@ public class YoutubeTvView extends WebView {
 
     private int mVideoAnnotation = 1;
 
+    private int mDebug = 0;
+
     public YoutubeTvView(Context context) {
         super(context);
         init(context);
@@ -78,6 +80,7 @@ public class YoutubeTvView extends WebView {
             mClosedCaptions = styledAttr.getBoolean(R.styleable.YoutubeTvView_closedCaptions, false) ? 1 : 0;
             mVideoAnnotation = styledAttr.getBoolean(R.styleable.YoutubeTvView_videoAnnotation, false) ? 1 : 3;
             mAutohide = VideoAutoHide.getVideoControls(styledAttr.getInteger(R.styleable.YoutubeTvView_autoHide, VideoAutoHide.DEFAULT.getIndex()));
+            mDebug = styledAttr.getBoolean(R.styleable.YoutubeTvView_debug, false) ? 1 : 0;
         } finally {
             styledAttr.recycle();
         }
@@ -103,7 +106,7 @@ public class YoutubeTvView extends WebView {
         JavascriptInterface jsInterface = new JavascriptInterface(this);
         addJavascriptInterface(jsInterface, "JSInterface");
 
-        loadUrl("file:///android_asset/youtube.html" +
+        final String videoUrl = "file:///android_asset/youtube.html" +
                 "?videoId=" + mVideoId +
                 "&videoQuality=" + mVideoQuality.getValue() +
                 "&playerHeight=" + mPlayerHeight +
@@ -113,7 +116,12 @@ public class YoutubeTvView extends WebView {
                 "&controls=" + mShowControls.getIndex() +
                 "&autohide=" + mAutohide.getIndex() +
                 "&cc_load_policy=" + mClosedCaptions +
-                "&iv_load_policy=" + mVideoAnnotation);
+                "&iv_load_policy=" + mVideoAnnotation +
+                "&debug=" + mDebug;
+
+        Log.v(TAG, "videoUrl : " + videoUrl);
+
+        loadUrl(videoUrl);
     }
 
     private int getWebviewScale(final Display display) {
