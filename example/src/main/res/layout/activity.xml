@@ -11,11 +11,13 @@
         custom:autoHide="auto"
         custom:closedCaptions="false"
         custom:playerHeight="1080"
+        custom:videoQuality="hd1080"
         custom:playerWidth="1920"
         custom:showControls="none"
         custom:showRelatedVideos="false"
         custom:showVideoInfo="false"
         custom:videoAnnotation="false"
-        custom:videoId="EZcJEvXmjfY" />
+        custom:videoId="EZcJEvXmjfY"
+        custom:debug="true"/>
 
 </LinearLayout>

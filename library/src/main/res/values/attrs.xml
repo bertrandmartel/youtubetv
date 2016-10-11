@@ -27,5 +27,6 @@
         </attr>
         <attr name="closedCaptions" format="boolean" />
         <attr name="videoAnnotation" format="boolean" />
+        <attr name="debug" format="boolean" />
     </declare-styleable>
 </resources>
