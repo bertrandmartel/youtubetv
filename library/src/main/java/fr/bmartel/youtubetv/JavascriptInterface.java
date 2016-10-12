@@ -18,6 +18,10 @@ public class JavascriptInterface {
         this.mViewGroup = viewGroup;
     }
 
+    private MotionEvent mEventDown;
+
+    private MotionEvent mEventUp;
+
     @android.webkit.JavascriptInterface
     public void log(String header, String message) {
         Log.i(header, message);
@@ -33,17 +37,13 @@ public class JavascriptInterface {
 
         Log.i("start", "start video");
 
-        // Obtain MotionEvent object
-        long downTime = SystemClock.uptimeMillis();
-        long eventTime = SystemClock.uptimeMillis() + 100;
         float x = 1000f;
         float y = 500f;
 
-        // List of meta states found here: developer.android.com/reference/android/view/KeyEvent.html#getMetaState()
         int metaState = 0;
-        MotionEvent motionEvent = MotionEvent.obtain(
-                downTime,
-                eventTime,
+        mEventDown = MotionEvent.obtain(
+                SystemClock.uptimeMillis(),
+                SystemClock.uptimeMillis(),
                 MotionEvent.ACTION_DOWN,
                 x,
                 y,
@@ -51,19 +51,17 @@ public class JavascriptInterface {
         );
 
         // Dispatch touch event to view
-        mViewGroup.dispatchTouchEvent(motionEvent);
+        mViewGroup.dispatchTouchEvent(mEventDown);
 
-
-        downTime = SystemClock.uptimeMillis();
-        eventTime = SystemClock.uptimeMillis() + 100;
-        motionEvent = MotionEvent.obtain(
-                downTime,
-                eventTime,
+        mEventUp = MotionEvent.obtain(
+                SystemClock.uptimeMillis(),
+                SystemClock.uptimeMillis(),
                 MotionEvent.ACTION_UP,
                 x,
                 y,
                 metaState
         );
-        mViewGroup.dispatchTouchEvent(motionEvent);
+        mViewGroup.dispatchTouchEvent(mEventUp);
+        Log.i("start", "end of touch event");
     }
 }
