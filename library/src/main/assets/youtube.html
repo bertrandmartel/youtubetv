@@ -261,6 +261,16 @@
     }
 
     /**
+     * Play the video if not playing, pause the video if playing.
+     */
+    function playPause() {
+        if (getPlayerState() == YT.PlayerState.PLAYING) {
+            pauseVideo();
+        } else {
+            playVideo();
+        }
+    }
+    /**
      * Stops and cancels loading of the current video.
      */
     function stopVideo() {
