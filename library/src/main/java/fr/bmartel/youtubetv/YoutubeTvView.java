@@ -18,6 +18,10 @@ import android.webkit.WebView;
  */
 public class YoutubeTvView extends WebView {
 
+    private final static String USER_AGENT_CHROME_DESKTOP = "Mozilla/5.0 (Windows NT 6.3; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/37.0.2049.0 Safari/537.36";
+
+    private final static String USER_AGENT_IPHONE = "Mozilla/5.0 (iPhone; CPU iPhone OS 6_1_4 like Mac OS X) AppleWebKit/536.26 (KHTML, like Gecko) Version/6.0 Mobile/10B350 Safari/8536.25";
+
     private String mVideoId = "EZcJEvXmjfY";
 
     private final static String TAG = YoutubeTvView.class.getSimpleName();
@@ -105,6 +109,8 @@ public class YoutubeTvView extends WebView {
 
         JavascriptInterface jsInterface = new JavascriptInterface(this);
         addJavascriptInterface(jsInterface, "JSInterface");
+
+        getSettings().setUserAgentString(USER_AGENT_IPHONE);
 
         final String videoUrl = "file:///android_asset/youtube.html" +
                 "?videoId=" + mVideoId +
