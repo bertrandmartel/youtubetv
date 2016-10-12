@@ -110,7 +110,11 @@
     var debug = false;
     var videoLaunchTimerId = 0;
     var debugTimerId = 0;
-
+    var loadedVideo = false;
+    //timestamp recorded at video load
+    var videoLoadTimestamp = 0;
+    //the max interval in milliseconds authorized to receive a PAUSE event after video start that will trigger a forced PLAY
+    var maxTimestampInterval = 500;
     /**
      * Upload overlay debug mode if enabled.
      * 
@@ -213,11 +217,20 @@
                 log(onPlayerStateChange.name, "state changed to YT.PlayerState.ENDED");
                 break;
             case YT.PlayerState.PLAYING:
+                if (loadedVideo) {
+                    videoLoadTimestamp = new Date().getTime();
+                    loadedVideo = false;
+                }
                 clearInterval(videoLaunchTimerId);
                 log(onPlayerStateChange.name, "state changed to YT.PlayerState.PLAYING");
                 break;
             case YT.PlayerState.PAUSED:
+                var diff = new Date().getTime() - videoLoadTimestamp;
                 log(onPlayerStateChange.name, "state changed to YT.PlayerState.PAUSED");
+                if (diff < 500) {
+                    log(onPlayerStateChange.name, "force playing");
+                    playVideo();
+                }
                 break;
             case YT.PlayerState.BUFFERING:
                 log(onPlayerStateChange.name, "state changed to YT.PlayerState.BUFFERING");
@@ -495,6 +508,7 @@
 
         log(onPlayerReady.name, "before loadVideo " + QueryString.videoQuality);
         loadVideo();
+        loadedVideo = true;
         $("#thumbnail").css("display", "none");
         $("#video_div").css("display", "block");
 
