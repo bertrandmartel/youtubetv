@@ -5,6 +5,8 @@ import android.content.res.TypedArray;
 import android.util.AttributeSet;
 import android.util.Log;
 import android.view.Display;
+import android.view.KeyEvent;
+import android.view.View;
 import android.view.WindowManager;
 import android.webkit.ValueCallback;
 import android.webkit.WebChromeClient;
@@ -170,5 +172,29 @@ public class YoutubeTvView extends WebView {
         }
 
         loadUrl(stringBuilder.toString());
+    }
+
+    @Override
+    public boolean dispatchKeyEvent(KeyEvent event) {
+        boolean dispatchFirst = super.dispatchKeyEvent(event);
+
+        if (event.getAction() == KeyEvent.ACTION_DOWN) {
+            
+            switch (event.getKeyCode()) {
+                case KeyEvent.KEYCODE_MEDIA_PLAY_PAUSE:
+                    callJavaScript("playPause");
+                    break;
+                case KeyEvent.KEYCODE_MEDIA_PLAY:
+                    callJavaScript("playVideo");
+                    break;
+                case KeyEvent.KEYCODE_MEDIA_PAUSE:
+                    callJavaScript("pauseVideo");
+                    break;
+                case KeyEvent.KEYCODE_MEDIA_NEXT:
+                    callJavaScript("nextVideo");
+                    break;
+            }
+        }
+        return dispatchFirst;
     }
 }
