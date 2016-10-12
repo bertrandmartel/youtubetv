@@ -59,7 +59,7 @@
         /* Stay in place */
         z-index: 1;
         /* Sit on top */
-        left: 0;
+        right: 0;
         top: 0;
         background-color: rgb(0, 0, 0);
         /* Black fallback color */
@@ -105,7 +105,7 @@
         $("#thumbnail_picture").attr('src', 'https://img.youtube.com/vi/' + QueryString.videoId + '/maxresdefault.jpg');
     });
 
-    var isAndroid = navigator.userAgent.toLowerCase().indexOf("android") > -1;
+    var isMobile = navigator.userAgent.toLowerCase().indexOf("android") > -1 || navigator.userAgent.toLowerCase().indexOf("iphone") > 1;
     var player, iframe;
     var debug = false;
     var videoLaunchTimerId = 0;
@@ -163,7 +163,7 @@
      * @param  {string} log message
      */
     function log(header, message) {
-        if (debug && isAndroid) {
+        if (debug && isMobile) {
             window.JSInterface.log("[ JS - " + header + " ]", message);
         }
     }
@@ -183,18 +183,18 @@
                 controls: QueryString.controls,
                 autohide: QueryString.autohide,
                 cc_load_policy: QueryString.cc_load_policy,
-                iv_load_policy: QueryString.iv_load_policy
+                iv_load_policy: QueryString.iv_load_policy,
+                enablejsapi: 1
             },
             events: {
                 'onReady': onPlayerReady,
                 'onStateChange': onPlayerStateChange
             }
         });
-
     }
 
-    function loadVideo(target) {
-        target.loadVideoById(QueryString.videoId, 0, QueryString.videoQuality);
+    function loadVideo() {
+        player.loadVideoById(QueryString.videoId, 0, QueryString.videoQuality);
     }
 
     function onPlayerStateChange(event) {
@@ -203,11 +203,6 @@
         var suggestedQuality = QueryString.videoQuality;
 
         log(onPlayerStateChange.name, "Quality changed to: " + playbackQuality);
-
-        if (playbackQuality !== QueryString.videoQuality) {
-            log(onPlayerStateChange.name, "Setting quality to " + suggestedQuality);
-            event.target.setPlaybackQuality(suggestedQuality);
-        }
 
         switch (event.data) {
             case YT.PlayerState.ENDED:
@@ -495,18 +490,15 @@
                 updateDebugMode();
             }, 1000);
         }
-        event.target.setPlaybackQuality(QueryString.videoQuality);
 
-        var player = event.target;
         iframe = document.getElementById('player');
-        iframe.height = 720;
-        iframe.width = 1280;
+
         log(onPlayerReady.name, "before loadVideo " + QueryString.videoQuality);
-        loadVideo(player);
+        loadVideo();
         $("#thumbnail").css("display", "none");
         $("#video_div").css("display", "block");
 
-        if (isAndroid) {
+        if (isMobile) {
             videoLaunchTimerId = setInterval(function() {
                 log(onPlayerReady.name, "trying to start video...");
 
@@ -524,7 +516,7 @@
         <img id="thumbnail_picture" />
     </div>
     <div id="myNav" class="overlay">
-        <div class="overlay-content" style='color:white;margin-top:10px;'>
+        <div class="overlay-content" style='color:white;margin-top:100px;'>
             <ul>
                 <li>state</li>
                 <li id="videoState"></li>
@@ -579,7 +571,7 @@
             </ul>
         </div>
     </div>
-    <div id="video_div" style='display:none;width:100%;height:100%;'>
+    <div id="video_div" style='display:none;'>
         <script src="https://www.youtube.com/iframe_api"></script>
         <div id="player"></div>
     </div>
