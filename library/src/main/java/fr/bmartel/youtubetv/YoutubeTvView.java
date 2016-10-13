@@ -83,8 +83,6 @@ public class YoutubeTvView extends WebView {
         try {
             mVideoId = styledAttr.getString(R.styleable.YoutubeTvView_videoId);
             mVideoQuality = VideoQuality.getVideoQuality(styledAttr.getInteger(R.styleable.YoutubeTvView_videoQuality, VideoQuality.HD_720.getIndex()));
-            mPlayerHeight = styledAttr.getInteger(R.styleable.YoutubeTvView_playerHeight, 1080);
-            mPlayerWidth = styledAttr.getInteger(R.styleable.YoutubeTvView_playerWidth, 1920);
             mShowRelatedVideos = styledAttr.getBoolean(R.styleable.YoutubeTvView_showRelatedVideos, false) ? 1 : 0;
             mShowVideoInfo = styledAttr.getBoolean(R.styleable.YoutubeTvView_showVideoInfo, false) ? 1 : 0;
             mShowControls = VideoControls.getVideoControls(styledAttr.getInteger(R.styleable.YoutubeTvView_showControls, VideoControls.NONE.getIndex()));
@@ -135,8 +133,8 @@ public class YoutubeTvView extends WebView {
         final String videoUrl = "file:///android_asset/youtube.html" +
                 "?videoId=" + mVideoId +
                 "&videoQuality=" + mVideoQuality.getValue() +
-                "&playerHeight=" + mPlayerHeight +
-                "&playerWidth=" + mPlayerWidth +
+                "&playerHeight=" + height +
+                "&playerWidth=" + width +
                 "&rel=" + mShowRelatedVideos +
                 "&showinfo=" + mShowVideoInfo +
                 "&controls=" + mShowControls.getIndex() +
