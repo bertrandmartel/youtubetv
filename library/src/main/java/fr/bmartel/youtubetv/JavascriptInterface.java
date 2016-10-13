@@ -3,7 +3,9 @@ package fr.bmartel.youtubetv;
 import android.os.SystemClock;
 import android.util.Log;
 import android.view.MotionEvent;
-import android.view.ViewGroup;
+import android.webkit.WebView;
+
+import fr.bmartel.youtubetv.utils.WebviewUtils;
 
 /**
  * Interface called from Javascript.
@@ -12,15 +14,26 @@ import android.view.ViewGroup;
  */
 public class JavascriptInterface {
 
-    private ViewGroup mViewGroup;
+    private WebView mWebview;
 
-    public JavascriptInterface(final ViewGroup viewGroup) {
-        this.mViewGroup = viewGroup;
+    private boolean mLoaded;
+
+    public JavascriptInterface(final WebView webView) {
+        this.mWebview = webView;
     }
 
     private MotionEvent mEventDown;
 
     private MotionEvent mEventUp;
+
+    private boolean mWaitLoaded;
+
+    private int mViewWidth;
+    private int mViewHeight;
+
+    public boolean isPageLoaded() {
+        return mLoaded;
+    }
 
     @android.webkit.JavascriptInterface
     public void log(String header, String message) {
@@ -30,6 +43,19 @@ public class JavascriptInterface {
     @android.webkit.JavascriptInterface
     public void onError(String error) {
         throw new Error(error);
+    }
+
+    @android.webkit.JavascriptInterface
+    public void onPageLoaded() {
+        mLoaded = true;
+        if (mWaitLoaded) {
+            mWebview.post(new Runnable() {
+                @Override
+                public void run() {
+                    WebviewUtils.callJavaScript(mWebview, "setSize", mViewWidth, mViewHeight);
+                }
+            });
+        }
     }
 
     @android.webkit.JavascriptInterface
@@ -51,7 +77,7 @@ public class JavascriptInterface {
         );
 
         // Dispatch touch event to view
-        mViewGroup.dispatchTouchEvent(mEventDown);
+        mWebview.dispatchTouchEvent(mEventDown);
 
         mEventUp = MotionEvent.obtain(
                 SystemClock.uptimeMillis(),
@@ -61,7 +87,13 @@ public class JavascriptInterface {
                 y,
                 metaState
         );
-        mViewGroup.dispatchTouchEvent(mEventUp);
+        mWebview.dispatchTouchEvent(mEventUp);
         Log.i("start", "end of touch event");
+    }
+
+    public void setSizeOnLoad(int viewWidth, int viewHeight) {
+        mWaitLoaded = true;
+        mViewWidth = viewWidth;
+        mViewHeight = viewHeight;
     }
 }

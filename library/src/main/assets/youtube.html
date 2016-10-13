@@ -355,10 +355,12 @@
      * Sets the size in pixels of the <iframe> that contains the player.
      * 
      * @param {number} width value
-     * @param {number} heigth value
+     * @param {number} height value
      */
-    function setSize(width, heigth) {
-        player.setSize(width, heigth);
+    function setSize(width, height) {
+        viewport = document.querySelector("meta[name=viewport]");
+        viewport.setAttribute('content', 'width=' + width + ', height=' + height);
+        player.setSize(width, height);
     }
 
     /**
@@ -532,10 +534,16 @@
         }
         return false;
     }
+
+    function onPageLoaded() {
+        if (isMobile) {
+            window.JSInterface.onPageLoaded();
+        }
+    }
     </script>
 </head>
 
-<body id="body" style='margin:0;padding:0;'>
+<body id="body" style='margin:0;padding:0;' onload="onPageLoaded();">
     <div id="thumbnail">
         <img id="thumbnail_picture" />
     </div>
