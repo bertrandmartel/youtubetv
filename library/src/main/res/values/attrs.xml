@@ -11,8 +11,6 @@
             <enum name="highres" value="5" />
             <enum name="auto" value="6" />
         </attr>
-        <attr name="playerHeight" format="integer" />
-        <attr name="playerWidth" format="integer" />
         <attr name="showRelatedVideos" format="boolean" />
         <attr name="showVideoInfo" format="boolean" />
         <attr name="showControls" format="enum">
