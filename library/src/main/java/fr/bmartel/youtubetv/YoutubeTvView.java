@@ -6,12 +6,12 @@ import android.util.AttributeSet;
 import android.util.Log;
 import android.view.Display;
 import android.view.KeyEvent;
-import android.view.View;
 import android.view.WindowManager;
-import android.webkit.ValueCallback;
 import android.webkit.WebChromeClient;
 import android.webkit.WebSettings;
 import android.webkit.WebView;
+
+import fr.bmartel.youtubetv.utils.WebviewUtils;
 
 /**
  * Youtuve TV custom view.
@@ -50,6 +50,11 @@ public class YoutubeTvView extends WebView {
     private int mVideoAnnotation = 1;
 
     private int mDebug = 0;
+
+    private int mViewWidth = 0;
+    private int mViewHeight = 0;
+
+    private JavascriptInterface mJavascriptInterface;
 
     public YoutubeTvView(Context context) {
         super(context);
@@ -92,11 +97,24 @@ public class YoutubeTvView extends WebView {
         }
     }
 
+    @Override
+    public void onWindowFocusChanged(boolean hasFocus) {
+        super.onWindowFocusChanged(hasFocus);
+        mViewWidth = getWidth();
+        mViewHeight = getHeight();
+        if (mJavascriptInterface != null && mJavascriptInterface.isPageLoaded()) {
+            WebviewUtils.callJavaScript(this, "setSize", mViewWidth, mViewHeight);
+        } else {
+            mJavascriptInterface.setSizeOnLoad(mViewWidth, mViewHeight);
+        }
+    }
+
     private void init(final Context context) {
 
         Display display = ((WindowManager) context.getSystemService(Context.WINDOW_SERVICE)).getDefaultDisplay();
-        int width = display.getWidth();
-        int height = display.getHeight();
+        int width = getMeasuredWidth();
+        int height = getMeasuredHeight();
+
 
         final WebSettings settings = getSettings();
         settings.setJavaScriptEnabled(true);
@@ -107,10 +125,10 @@ public class YoutubeTvView extends WebView {
 
         setWebChromeClient(new WebChromeClient());
         setPadding(0, 0, 0, 0);
-        setInitialScale(getWebviewScale(display));
+        setInitialScale(WebviewUtils.getWebviewScale(display));
 
-        JavascriptInterface jsInterface = new JavascriptInterface(this);
-        addJavascriptInterface(jsInterface, "JSInterface");
+        mJavascriptInterface = new JavascriptInterface(this);
+        addJavascriptInterface(mJavascriptInterface, "JSInterface");
 
         getSettings().setUserAgentString(USER_AGENT_IPHONE);
 
@@ -132,66 +150,24 @@ public class YoutubeTvView extends WebView {
         loadUrl(videoUrl);
     }
 
-    private int getWebviewScale(final Display display) {
-        int width = display.getWidth();
-        Double val = new Double(width) / new Double(1920);
-        val = val * 100d;
-        return val.intValue();
-    }
-
-    private void callJavaScript(String methodName, Object... params) {
-
-        StringBuilder stringBuilder = new StringBuilder();
-        if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.KITKAT) {
-            stringBuilder.append("javascript:try{");
-        }
-        stringBuilder.append(methodName);
-        stringBuilder.append("(");
-        for (int i = 0; i < params.length; i++) {
-            Object param = params[i];
-            if (param instanceof String) {
-                stringBuilder.append("'");
-                stringBuilder.append(param);
-                stringBuilder.append("'");
-            }
-            if (i < params.length - 1) {
-                stringBuilder.append(",");
-            }
-        }
-        stringBuilder.append(")}catch(error){Android.onError(error.message);}");
-
-        if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.KITKAT) {
-            evaluateJavascript(stringBuilder.toString(), new ValueCallback<String>() {
-                @Override
-                public void onReceiveValue(String result) {
-                    Log.i(TAG, "received : " + result);
-                }
-            });
-        } else {
-            loadUrl(stringBuilder.toString());
-        }
-
-        loadUrl(stringBuilder.toString());
-    }
-
     @Override
     public boolean dispatchKeyEvent(KeyEvent event) {
         boolean dispatchFirst = super.dispatchKeyEvent(event);
 
         if (event.getAction() == KeyEvent.ACTION_DOWN) {
-            
+
             switch (event.getKeyCode()) {
                 case KeyEvent.KEYCODE_MEDIA_PLAY_PAUSE:
-                    callJavaScript("playPause");
+                    WebviewUtils.callJavaScript(this, "playPause");
                     break;
                 case KeyEvent.KEYCODE_MEDIA_PLAY:
-                    callJavaScript("playVideo");
+                    WebviewUtils.callJavaScript(this, "playVideo");
                     break;
                 case KeyEvent.KEYCODE_MEDIA_PAUSE:
-                    callJavaScript("pauseVideo");
+                    WebviewUtils.callJavaScript(this, "pauseVideo");
                     break;
                 case KeyEvent.KEYCODE_MEDIA_NEXT:
-                    callJavaScript("nextVideo");
+                    WebviewUtils.callJavaScript(this, "nextVideo");
                     break;
             }
         }
