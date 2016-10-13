@@ -107,7 +107,7 @@
 
     var isMobile = navigator.userAgent.toLowerCase().indexOf("android") > -1 || navigator.userAgent.toLowerCase().indexOf("iphone") > 1;
     var player, iframe;
-    var debug = false;
+    var debug = 0;
     var videoLaunchTimerId = 0;
     var debugTimerId = 0;
     var loadedVideo = false;
@@ -120,7 +120,7 @@
      * 
      */
     function updateDebugMode() {
-        if (debug) {
+        if (debug == 1) {
             var state = getPlayerState();
             document.getElementById('videoState').innerHTML = getVideoStateStr(state) + " (" + state + ")";
             document.getElementById('videoQuality').innerHTML = getPlaybackQuality();
@@ -167,7 +167,7 @@
      * @param  {string} log message
      */
     function log(header, message) {
-        if (debug && isMobile) {
+        if (debug == 1 && isMobile) {
             window.JSInterface.log("[ JS - " + header + " ]", message);
         }
     }
@@ -176,6 +176,10 @@
     function onYouTubeIframeAPIReady() {
 
         debug = QueryString.debug;
+
+        if (debug == 0) {
+            document.getElementById('debugWindow').style.display = 'none';
+        }
 
         player = new YT.Player('player', {
             height: QueryString.playerHeight,
@@ -210,7 +214,7 @@
 
         switch (event.data) {
             case YT.PlayerState.ENDED:
-                if (debug) {
+                if (debug == 1) {
                     updateDebugMode();
                     clearInterval(debugTimerId);
                 }
@@ -510,7 +514,7 @@
     // when ready, wait for clicks
     function onPlayerReady(event) {
 
-        if (debug) {
+        if (debug == 1) {
             debugTimerId = setInterval(function() {
                 updateDebugMode();
             }, 1000);
@@ -547,7 +551,7 @@
     <div id="thumbnail">
         <img id="thumbnail_picture" />
     </div>
-    <div id="myNav" class="overlay">
+    <div id="debugWindow" class="overlay">
         <div class="overlay-content" style='color:white;margin-top:100px;'>
             <ul>
                 <li>state</li>
