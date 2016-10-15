@@ -1,9 +1,12 @@
 package fr.bmartel.youtubetv;
 
+import android.os.Handler;
 import android.os.SystemClock;
 import android.util.Log;
 import android.view.MotionEvent;
+import android.view.View;
 import android.webkit.WebView;
+import android.widget.RelativeLayout;
 
 import fr.bmartel.youtubetv.utils.WebviewUtils;
 
@@ -18,8 +21,14 @@ public class JavascriptInterface {
 
     private boolean mLoaded;
 
-    public JavascriptInterface(final WebView webView) {
+    private RelativeLayout mLoadingProgress;
+
+    private Handler mHandler;
+
+    public JavascriptInterface(final Handler handler, final RelativeLayout loadingBar, final WebView webView) {
         this.mWebview = webView;
+        this.mLoadingProgress = loadingBar;
+        this.mHandler = handler;
     }
 
     private MotionEvent mEventDown;
@@ -46,12 +55,25 @@ public class JavascriptInterface {
     }
 
     @android.webkit.JavascriptInterface
+    public void onPlayerReady() {
+        if (mLoadingProgress != null) {
+            mHandler.post(new Runnable() {
+                @Override
+                public void run() {
+                    mLoadingProgress.setVisibility(View.GONE);
+                }
+            });
+        }
+    }
+
+    @android.webkit.JavascriptInterface
     public void onPageLoaded() {
         mLoaded = true;
         if (mWaitLoaded) {
             mWebview.post(new Runnable() {
                 @Override
                 public void run() {
+                    Log.v("test", "before setSize");
                     WebviewUtils.callJavaScript(mWebview, "setSize", mViewWidth, mViewHeight);
                 }
             });

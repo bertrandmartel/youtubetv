@@ -2,6 +2,7 @@ package fr.bmartel.youtubetv;
 
 import android.content.Context;
 import android.content.res.TypedArray;
+import android.os.Handler;
 import android.util.AttributeSet;
 import android.util.Log;
 import android.view.Display;
@@ -10,6 +11,9 @@ import android.view.WindowManager;
 import android.webkit.WebChromeClient;
 import android.webkit.WebSettings;
 import android.webkit.WebView;
+import android.webkit.WebViewClient;
+import android.widget.FrameLayout;
+import android.widget.RelativeLayout;
 
 import fr.bmartel.youtubetv.utils.WebviewUtils;
 
@@ -18,7 +22,7 @@ import fr.bmartel.youtubetv.utils.WebviewUtils;
  *
  * @author Bertrand Martel
  */
-public class YoutubeTvView extends WebView {
+public class YoutubeTvView extends FrameLayout {
 
     private final static String USER_AGENT_CHROME_DESKTOP = "Mozilla/5.0 (Windows NT 6.3; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/37.0.2049.0 Safari/537.36";
 
@@ -27,6 +31,8 @@ public class YoutubeTvView extends WebView {
     private String mVideoId = "EZcJEvXmjfY";
 
     private final static String TAG = YoutubeTvView.class.getSimpleName();
+
+    private final static int DEFAULT_LOADING_BG = 0x00000000;
 
     //https://developers.google.com/youtube/iframe_api_reference#Playback_quality
     private VideoQuality mVideoQuality = VideoQuality.HD_1080;
@@ -54,7 +60,13 @@ public class YoutubeTvView extends WebView {
     private int mViewWidth = 0;
     private int mViewHeight = 0;
 
+    private int mLoadBackgroundColor = DEFAULT_LOADING_BG;
+
     private JavascriptInterface mJavascriptInterface;
+
+    private WebView mWebView;
+    private RelativeLayout mLoadingProgress;
+    private Handler mHandler;
 
     public YoutubeTvView(Context context) {
         super(context);
@@ -90,6 +102,7 @@ public class YoutubeTvView extends WebView {
             mVideoAnnotation = styledAttr.getBoolean(R.styleable.YoutubeTvView_videoAnnotation, false) ? 1 : 3;
             mAutohide = VideoAutoHide.getVideoControls(styledAttr.getInteger(R.styleable.YoutubeTvView_autoHide, VideoAutoHide.DEFAULT.getIndex()));
             mDebug = styledAttr.getBoolean(R.styleable.YoutubeTvView_debug, false) ? 1 : 0;
+            mLoadBackgroundColor = styledAttr.getInteger(R.styleable.YoutubeTvView_loadingBackgroundColor, DEFAULT_LOADING_BG);
         } finally {
             styledAttr.recycle();
         }
@@ -101,7 +114,7 @@ public class YoutubeTvView extends WebView {
         mViewWidth = getWidth();
         mViewHeight = getHeight();
         if (mJavascriptInterface != null && mJavascriptInterface.isPageLoaded()) {
-            WebviewUtils.callJavaScript(this, "setSize", mViewWidth, mViewHeight);
+            WebviewUtils.callJavaScript(mWebView, "setSize", mViewWidth, mViewHeight);
         } else {
             mJavascriptInterface.setSizeOnLoad(mViewWidth, mViewHeight);
         }
@@ -109,26 +122,42 @@ public class YoutubeTvView extends WebView {
 
     private void init(final Context context) {
 
+        inflate(getContext(), R.layout.youtube_view, this);
+
+        mWebView = (WebView) findViewById(R.id.youtube_view);
+        mLoadingProgress = (RelativeLayout) findViewById(R.id.loading_progressbar);
+        mHandler = new Handler();
+
+        mWebView.setWebViewClient(new WebViewClient() {
+
+            public void onPageFinished(WebView view, String url) {
+                mLoadingProgress.setVisibility(GONE);
+            }
+        });
+
+        mWebView.setBackgroundColor(mLoadBackgroundColor);
+
         Display display = ((WindowManager) context.getSystemService(Context.WINDOW_SERVICE)).getDefaultDisplay();
         int width = getMeasuredWidth();
         int height = getMeasuredHeight();
 
-
-        final WebSettings settings = getSettings();
+        final WebSettings settings = mWebView.getSettings();
         settings.setJavaScriptEnabled(true);
         settings.setJavaScriptCanOpenWindowsAutomatically(true);
         settings.setPluginState(WebSettings.PluginState.ON);
         settings.setLoadWithOverviewMode(true);
         settings.setUseWideViewPort(true);
+        settings.setDomStorageEnabled(true);
 
-        setWebChromeClient(new WebChromeClient());
-        setPadding(0, 0, 0, 0);
-        setInitialScale(WebviewUtils.getWebviewScale(display));
+        mWebView.setWebChromeClient(new WebChromeClient());
+        mWebView.setPadding(0, 0, 0, 0);
+        mWebView.setInitialScale(WebviewUtils.getWebviewScale(display));
+        mWebView.setScrollbarFadingEnabled(true);
 
-        mJavascriptInterface = new JavascriptInterface(this);
-        addJavascriptInterface(mJavascriptInterface, "JSInterface");
+        mJavascriptInterface = new JavascriptInterface(mHandler,mLoadingProgress, mWebView);
+        mWebView.addJavascriptInterface(mJavascriptInterface, "JSInterface");
 
-        getSettings().setUserAgentString(USER_AGENT_IPHONE);
+        mWebView.getSettings().setUserAgentString(USER_AGENT_IPHONE);
 
         final String videoUrl = "file:///android_asset/youtube.html" +
                 "?videoId=" + mVideoId +
@@ -145,7 +174,7 @@ public class YoutubeTvView extends WebView {
 
         Log.v(TAG, "videoUrl : " + videoUrl);
 
-        loadUrl(videoUrl);
+        mWebView.loadUrl(videoUrl);
     }
 
     @Override
@@ -156,16 +185,16 @@ public class YoutubeTvView extends WebView {
 
             switch (event.getKeyCode()) {
                 case KeyEvent.KEYCODE_MEDIA_PLAY_PAUSE:
-                    WebviewUtils.callJavaScript(this, "playPause");
+                    WebviewUtils.callJavaScript(mWebView, "playPause");
                     break;
                 case KeyEvent.KEYCODE_MEDIA_PLAY:
-                    WebviewUtils.callJavaScript(this, "playVideo");
+                    WebviewUtils.callJavaScript(mWebView, "playVideo");
                     break;
                 case KeyEvent.KEYCODE_MEDIA_PAUSE:
-                    WebviewUtils.callJavaScript(this, "pauseVideo");
+                    WebviewUtils.callJavaScript(mWebView, "pauseVideo");
                     break;
                 case KeyEvent.KEYCODE_MEDIA_NEXT:
-                    WebviewUtils.callJavaScript(this, "nextVideo");
+                    WebviewUtils.callJavaScript(mWebView, "nextVideo");
                     break;
             }
         }
