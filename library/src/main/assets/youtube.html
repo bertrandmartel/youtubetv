@@ -7,6 +7,10 @@
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.1.0/jquery.min.js"></script>
     <title></title>
     <style type="text/css">
+    body {
+        overflow: hidden;
+    }
+    
     #over {
         position: absolute;
         top: 50%;
@@ -67,7 +71,6 @@
     canvas {
         display: block;
     }
-
     </style>
     <script>
     var QueryString = function() {
@@ -571,10 +574,13 @@
         log(onPlayerReady.name, "before loadVideo " + QueryString.videoQuality);
         loadVideo();
         loadedVideo = true;
-        $("#thumbnail").css("display", "none");
-        //$("#video_div").css("display", "block");
+        $("#thumbnail_canvas").css("display", "none");
+        $("#video_div").css("display", "block");
 
         if (isMobile) {
+
+            window.JSInterface.onPlayerReady();
+
             videoLaunchTimerId = setInterval(function() {
                 log(onPlayerReady.name, "trying to start video...");
 
@@ -588,6 +594,7 @@
 </head>
 
 <body id="body" style='margin:0;padding:0;'>
+
     <canvas id="thumbnail_canvas"></canvas>
     <div id="debugWindow" class="overlay">
         <div class="overlay-content" style='color:white;margin-top:100px;'>
@@ -649,6 +656,7 @@
         <script src="https://www.youtube.com/iframe_api"></script>
         <div id="player"></div>
     </div>
+
 </body>
 
 </html>

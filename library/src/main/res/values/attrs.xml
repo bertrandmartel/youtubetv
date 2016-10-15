@@ -26,5 +26,6 @@
         <attr name="closedCaptions" format="boolean" />
         <attr name="videoAnnotation" format="boolean" />
         <attr name="debug" format="boolean" />
+        <attr name="loadingBackgroundColor" format="integer" />
     </declare-styleable>
 </resources>
