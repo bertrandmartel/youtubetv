@@ -121,11 +121,7 @@
     var debug = 0;
     var videoLaunchTimerId = 0;
     var debugTimerId = 0;
-    var loadedVideo = false;
-    //timestamp recorded at video load
-    var videoLoadTimestamp = 0;
-    //the max interval in milliseconds authorized to receive a PAUSE event after video start that will trigger a forced PLAY
-    var maxTimestampInterval = 500;
+
     /**
      * Upload overlay debug mode if enabled.
      * 
@@ -237,20 +233,14 @@
                 log(onPlayerStateChange.name, "state changed to YT.PlayerState.ENDED");
                 break;
             case YT.PlayerState.PLAYING:
-                if (loadedVideo) {
-                    videoLoadTimestamp = new Date().getTime();
-                    loadedVideo = false;
-                }
                 clearInterval(videoLaunchTimerId);
+                window.JSInterface.hideLoading();
+                $("#thumbnail_canvas").css("display", "none");
+                $("#video_div").css("display", "block");
                 log(onPlayerStateChange.name, "state changed to YT.PlayerState.PLAYING");
                 break;
             case YT.PlayerState.PAUSED:
-                var diff = new Date().getTime() - videoLoadTimestamp;
                 log(onPlayerStateChange.name, "state changed to YT.PlayerState.PAUSED");
-                if (diff < 500) {
-                    log(onPlayerStateChange.name, "force playing");
-                    playVideo();
-                }
                 break;
             case YT.PlayerState.BUFFERING:
                 log(onPlayerStateChange.name, "state changed to YT.PlayerState.BUFFERING");
@@ -411,6 +401,7 @@
      * @param {number} height value
      */
     function setSize(width, height) {
+        console.log("setSize  : " + width + " et " + height);
         viewport = document.querySelector("meta[name=viewport]");
         viewport.setAttribute('content', 'width=' + width + ', height=' + height);
         player.setSize(width, height);
@@ -573,28 +564,27 @@
 
         log(onPlayerReady.name, "before loadVideo " + QueryString.videoQuality);
         loadVideo();
-        loadedVideo = true;
-        $("#thumbnail_canvas").css("display", "none");
-        $("#video_div").css("display", "block");
 
         if (isMobile) {
 
-            window.JSInterface.onPlayerReady();
+            if (QueryString.autoplay == 1) {
 
-            videoLaunchTimerId = setInterval(function() {
-                log(onPlayerReady.name, "trying to start video...");
+                log(onPlayerReady.name, "autoplaying video...");
 
-                window.JSInterface.startVideo();
-
-            }, 1000);
+                videoLaunchTimerId = setInterval(function() {
+                    window.JSInterface.startVideo();
+                }, 1000);
+            } else {
+                window.JSInterface.hideLoading();
+            }
         }
+
         return false;
     }
     </script>
 </head>
 
 <body id="body" style='margin:0;padding:0;'>
-
     <canvas id="thumbnail_canvas"></canvas>
     <div id="debugWindow" class="overlay">
         <div class="overlay-content" style='color:white;margin-top:100px;'>
@@ -656,7 +646,6 @@
         <script src="https://www.youtube.com/iframe_api"></script>
         <div id="player"></div>
     </div>
-
 </body>
 
 </html>

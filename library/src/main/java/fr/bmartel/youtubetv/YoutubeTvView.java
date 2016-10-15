@@ -68,6 +68,8 @@ public class YoutubeTvView extends FrameLayout {
     private RelativeLayout mLoadingProgress;
     private Handler mHandler;
 
+    private int mAutoPlay;
+
     public YoutubeTvView(Context context) {
         super(context);
         init(context);
@@ -103,6 +105,7 @@ public class YoutubeTvView extends FrameLayout {
             mAutohide = VideoAutoHide.getVideoControls(styledAttr.getInteger(R.styleable.YoutubeTvView_autoHide, VideoAutoHide.DEFAULT.getIndex()));
             mDebug = styledAttr.getBoolean(R.styleable.YoutubeTvView_debug, false) ? 1 : 0;
             mLoadBackgroundColor = styledAttr.getInteger(R.styleable.YoutubeTvView_loadingBackgroundColor, DEFAULT_LOADING_BG);
+            mAutoPlay = styledAttr.getBoolean(R.styleable.YoutubeTvView_autoplay, false) ? 1 : 0;
         } finally {
             styledAttr.recycle();
         }
@@ -128,13 +131,6 @@ public class YoutubeTvView extends FrameLayout {
         mLoadingProgress = (RelativeLayout) findViewById(R.id.loading_progressbar);
         mHandler = new Handler();
 
-        mWebView.setWebViewClient(new WebViewClient() {
-
-            public void onPageFinished(WebView view, String url) {
-                mLoadingProgress.setVisibility(GONE);
-            }
-        });
-
         mWebView.setBackgroundColor(mLoadBackgroundColor);
 
         Display display = ((WindowManager) context.getSystemService(Context.WINDOW_SERVICE)).getDefaultDisplay();
@@ -149,12 +145,14 @@ public class YoutubeTvView extends FrameLayout {
         settings.setUseWideViewPort(true);
         settings.setDomStorageEnabled(true);
 
+        mWebView.setWebViewClient(new WebViewClient());
+
         mWebView.setWebChromeClient(new WebChromeClient());
         mWebView.setPadding(0, 0, 0, 0);
         mWebView.setInitialScale(WebviewUtils.getWebviewScale(display));
         mWebView.setScrollbarFadingEnabled(true);
 
-        mJavascriptInterface = new JavascriptInterface(mHandler,mLoadingProgress, mWebView);
+        mJavascriptInterface = new JavascriptInterface(mHandler, mLoadingProgress, mWebView);
         mWebView.addJavascriptInterface(mJavascriptInterface, "JSInterface");
 
         mWebView.getSettings().setUserAgentString(USER_AGENT_IPHONE);
@@ -170,6 +168,7 @@ public class YoutubeTvView extends FrameLayout {
                 "&autohide=" + mAutohide.getIndex() +
                 "&cc_load_policy=" + mClosedCaptions +
                 "&iv_load_policy=" + mVideoAnnotation +
+                "&autoplay=" + mAutoPlay +
                 "&debug=" + mDebug;
 
         Log.v(TAG, "videoUrl : " + videoUrl);
@@ -184,6 +183,7 @@ public class YoutubeTvView extends FrameLayout {
         if (event.getAction() == KeyEvent.ACTION_DOWN) {
 
             switch (event.getKeyCode()) {
+                case KeyEvent.KEYCODE_DPAD_CENTER:
                 case KeyEvent.KEYCODE_MEDIA_PLAY_PAUSE:
                     WebviewUtils.callJavaScript(mWebView, "playPause");
                     break;
