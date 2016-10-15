@@ -1,7 +1,6 @@
 package fr.bmartel.youtubetv;
 
 import android.os.Handler;
-import android.os.SystemClock;
 import android.util.Log;
 import android.view.MotionEvent;
 import android.view.View;
@@ -55,7 +54,7 @@ public class JavascriptInterface {
     }
 
     @android.webkit.JavascriptInterface
-    public void onPlayerReady() {
+    public void hideLoading() {
         if (mLoadingProgress != null) {
             mHandler.post(new Runnable() {
                 @Override
@@ -85,32 +84,12 @@ public class JavascriptInterface {
 
         Log.i("start", "start video");
 
-        float x = 1000f;
-        float y = 500f;
-
-        int metaState = 0;
-        mEventDown = MotionEvent.obtain(
-                SystemClock.uptimeMillis(),
-                SystemClock.uptimeMillis(),
-                MotionEvent.ACTION_DOWN,
-                x,
-                y,
-                metaState
-        );
-
-        // Dispatch touch event to view
-        mWebview.dispatchTouchEvent(mEventDown);
-
-        mEventUp = MotionEvent.obtain(
-                SystemClock.uptimeMillis(),
-                SystemClock.uptimeMillis(),
-                MotionEvent.ACTION_UP,
-                x,
-                y,
-                metaState
-        );
-        mWebview.dispatchTouchEvent(mEventUp);
-        Log.i("start", "end of touch event");
+        mWebview.post(new Runnable() {
+            @Override
+            public void run() {
+                WebviewUtils.callJavaScript(mWebview, "playVideo");
+            }
+        });
     }
 
     public void setSizeOnLoad(int viewWidth, int viewHeight) {
