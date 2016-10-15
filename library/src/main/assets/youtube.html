@@ -25,19 +25,6 @@
         height: 100%;
     }
     
-    img {
-        min-height: 100%;
-        min-width: 100%;
-        height: auto;
-        width: auto;
-        position: absolute;
-        top: -100%;
-        bottom: -100%;
-        left: -100%;
-        right: -100%;
-        margin: auto;
-    }
-    
     ul {
         list-style-type: none;
         float: left;
@@ -76,6 +63,11 @@
         position: relative;
         width: 100%;
     }
+    
+    canvas {
+        display: block;
+    }
+
     </style>
     <script>
     var QueryString = function() {
@@ -101,9 +93,25 @@
         return query_string;
     }();
 
-    $(document).ready(function() {
-        $("#thumbnail_picture").attr('src', 'https://img.youtube.com/vi/' + QueryString.videoId + '/maxresdefault.jpg');
-    });
+    /**
+     * Conserve aspect ratio of the orignal region. Useful when shrinking/enlarging
+     * images to fit into a certain area.
+     *
+     * @param {Number} srcWidth Source area width
+     * @param {Number} srcHeight Source area height
+     * @param {Number} maxWidth Fittable area maximum available width
+     * @param {Number} maxHeight Fittable area maximum available height
+     * @return {Object} { width, heigth }
+     */
+    function calculateAspectRatioFit(srcWidth, srcHeight, maxWidth, maxHeight) {
+
+        var ratio = Math.min(maxWidth / srcWidth, maxHeight / srcHeight);
+
+        return {
+            width: srcWidth * ratio,
+            height: srcHeight * ratio
+        };
+    }
 
     var isMobile = navigator.userAgent.toLowerCase().indexOf("android") > -1 || navigator.userAgent.toLowerCase().indexOf("iphone") > 1;
     var player, iframe;
@@ -199,6 +207,11 @@
                 'onStateChange': onPlayerStateChange
             }
         });
+        log(onYouTubeIframeAPIReady.name, "after setting player");
+        if (isMobile) {
+            window.JSInterface.onPageLoaded();
+        }
+        //$("#thumbnail_canvas").attr('src', 'https://img.youtube.com/vi/' + QueryString.videoId + '/maxresdefault.jpg');
     }
 
     function loadVideo() {
@@ -355,10 +368,43 @@
         return player.getVolume();
     }
 
+    function calculateAspectRatioFit2(srcWidth, srcHeight, maxWidth, maxHeight) {
+        var ratio = [maxWidth / srcWidth, maxHeight / srcHeight];
+        ratio = Math.min(ratio[0], ratio[1]);
+
+        return {
+            width: srcWidth * ratio,
+            height: srcHeight * ratio
+        };
+    }
+
+    function putImageInMiddle(srcWidth, srcHeight, maxWidth, maxHeight) {
+        return {
+            x: maxWidth / 2 - srcWidth / 2,
+            y: maxHeight / 2 - srcHeight / 2
+        };
+    }
+
+    var IMG = new Image();
+    IMG.src = 'https://img.youtube.com/vi/' + QueryString.videoId + '/maxresdefault.jpg';
+
+    IMG.onload = function() {
+        var thumbnailCanvas = document.getElementById('thumbnail_canvas');
+        thumbnailCanvas.width = window.innerWidth;
+        thumbnailCanvas.height = window.innerHeight;
+        var ctx = thumbnailCanvas.getContext('2d');
+        var targetSize = calculateAspectRatioFit2(IMG.width, IMG.height, thumbnailCanvas.width, thumbnailCanvas.height);
+        var targetpoint = putImageInMiddle(targetSize.width, targetSize.height, thumbnailCanvas.width, thumbnailCanvas.height);
+        console.log(thumbnailCanvas.width + " et " + thumbnailCanvas.height + " for : " + IMG.width + " et " + IMG.height);
+        console.log("targetpoint : " + targetpoint.x + " et " + targetpoint.y);
+        console.log("targetSize  : " + targetSize.width + " et " + targetSize.height);
+        ctx.drawImage(IMG, targetpoint.x, targetpoint.y, targetSize.width, targetSize.height);
+    };
+
     /**
      * Sets the size in pixels of the <iframe> that contains the player.
      * 
-     * @param {number} width value
+     * @param {number} width valuedrawImage
      * @param {number} height value
      */
     function setSize(width, height) {
@@ -526,7 +572,7 @@
         loadVideo();
         loadedVideo = true;
         $("#thumbnail").css("display", "none");
-        $("#video_div").css("display", "block");
+        //$("#video_div").css("display", "block");
 
         if (isMobile) {
             videoLaunchTimerId = setInterval(function() {
@@ -538,19 +584,11 @@
         }
         return false;
     }
-
-    function onPageLoaded() {
-        if (isMobile) {
-            window.JSInterface.onPageLoaded();
-        }
-    }
     </script>
 </head>
 
-<body id="body" style='margin:0;padding:0;' onload="onPageLoaded();">
-    <div id="thumbnail">
-        <img id="thumbnail_picture" />
-    </div>
+<body id="body" style='margin:0;padding:0;'>
+    <canvas id="thumbnail_canvas"></canvas>
     <div id="debugWindow" class="overlay">
         <div class="overlay-content" style='color:white;margin-top:100px;'>
             <ul>
