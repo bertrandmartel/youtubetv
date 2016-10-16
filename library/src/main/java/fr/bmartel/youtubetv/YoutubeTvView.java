@@ -41,6 +41,7 @@ import android.webkit.WebViewClient;
 import android.widget.FrameLayout;
 import android.widget.RelativeLayout;
 
+import fr.bmartel.youtubetv.model.ThumbnailQuality;
 import fr.bmartel.youtubetv.model.UserAgents;
 import fr.bmartel.youtubetv.model.VideoAutoHide;
 import fr.bmartel.youtubetv.model.VideoControls;
@@ -99,6 +100,8 @@ public class YoutubeTvView extends FrameLayout {
     private int mBorderWidth;
 
     private int mBorderColor;
+
+    private ThumbnailQuality mThumbnailQuality;
 
     /**
      * Build Custom view.
@@ -164,6 +167,7 @@ public class YoutubeTvView extends FrameLayout {
             mShowBorder = styledAttr.getBoolean(R.styleable.YoutubeTvView_showBorder, YoutubeTvConst.DEFAULT_SHOW_BORDER);
             mBorderWidth = styledAttr.getInteger(R.styleable.YoutubeTvView_borderWidth, YoutubeTvConst.DEFAULT_BORDER_WIDTH);
             mBorderColor = styledAttr.getColor(R.styleable.YoutubeTvView_borderColor, YoutubeTvConst.DEFAULT_BORDER_COLOR);
+            mThumbnailQuality = ThumbnailQuality.getThumbnail(styledAttr.getInteger(R.styleable.YoutubeTvView_thumbnailQuality, YoutubeTvConst.DEFAULT_THUMBNAIL_QUALITY.getIndex()));
         } finally {
             styledAttr.recycle();
         }
@@ -237,6 +241,7 @@ public class YoutubeTvView extends FrameLayout {
                 "&cc_load_policy=" + mClosedCaptions +
                 "&iv_load_policy=" + mVideoAnnotation +
                 "&autoplay=" + mAutoPlay +
+                "&thumbnailQuality=" + mThumbnailQuality.getValue() +
                 "&debug=" + mDebug;
 
         Log.v(TAG, "videoUrl : " + videoUrl);

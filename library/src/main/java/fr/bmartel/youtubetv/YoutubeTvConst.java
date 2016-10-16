@@ -26,6 +26,7 @@ package fr.bmartel.youtubetv;
 
 import android.graphics.Color;
 
+import fr.bmartel.youtubetv.model.ThumbnailQuality;
 import fr.bmartel.youtubetv.model.UserAgents;
 import fr.bmartel.youtubetv.model.VideoAutoHide;
 import fr.bmartel.youtubetv.model.VideoControls;
@@ -112,5 +113,10 @@ public class YoutubeTvConst {
      * Default border color.
      */
     public final static int DEFAULT_BORDER_COLOR = Color.BLUE;
+
+    /**
+     * Default thumbnail quality.
+     */
+    public final static ThumbnailQuality DEFAULT_THUMBNAIL_QUALITY = ThumbnailQuality.MAXRES_DEFAULT;
 
 }
