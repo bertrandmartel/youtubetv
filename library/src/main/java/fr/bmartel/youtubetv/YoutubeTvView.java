@@ -1,3 +1,27 @@
+/*
+ * The MIT License (MIT)
+ * <p/>
+ * Copyright (c) 2016 Bertrand Martel
+ * <p/>
+ * Permission is hereby granted, free of charge, to any person obtaining a copy
+ * of this software and associated documentation files (the "Software"), to deal
+ * in the Software without restriction, including without limitation the rights
+ * to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+ * copies of the Software, and to permit persons to whom the Software is
+ * furnished to do so, subject to the following conditions:
+ * <p/>
+ * The above copyright notice and this permission notice shall be included in
+ * all copies or substantial portions of the Software.
+ * <p/>
+ * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+ * IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+ * FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+ * AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+ * LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+ * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
+ * THE SOFTWARE.
+ */
+
 package fr.bmartel.youtubetv;
 
 import android.content.Context;
@@ -5,9 +29,7 @@ import android.content.res.TypedArray;
 import android.os.Handler;
 import android.util.AttributeSet;
 import android.util.Log;
-import android.view.Display;
 import android.view.KeyEvent;
-import android.view.WindowManager;
 import android.webkit.WebChromeClient;
 import android.webkit.WebSettings;
 import android.webkit.WebView;
@@ -15,78 +37,101 @@ import android.webkit.WebViewClient;
 import android.widget.FrameLayout;
 import android.widget.RelativeLayout;
 
+import fr.bmartel.youtubetv.model.VideoAutoHide;
+import fr.bmartel.youtubetv.model.VideoControls;
+import fr.bmartel.youtubetv.model.VideoQuality;
 import fr.bmartel.youtubetv.utils.WebviewUtils;
 
 /**
- * Youtuve TV custom view.
+ * Youtube TV custom view.
  *
  * @author Bertrand Martel
  */
 public class YoutubeTvView extends FrameLayout {
 
+    private final static String TAG = YoutubeTvView.class.getSimpleName();
+
     private final static String USER_AGENT_CHROME_DESKTOP = "Mozilla/5.0 (Windows NT 6.3; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/37.0.2049.0 Safari/537.36";
 
     private final static String USER_AGENT_IPHONE = "Mozilla/5.0 (iPhone; CPU iPhone OS 6_1_4 like Mac OS X) AppleWebKit/536.26 (KHTML, like Gecko) Version/6.0 Mobile/10B350 Safari/8536.25";
 
-    private String mVideoId = "EZcJEvXmjfY";
-
-    private final static String TAG = YoutubeTvView.class.getSimpleName();
-
-    private final static int DEFAULT_LOADING_BG = 0x00000000;
+    private String mVideoId;
 
     //https://developers.google.com/youtube/iframe_api_reference#Playback_quality
-    private VideoQuality mVideoQuality = VideoQuality.HD_1080;
-
-    private int mPlayerHeight = 1080;
-
-    private int mPlayerWidth = 1920;
+    private VideoQuality mVideoQuality;
 
     //check https://developers.google.com/youtube/player_parameters?playerVersion=HTML5
+    private int mShowRelatedVideos;
 
-    private int mShowRelatedVideos = 0;
+    private int mShowVideoInfo;
 
-    private int mShowVideoInfo = 0;
+    private VideoControls mShowControls;
 
-    private VideoControls mShowControls = VideoControls.NONE;
+    private VideoAutoHide mAutohide;
 
-    private VideoAutoHide mAutohide = VideoAutoHide.DEFAULT;
+    private int mClosedCaptions;
 
-    private int mClosedCaptions = 1;
+    private int mVideoAnnotation;
 
-    private int mVideoAnnotation = 1;
+    private int mDebug;
 
-    private int mDebug = 0;
+    private int mViewWidth;
 
-    private int mViewWidth = 0;
-    private int mViewHeight = 0;
+    private int mViewHeight;
 
-    private int mLoadBackgroundColor = DEFAULT_LOADING_BG;
+    private int mLoadBackgroundColor = YoutubeTvConst.DEFAULT_LOADING_BG;
 
     private JavascriptInterface mJavascriptInterface;
 
     private WebView mWebView;
+
     private RelativeLayout mLoadingProgress;
+
     private Handler mHandler;
 
     private int mAutoPlay;
 
+    /**
+     * Build Custom view.
+     *
+     * @param context android context
+     */
     public YoutubeTvView(Context context) {
         super(context);
         init(context);
     }
 
+    /**
+     * Build Custom view.
+     *
+     * @param context android context
+     * @param attrs   attributes
+     */
     public YoutubeTvView(Context context, AttributeSet attrs) {
         super(context, attrs);
         processAttr(context, attrs);
         init(context);
     }
 
+    /**
+     * Build Custom view.
+     *
+     * @param context  android context
+     * @param attrs    attributes
+     * @param defStyle
+     */
     public YoutubeTvView(Context context, AttributeSet attrs, int defStyle) {
         super(context, attrs, defStyle);
         processAttr(context, attrs);
         init(context);
     }
 
+    /**
+     * Process view attributes.
+     *
+     * @param context view context
+     * @param attrs   attributes
+     */
     private void processAttr(final Context context, AttributeSet attrs) {
 
         TypedArray styledAttr = context.getTheme().obtainStyledAttributes(
@@ -96,21 +141,26 @@ public class YoutubeTvView extends FrameLayout {
 
         try {
             mVideoId = styledAttr.getString(R.styleable.YoutubeTvView_videoId);
-            mVideoQuality = VideoQuality.getVideoQuality(styledAttr.getInteger(R.styleable.YoutubeTvView_videoQuality, VideoQuality.HD_720.getIndex()));
-            mShowRelatedVideos = styledAttr.getBoolean(R.styleable.YoutubeTvView_showRelatedVideos, false) ? 1 : 0;
-            mShowVideoInfo = styledAttr.getBoolean(R.styleable.YoutubeTvView_showVideoInfo, false) ? 1 : 0;
-            mShowControls = VideoControls.getVideoControls(styledAttr.getInteger(R.styleable.YoutubeTvView_showControls, VideoControls.NONE.getIndex()));
-            mClosedCaptions = styledAttr.getBoolean(R.styleable.YoutubeTvView_closedCaptions, false) ? 1 : 0;
-            mVideoAnnotation = styledAttr.getBoolean(R.styleable.YoutubeTvView_videoAnnotation, false) ? 1 : 3;
-            mAutohide = VideoAutoHide.getVideoControls(styledAttr.getInteger(R.styleable.YoutubeTvView_autoHide, VideoAutoHide.DEFAULT.getIndex()));
-            mDebug = styledAttr.getBoolean(R.styleable.YoutubeTvView_debug, false) ? 1 : 0;
-            mLoadBackgroundColor = styledAttr.getInteger(R.styleable.YoutubeTvView_loadingBackgroundColor, DEFAULT_LOADING_BG);
-            mAutoPlay = styledAttr.getBoolean(R.styleable.YoutubeTvView_autoplay, false) ? 1 : 0;
+            mVideoQuality = VideoQuality.getVideoQuality(styledAttr.getInteger(R.styleable.YoutubeTvView_videoQuality, YoutubeTvConst.DEFAULT_VIDEO_QUALITY.getIndex()));
+            mShowRelatedVideos = styledAttr.getBoolean(R.styleable.YoutubeTvView_showRelatedVideos, YoutubeTvConst.DEFAULT_SHOW_RELATED_VIDEOS) ? 1 : 0;
+            mShowVideoInfo = styledAttr.getBoolean(R.styleable.YoutubeTvView_showVideoInfo, YoutubeTvConst.DEFAULT_SHOW_VIDEO_INFO) ? 1 : 0;
+            mShowControls = VideoControls.getVideoControls(styledAttr.getInteger(R.styleable.YoutubeTvView_showControls, YoutubeTvConst.DEFAULT_SHOW_CONTROLS.getIndex()));
+            mClosedCaptions = styledAttr.getBoolean(R.styleable.YoutubeTvView_closedCaptions, YoutubeTvConst.DEFAULT_CLOSED_CAPTION) ? 1 : 0;
+            mVideoAnnotation = styledAttr.getBoolean(R.styleable.YoutubeTvView_videoAnnotation, YoutubeTvConst.DEFAULT_VIDEO_ANNOTATION) ? 1 : 3;
+            mAutohide = VideoAutoHide.getVideoControls(styledAttr.getInteger(R.styleable.YoutubeTvView_autoHide, YoutubeTvConst.DEFAULT_AUTOHIDE.getIndex()));
+            mDebug = styledAttr.getBoolean(R.styleable.YoutubeTvView_debug, YoutubeTvConst.DEFAULT_DEBUG_MODE) ? 1 : 0;
+            mLoadBackgroundColor = styledAttr.getInteger(R.styleable.YoutubeTvView_loadingBackgroundColor, YoutubeTvConst.DEFAULT_LOADING_BG);
+            mAutoPlay = styledAttr.getBoolean(R.styleable.YoutubeTvView_autoplay, YoutubeTvConst.DEFAULT_AUTOPLAY) ? 1 : 0;
         } finally {
             styledAttr.recycle();
         }
     }
 
+    /**
+     * This must be override to get actual width & height of the webview and pass it to Javascript to resize player & viewport.
+     *
+     * @param hasFocus
+     */
     @Override
     public void onWindowFocusChanged(boolean hasFocus) {
         super.onWindowFocusChanged(hasFocus);
@@ -123,6 +173,11 @@ public class YoutubeTvView extends FrameLayout {
         }
     }
 
+    /**
+     * Initialize Webview.
+     *
+     * @param context view context
+     */
     private void init(final Context context) {
 
         inflate(getContext(), R.layout.youtube_view, this);
@@ -133,7 +188,7 @@ public class YoutubeTvView extends FrameLayout {
 
         mWebView.setBackgroundColor(mLoadBackgroundColor);
 
-        Display display = ((WindowManager) context.getSystemService(Context.WINDOW_SERVICE)).getDefaultDisplay();
+        //Display display = ((WindowManager) context.getSystemService(Context.WINDOW_SERVICE)).getDefaultDisplay();
         int width = getMeasuredWidth();
         int height = getMeasuredHeight();
 
@@ -149,7 +204,7 @@ public class YoutubeTvView extends FrameLayout {
 
         mWebView.setWebChromeClient(new WebChromeClient());
         mWebView.setPadding(0, 0, 0, 0);
-        mWebView.setInitialScale(WebviewUtils.getWebviewScale(display));
+        //mWebView.setInitialScale(WebviewUtils.getWebviewScale(display));
         mWebView.setScrollbarFadingEnabled(true);
 
         mJavascriptInterface = new JavascriptInterface(mHandler, mLoadingProgress, mWebView);
@@ -176,9 +231,17 @@ public class YoutubeTvView extends FrameLayout {
         mWebView.loadUrl(videoUrl);
     }
 
+    /**
+     * Dispatch key events to be interpreted in the webview via API (since webview is non focusable).
+     *
+     * @param event key event
+     * @return
+     */
     @Override
     public boolean dispatchKeyEvent(KeyEvent event) {
         boolean dispatchFirst = super.dispatchKeyEvent(event);
+
+        Log.v(TAG, "dispatchKeyEvent : " + event.getAction() + " et " + event.getKeyCode());
 
         if (event.getAction() == KeyEvent.ACTION_DOWN) {
 

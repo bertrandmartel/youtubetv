@@ -1,8 +1,31 @@
+/*
+ * The MIT License (MIT)
+ * <p/>
+ * Copyright (c) 2016 Bertrand Martel
+ * <p/>
+ * Permission is hereby granted, free of charge, to any person obtaining a copy
+ * of this software and associated documentation files (the "Software"), to deal
+ * in the Software without restriction, including without limitation the rights
+ * to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+ * copies of the Software, and to permit persons to whom the Software is
+ * furnished to do so, subject to the following conditions:
+ * <p/>
+ * The above copyright notice and this permission notice shall be included in
+ * all copies or substantial portions of the Software.
+ * <p/>
+ * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+ * IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+ * FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+ * AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+ * LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+ * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
+ * THE SOFTWARE.
+ */
+
 package fr.bmartel.youtubetv;
 
 import android.os.Handler;
 import android.util.Log;
-import android.view.MotionEvent;
 import android.view.View;
 import android.webkit.WebView;
 import android.widget.RelativeLayout;
@@ -16,43 +39,79 @@ import fr.bmartel.youtubetv.utils.WebviewUtils;
  */
 public class JavascriptInterface {
 
+    private final static String TAG = JavascriptInterface.class.getSimpleName();
+
+    /**
+     * Webview object.
+     */
     private WebView mWebview;
 
+    /**
+     * check if page is loaded.
+     */
     private boolean mLoaded;
 
+    /**
+     * layout containing progressbar.
+     */
     private RelativeLayout mLoadingProgress;
 
+    /**
+     * Handler instanciated in Webview thread.
+     */
     private Handler mHandler;
 
+    /**
+     * Build JS interface.
+     *
+     * @param handler    Webview handler
+     * @param loadingBar layout containing the progress bar
+     * @param webView    Webview object
+     */
     public JavascriptInterface(final Handler handler, final RelativeLayout loadingBar, final WebView webView) {
         this.mWebview = webView;
         this.mLoadingProgress = loadingBar;
         this.mHandler = handler;
     }
 
-    private MotionEvent mEventDown;
-
-    private MotionEvent mEventUp;
-
+    /**
+     * Variable to check if onWindowFocusChanged has been called.
+     */
     private boolean mWaitLoaded;
 
+    /**
+     * Webview actual width.
+     */
     private int mViewWidth;
+
+    /**
+     * Webview actual height.
+     */
     private int mViewHeight;
 
+    /**
+     * check if pageLoad callback has been called.
+     *
+     * @return
+     */
     public boolean isPageLoaded() {
         return mLoaded;
     }
 
+    /**
+     * Log a message from Javascript.
+     *
+     * @param header  message header
+     * @param message message body
+     */
     @android.webkit.JavascriptInterface
     public void log(String header, String message) {
         Log.i(header, message);
     }
 
-    @android.webkit.JavascriptInterface
-    public void onError(String error) {
-        throw new Error(error);
-    }
-
+    /**
+     * Hide progress bar.
+     */
     @android.webkit.JavascriptInterface
     public void hideLoading() {
         if (mLoadingProgress != null) {
@@ -65,6 +124,9 @@ public class JavascriptInterface {
         }
     }
 
+    /**
+     * Called when page is loaded.
+     */
     @android.webkit.JavascriptInterface
     public void onPageLoaded() {
         mLoaded = true;
@@ -79,10 +141,13 @@ public class JavascriptInterface {
         }
     }
 
+    /**
+     * Start video. This must be called from Java to enable autoplay.
+     */
     @android.webkit.JavascriptInterface
     public void startVideo() {
 
-        Log.i("start", "start video");
+        Log.v(TAG, "start video");
 
         mWebview.post(new Runnable() {
             @Override
@@ -92,6 +157,12 @@ public class JavascriptInterface {
         });
     }
 
+    /**
+     * Set size parameters from WebviewonWindowFocusChanged.
+     *
+     * @param viewWidth  webview actual width
+     * @param viewHeight webview actual height
+     */
     public void setSizeOnLoad(int viewWidth, int viewHeight) {
         mWaitLoaded = true;
         mViewWidth = viewWidth;
