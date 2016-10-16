@@ -37,6 +37,7 @@ import android.webkit.WebViewClient;
 import android.widget.FrameLayout;
 import android.widget.RelativeLayout;
 
+import fr.bmartel.youtubetv.model.UserAgents;
 import fr.bmartel.youtubetv.model.VideoAutoHide;
 import fr.bmartel.youtubetv.model.VideoControls;
 import fr.bmartel.youtubetv.model.VideoQuality;
@@ -51,9 +52,7 @@ public class YoutubeTvView extends FrameLayout {
 
     private final static String TAG = YoutubeTvView.class.getSimpleName();
 
-    private final static String USER_AGENT_CHROME_DESKTOP = "Mozilla/5.0 (Windows NT 6.3; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/37.0.2049.0 Safari/537.36";
-
-    private final static String USER_AGENT_IPHONE = "Mozilla/5.0 (iPhone; CPU iPhone OS 6_1_4 like Mac OS X) AppleWebKit/536.26 (KHTML, like Gecko) Version/6.0 Mobile/10B350 Safari/8536.25";
+    private UserAgents mUserAgent;
 
     private String mVideoId;
 
@@ -151,6 +150,7 @@ public class YoutubeTvView extends FrameLayout {
             mDebug = styledAttr.getBoolean(R.styleable.YoutubeTvView_debug, YoutubeTvConst.DEFAULT_DEBUG_MODE) ? 1 : 0;
             mLoadBackgroundColor = styledAttr.getInteger(R.styleable.YoutubeTvView_loadingBackgroundColor, YoutubeTvConst.DEFAULT_LOADING_BG);
             mAutoPlay = styledAttr.getBoolean(R.styleable.YoutubeTvView_autoplay, YoutubeTvConst.DEFAULT_AUTOPLAY) ? 1 : 0;
+            mUserAgent = UserAgents.getUserAgent(styledAttr.getInteger(R.styleable.YoutubeTvView_userAgentString, YoutubeTvConst.DEFAULT_USER_AGENT.getIndex()));
         } finally {
             styledAttr.recycle();
         }
@@ -208,7 +208,7 @@ public class YoutubeTvView extends FrameLayout {
         mJavascriptInterface = new JavascriptInterface(mHandler, mLoadingProgress, mWebView);
         mWebView.addJavascriptInterface(mJavascriptInterface, "JSInterface");
 
-        mWebView.getSettings().setUserAgentString(USER_AGENT_IPHONE);
+        mWebView.getSettings().setUserAgentString(mUserAgent.getValue());
 
         final String videoUrl = "file:///android_asset/youtube.html" +
                 "?videoId=" + mVideoId +
