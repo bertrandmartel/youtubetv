@@ -16,15 +16,25 @@
         android:scrollbars="none" />
 
     <RelativeLayout
-        android:id="@+id/loading_progressbar"
+        android:id="@+id/overlay_component"
         android:layout_width="match_parent"
         android:layout_height="match_parent">
 
+        <ImageView
+            android:id="@+id/play_icon"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerInParent="true"
+            android:src="@drawable/youtube_overlay"
+            android:visibility="gone" />
+
         <ProgressBar
+            android:id="@+id/progress_bar"
             style="?android:attr/progressBarStyleLarge"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_centerInParent="true" />
+
     </RelativeLayout>
 
 </FrameLayout>
