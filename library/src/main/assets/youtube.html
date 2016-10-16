@@ -210,7 +210,6 @@
         if (isMobile) {
             window.JSInterface.onPageLoaded();
         }
-        //$("#thumbnail_canvas").attr('src', 'https://img.youtube.com/vi/' + QueryString.videoId + '/maxresdefault.jpg');
     }
 
     function loadVideo() {
@@ -379,7 +378,7 @@
     }
 
     var IMG = new Image();
-    IMG.src = 'https://img.youtube.com/vi/' + QueryString.videoId + '/maxresdefault.jpg';
+    IMG.src = 'https://img.youtube.com/vi/' + QueryString.videoId + '/' + QueryString.thumbnailQuality + '.jpg';
 
     IMG.onload = function() {
         var thumbnailCanvas = document.getElementById('thumbnail_canvas');

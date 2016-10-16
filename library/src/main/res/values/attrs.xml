@@ -38,5 +38,12 @@
         <attr name="showBorder" format="boolean" />
         <attr name="borderWidth" format="integer" />
         <attr name="borderColor" format="color" />
+        <attr name="thumbnailQuality" format="enum">
+            <enum name="auto" value="0" />
+            <enum name="hqdefault" value="1" />
+            <enum name="mqdefault" value="2" />
+            <enum name="sddefault" value="3" />
+            <enum name="maxresdefault" value="4" />
+        </attr>
     </declare-styleable>
 </resources>
