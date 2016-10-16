@@ -28,7 +28,8 @@ import android.os.Handler;
 import android.util.Log;
 import android.view.View;
 import android.webkit.WebView;
-import android.widget.RelativeLayout;
+import android.widget.ImageView;
+import android.widget.ProgressBar;
 
 import fr.bmartel.youtubetv.utils.WebviewUtils;
 
@@ -47,14 +48,19 @@ public class JavascriptInterface {
     private WebView mWebview;
 
     /**
-     * check if page is loaded.
+     * Check if page is loaded.
      */
     private boolean mLoaded;
 
     /**
-     * layout containing progressbar.
+     * Progress bar.
      */
-    private RelativeLayout mLoadingProgress;
+    private ProgressBar mLoadingProgress;
+
+    /**
+     * Play icon.
+     */
+    private ImageView mPlayIcon;
 
     /**
      * Handler instanciated in Webview thread.
@@ -68,10 +74,11 @@ public class JavascriptInterface {
      * @param loadingBar layout containing the progress bar
      * @param webView    Webview object
      */
-    public JavascriptInterface(final Handler handler, final RelativeLayout loadingBar, final WebView webView) {
+    public JavascriptInterface(final Handler handler, final ProgressBar loadingBar, final ImageView playIcon, final WebView webView) {
         this.mWebview = webView;
         this.mLoadingProgress = loadingBar;
         this.mHandler = handler;
+        this.mPlayIcon = playIcon;
     }
 
     /**
@@ -113,12 +120,17 @@ public class JavascriptInterface {
      * Hide progress bar.
      */
     @android.webkit.JavascriptInterface
-    public void hideLoading() {
+    public void hideLoading(final boolean showPlayIcon) {
         if (mLoadingProgress != null) {
             mHandler.post(new Runnable() {
                 @Override
                 public void run() {
                     mLoadingProgress.setVisibility(View.GONE);
+                    if (showPlayIcon) {
+                        mPlayIcon.setVisibility(View.VISIBLE);
+                    } else {
+                        mPlayIcon.setVisibility(View.GONE);
+                    }
                 }
             });
         }

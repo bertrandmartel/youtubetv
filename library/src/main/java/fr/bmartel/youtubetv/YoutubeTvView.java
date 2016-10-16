@@ -39,7 +39,8 @@ import android.webkit.WebSettings;
 import android.webkit.WebView;
 import android.webkit.WebViewClient;
 import android.widget.FrameLayout;
-import android.widget.RelativeLayout;
+import android.widget.ImageView;
+import android.widget.ProgressBar;
 
 import fr.bmartel.youtubetv.model.ThumbnailQuality;
 import fr.bmartel.youtubetv.model.UserAgents;
@@ -88,8 +89,6 @@ public class YoutubeTvView extends FrameLayout {
     private JavascriptInterface mJavascriptInterface;
 
     private WebView mWebView;
-
-    private RelativeLayout mLoadingProgress;
 
     private Handler mHandler;
 
@@ -202,7 +201,9 @@ public class YoutubeTvView extends FrameLayout {
         setBorder();
 
         mWebView = (WebView) findViewById(R.id.youtube_view);
-        mLoadingProgress = (RelativeLayout) findViewById(R.id.loading_progressbar);
+        ImageView playIcon = (ImageView) findViewById(R.id.play_icon);
+
+        ProgressBar loadingProgress = (ProgressBar) findViewById(R.id.progress_bar);
         mHandler = new Handler();
 
         mWebView.setBackgroundColor(mLoadBackgroundColor);
@@ -224,7 +225,7 @@ public class YoutubeTvView extends FrameLayout {
         mWebView.setPadding(0, 0, 0, 0);
         mWebView.setScrollbarFadingEnabled(true);
 
-        mJavascriptInterface = new JavascriptInterface(mHandler, mLoadingProgress, mWebView);
+        mJavascriptInterface = new JavascriptInterface(mHandler, loadingProgress, playIcon, mWebView);
         mWebView.addJavascriptInterface(mJavascriptInterface, "JSInterface");
 
         mWebView.getSettings().setUserAgentString(mUserAgent.getValue());

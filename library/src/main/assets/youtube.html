@@ -233,7 +233,7 @@
                 break;
             case YT.PlayerState.PLAYING:
                 clearInterval(videoLaunchTimerId);
-                window.JSInterface.hideLoading();
+                window.JSInterface.hideLoading(false);
                 $("#thumbnail_canvas").css("display", "none");
                 $("#video_div").css("display", "block");
                 log(onPlayerStateChange.name, "state changed to YT.PlayerState.PLAYING");
@@ -574,7 +574,7 @@
                     window.JSInterface.startVideo();
                 }, 1000);
             } else {
-                window.JSInterface.hideLoading();
+                window.JSInterface.hideLoading(true);
             }
         }
 
