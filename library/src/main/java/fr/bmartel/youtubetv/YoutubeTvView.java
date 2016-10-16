@@ -58,48 +58,109 @@ public class YoutubeTvView extends FrameLayout {
 
     private final static String TAG = YoutubeTvView.class.getSimpleName();
 
+    /**
+     * User agent string used.
+     */
     private UserAgents mUserAgent;
 
+    /**
+     * Video id.
+     */
     private String mVideoId;
 
-    //https://developers.google.com/youtube/iframe_api_reference#Playback_quality
+    /**
+     * set suggested video quality. (https://developers.google.com/youtube/iframe_api_reference#Playback_quality)
+     */
     private VideoQuality mVideoQuality;
 
-    //check https://developers.google.com/youtube/player_parameters?playerVersion=HTML5
+    /**
+     * show/dont show related video at the end of the video. (check https://developers.google.com/youtube/player_parameters?playerVersion=HTML5)
+     */
     private int mShowRelatedVideos;
 
+    /**
+     * show/hide video info at the beginning of the video.
+     */
     private int mShowVideoInfo;
 
+    /**
+     * show/hide youtube player controls.
+     */
     private VideoControls mShowControls;
 
+    /**
+     * autohide mode for youtube player controls.
+     */
     private VideoAutoHide mAutohide;
 
+    /**
+     * show/hide closed caption.
+     */
     private int mClosedCaptions;
 
+    /**
+     * show/hide video annotation.
+     */
     private int mVideoAnnotation;
 
+    /**
+     * debug mode.
+     */
     private int mDebug;
 
+    /**
+     * actual view width.
+     */
     private int mViewWidth;
 
+    /**
+     * actual view height.
+     */
     private int mViewHeight;
 
+    /**
+     * webview background color.
+     */
     private int mLoadBackgroundColor = YoutubeTvConst.DEFAULT_LOADING_BG;
 
+    /**
+     * Javascript interface.
+     */
     private JavascriptInterface mJavascriptInterface;
 
+    /**
+     * Youtube Webview.
+     */
     private WebView mWebView;
 
+    /**
+     * handler to be used to interact with UI when called from JS.
+     */
     private Handler mHandler;
 
+    /**
+     * autoplay mode.
+     */
     private int mAutoPlay;
 
+    /**
+     * define if border is shown when selecting the frame.
+     */
     private boolean mShowBorder;
 
+    /**
+     * Border width.
+     */
     private int mBorderWidth;
 
+    /**
+     * Border color.
+     */
     private int mBorderColor;
 
+    /**
+     * Thumbnail quality.
+     */
     private ThumbnailQuality mThumbnailQuality;
 
     /**
