@@ -24,6 +24,8 @@
 
 package fr.bmartel.youtubetv;
 
+import android.graphics.Color;
+
 import fr.bmartel.youtubetv.model.UserAgents;
 import fr.bmartel.youtubetv.model.VideoAutoHide;
 import fr.bmartel.youtubetv.model.VideoControls;
@@ -95,5 +97,20 @@ public class YoutubeTvConst {
      * Default user agent string used.
      */
     public final static UserAgents DEFAULT_USER_AGENT = UserAgents.CHROME_IPHONE;
+
+    /**
+     * Show border around webview.
+     */
+    public final static boolean DEFAULT_SHOW_BORDER = false;
+
+    /**
+     * Default border width in dp.
+     */
+    public final static int DEFAULT_BORDER_WIDTH = 2;
+
+    /**
+     * Default border color.
+     */
+    public final static int DEFAULT_BORDER_COLOR = Color.BLUE;
 
 }

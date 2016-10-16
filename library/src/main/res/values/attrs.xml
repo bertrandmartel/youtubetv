@@ -35,5 +35,8 @@
             <enum name="desktop" value="3" />
             <enum name="mobileDesktop" value="4" />
         </attr>
+        <attr name="showBorder" format="boolean" />
+        <attr name="borderWidth" format="integer" />
+        <attr name="borderColor" format="color" />
     </declare-styleable>
 </resources>

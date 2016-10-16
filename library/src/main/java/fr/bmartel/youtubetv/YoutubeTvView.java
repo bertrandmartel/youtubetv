@@ -26,6 +26,10 @@ package fr.bmartel.youtubetv;
 
 import android.content.Context;
 import android.content.res.TypedArray;
+import android.graphics.drawable.Drawable;
+import android.graphics.drawable.DrawableContainer;
+import android.graphics.drawable.GradientDrawable;
+import android.graphics.drawable.StateListDrawable;
 import android.os.Handler;
 import android.util.AttributeSet;
 import android.util.Log;
@@ -90,6 +94,12 @@ public class YoutubeTvView extends FrameLayout {
 
     private int mAutoPlay;
 
+    private boolean mShowBorder;
+
+    private int mBorderWidth;
+
+    private int mBorderColor;
+
     /**
      * Build Custom view.
      *
@@ -151,6 +161,9 @@ public class YoutubeTvView extends FrameLayout {
             mLoadBackgroundColor = styledAttr.getInteger(R.styleable.YoutubeTvView_loadingBackgroundColor, YoutubeTvConst.DEFAULT_LOADING_BG);
             mAutoPlay = styledAttr.getBoolean(R.styleable.YoutubeTvView_autoplay, YoutubeTvConst.DEFAULT_AUTOPLAY) ? 1 : 0;
             mUserAgent = UserAgents.getUserAgent(styledAttr.getInteger(R.styleable.YoutubeTvView_userAgentString, YoutubeTvConst.DEFAULT_USER_AGENT.getIndex()));
+            mShowBorder = styledAttr.getBoolean(R.styleable.YoutubeTvView_showBorder, YoutubeTvConst.DEFAULT_SHOW_BORDER);
+            mBorderWidth = styledAttr.getInteger(R.styleable.YoutubeTvView_borderWidth, YoutubeTvConst.DEFAULT_BORDER_WIDTH);
+            mBorderColor = styledAttr.getColor(R.styleable.YoutubeTvView_borderColor, YoutubeTvConst.DEFAULT_BORDER_COLOR);
         } finally {
             styledAttr.recycle();
         }
@@ -181,6 +194,8 @@ public class YoutubeTvView extends FrameLayout {
     private void init(final Context context) {
 
         inflate(getContext(), R.layout.youtube_view, this);
+
+        setBorder();
 
         mWebView = (WebView) findViewById(R.id.youtube_view);
         mLoadingProgress = (RelativeLayout) findViewById(R.id.loading_progressbar);
@@ -227,6 +242,20 @@ public class YoutubeTvView extends FrameLayout {
         Log.v(TAG, "videoUrl : " + videoUrl);
 
         mWebView.loadUrl(videoUrl);
+    }
+
+    private void setBorder() {
+
+        if (mShowBorder) {
+            FrameLayout layout = (FrameLayout) findViewById(R.id.youtube_frame);
+            layout.setPadding(mBorderWidth, mBorderWidth, mBorderWidth, mBorderWidth);
+            layout.setBackground(getResources().getDrawable(R.drawable.webview_selector));
+            StateListDrawable drawable = (StateListDrawable) layout.getBackground();
+            DrawableContainer.DrawableContainerState drawableContainerState = (DrawableContainer.DrawableContainerState) drawable.getConstantState();
+            Drawable[] children = drawableContainerState.getChildren();
+            GradientDrawable focusedItem = (GradientDrawable) children[0];
+            focusedItem.setStroke(mBorderWidth, mBorderColor);
+        }
     }
 
     /**
