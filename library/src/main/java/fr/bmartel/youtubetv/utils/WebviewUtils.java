@@ -24,7 +24,6 @@
 
 package fr.bmartel.youtubetv.utils;
 
-import android.view.Display;
 import android.webkit.WebView;
 
 /**
@@ -33,13 +32,6 @@ import android.webkit.WebView;
  * @author Bertrand Martel
  */
 public class WebviewUtils {
-
-    public static int getWebviewScale(final Display display) {
-        int width = display.getWidth();
-        Double val = new Double(width) / new Double(1920);
-        val = val * 100d;
-        return val.intValue();
-    }
 
     /**
      * Call javascript functions in webview.

@@ -188,7 +188,6 @@ public class YoutubeTvView extends FrameLayout {
 
         mWebView.setBackgroundColor(mLoadBackgroundColor);
 
-        //Display display = ((WindowManager) context.getSystemService(Context.WINDOW_SERVICE)).getDefaultDisplay();
         int width = getMeasuredWidth();
         int height = getMeasuredHeight();
 
@@ -204,7 +203,6 @@ public class YoutubeTvView extends FrameLayout {
 
         mWebView.setWebChromeClient(new WebChromeClient());
         mWebView.setPadding(0, 0, 0, 0);
-        //mWebView.setInitialScale(WebviewUtils.getWebviewScale(display));
         mWebView.setScrollbarFadingEnabled(true);
 
         mJavascriptInterface = new JavascriptInterface(mHandler, mLoadingProgress, mWebView);
