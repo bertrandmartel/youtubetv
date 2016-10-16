@@ -24,6 +24,7 @@
 
 package fr.bmartel.youtubetv;
 
+import fr.bmartel.youtubetv.model.UserAgents;
 import fr.bmartel.youtubetv.model.VideoAutoHide;
 import fr.bmartel.youtubetv.model.VideoControls;
 import fr.bmartel.youtubetv.model.VideoQuality;
@@ -89,5 +90,10 @@ public class YoutubeTvConst {
      * Default value for autoplay.
      */
     public final static boolean DEFAULT_AUTOPLAY = true;
+
+    /**
+     * Default user agent string used.
+     */
+    public final static UserAgents DEFAULT_USER_AGENT = UserAgents.CHROME_IPHONE;
 
 }

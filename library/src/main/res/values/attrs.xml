@@ -28,5 +28,12 @@
         <attr name="debug" format="boolean" />
         <attr name="loadingBackgroundColor" format="integer" />
         <attr name="autoplay" format="boolean" />
+        <attr name="userAgentString" format="enum">
+            <enum name="auto" value="0" />
+            <enum name="iphone" value="1" />
+            <enum name="ipad" value="2" />
+            <enum name="desktop" value="3" />
+            <enum name="mobileDesktop" value="4" />
+        </attr>
     </declare-styleable>
 </resources>
