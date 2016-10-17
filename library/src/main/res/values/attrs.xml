@@ -45,5 +45,7 @@
             <enum name="sddefault" value="3" />
             <enum name="maxresdefault" value="4" />
         </attr>
+        <attr name="closedCaptionLangPref" format="string" />
+        <attr name="playerLanguage" format="string" />
     </declare-styleable>
 </resources>

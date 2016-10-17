@@ -34,6 +34,8 @@ import android.os.Handler;
 import android.util.AttributeSet;
 import android.util.Log;
 import android.view.KeyEvent;
+import android.webkit.JsPromptResult;
+import android.webkit.JsResult;
 import android.webkit.WebChromeClient;
 import android.webkit.WebSettings;
 import android.webkit.WebView;
@@ -159,6 +161,16 @@ public class YoutubeTvView extends FrameLayout {
     private int mBorderColor;
 
     /**
+     * Closed caption language preference.
+     */
+    private String mClosedCaptionLangPref;
+
+    /**
+     * youtube player languge (http://www.loc.gov/standards/iso639-2/php/code_list.php)
+     */
+    private String mPlayerLanguage;
+
+    /**
      * Thumbnail quality.
      */
     private ThumbnailQuality mThumbnailQuality;
@@ -228,6 +240,8 @@ public class YoutubeTvView extends FrameLayout {
             mBorderWidth = styledAttr.getInteger(R.styleable.YoutubeTvView_borderWidth, YoutubeTvConst.DEFAULT_BORDER_WIDTH);
             mBorderColor = styledAttr.getColor(R.styleable.YoutubeTvView_borderColor, YoutubeTvConst.DEFAULT_BORDER_COLOR);
             mThumbnailQuality = ThumbnailQuality.getThumbnail(styledAttr.getInteger(R.styleable.YoutubeTvView_thumbnailQuality, YoutubeTvConst.DEFAULT_THUMBNAIL_QUALITY.getIndex()));
+            mClosedCaptionLangPref = styledAttr.getString(R.styleable.YoutubeTvView_closedCaptionLangPref);
+            mPlayerLanguage = styledAttr.getString(R.styleable.YoutubeTvView_playerLanguage);
         } finally {
             styledAttr.recycle();
         }
@@ -282,7 +296,26 @@ public class YoutubeTvView extends FrameLayout {
 
         mWebView.setWebViewClient(new WebViewClient());
 
-        mWebView.setWebChromeClient(new WebChromeClient());
+        mWebView.setWebChromeClient(new WebChromeClient() {
+            @Override
+            public boolean onJsAlert(WebView view, String url, String message, JsResult result) {
+                result.cancel();
+                return true;
+            }
+
+            @Override
+            public boolean onJsConfirm(WebView view, String url, String message, JsResult result) {
+                result.cancel();
+                return true;
+            }
+
+            @Override
+            public boolean onJsPrompt(WebView view, String url, String message, String defaultValue, JsPromptResult result) {
+                result.cancel();
+                return true;
+            }
+        });
+
         mWebView.setPadding(0, 0, 0, 0);
         mWebView.setScrollbarFadingEnabled(true);
 
@@ -304,6 +337,8 @@ public class YoutubeTvView extends FrameLayout {
                 "&iv_load_policy=" + mVideoAnnotation +
                 "&autoplay=" + mAutoPlay +
                 "&thumbnailQuality=" + mThumbnailQuality.getValue() +
+                "&cc_lang_pref=" + mClosedCaptionLangPref +
+                "&hl=" + mPlayerLanguage +
                 "&debug=" + mDebug;
 
         Log.v(TAG, "videoUrl : " + videoUrl);
