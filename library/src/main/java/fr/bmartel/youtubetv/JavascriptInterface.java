@@ -31,6 +31,8 @@ import android.webkit.WebView;
 import android.widget.ImageView;
 import android.widget.ProgressBar;
 
+import java.io.IOException;
+
 import fr.bmartel.youtubetv.utils.WebviewUtils;
 
 /**
@@ -113,7 +115,7 @@ public class JavascriptInterface {
      */
     @android.webkit.JavascriptInterface
     public void log(String header, String message) {
-        Log.i(header, message);
+        Log.v(header, message);
     }
 
     /**
@@ -137,6 +139,22 @@ public class JavascriptInterface {
     }
 
     /**
+     * Get thumbnail quality.
+     */
+    @android.webkit.JavascriptInterface
+    public String getThumbnailQuality(final String videoId, final String thumbnailQuality) {
+        String quality = "";
+        try {
+            quality = WebviewUtils.getThumbnailQuality(videoId, thumbnailQuality);
+            Log.v(TAG, "best thumbnail quality is : " + quality);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        return quality;
+    }
+
+
+    /**
      * Called when page is loaded.
      */
     @android.webkit.JavascriptInterface
@@ -146,7 +164,6 @@ public class JavascriptInterface {
             mWebview.post(new Runnable() {
                 @Override
                 public void run() {
-                    Log.v("test", "before setSize");
                     WebviewUtils.callJavaScript(mWebview, "setSize", mViewWidth, mViewHeight);
                 }
             });
