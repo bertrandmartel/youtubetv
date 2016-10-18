@@ -44,6 +44,11 @@ import android.widget.FrameLayout;
 import android.widget.ImageView;
 import android.widget.ProgressBar;
 
+import java.io.IOException;
+import java.io.OutputStream;
+import java.net.HttpURLConnection;
+import java.net.URL;
+
 import fr.bmartel.youtubetv.model.ThumbnailQuality;
 import fr.bmartel.youtubetv.model.UserAgents;
 import fr.bmartel.youtubetv.model.VideoAutoHide;
@@ -341,6 +346,7 @@ public class YoutubeTvView extends FrameLayout {
                 "&hl=" + mPlayerLanguage +
                 "&debug=" + mDebug;
 
+
         Log.v(TAG, "videoUrl : " + videoUrl);
 
         mWebView.loadUrl(videoUrl);
@@ -369,8 +375,6 @@ public class YoutubeTvView extends FrameLayout {
     @Override
     public boolean dispatchKeyEvent(KeyEvent event) {
         boolean dispatchFirst = super.dispatchKeyEvent(event);
-
-        Log.v(TAG, "dispatchKeyEvent : " + event.getAction() + " et " + event.getKeyCode());
 
         if (event.getAction() == KeyEvent.ACTION_DOWN) {
 

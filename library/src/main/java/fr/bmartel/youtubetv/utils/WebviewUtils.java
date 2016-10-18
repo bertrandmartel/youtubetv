@@ -24,7 +24,15 @@
 
 package fr.bmartel.youtubetv.utils;
 
+import android.util.Log;
 import android.webkit.WebView;
+
+import java.io.IOException;
+import java.io.OutputStream;
+import java.net.HttpURLConnection;
+import java.net.URL;
+
+import fr.bmartel.youtubetv.YoutubeTvConst;
 
 /**
  * Utility functions for Webview.
@@ -63,6 +71,60 @@ public class WebviewUtils {
         final String call = stringBuilder.toString();
 
         webView.loadUrl(call);
+    }
+
+    /**
+     * Get youtube thumbnail URL.
+     *
+     * @param videoId youtube video id
+     * @param quality youtube thumbnail quality
+     * @return thumbnail URL
+     */
+    public static String getThumbnailURL(final String videoId, final String quality) {
+        return "http://img.youtube.com/vi/" + videoId + "/" + quality + ".jpg";
+    }
+
+    /**
+     * Get best thumbnail quality from responding thumbnail URL.
+     *
+     * @param videoId          youtube video id
+     * @param suggestedQuality best quality that should match
+     * @return the best quality found
+     * @throws IOException
+     */
+    public static String getThumbnailQuality(final String videoId, final String suggestedQuality) throws IOException {
+
+        boolean check = false;
+        for (int i = 0; i < YoutubeTvConst.THUMBNAIL_QUALITY_LIST.size(); i++) {
+
+            if (suggestedQuality.equals(YoutubeTvConst.THUMBNAIL_QUALITY_LIST.get(i))) {
+                check = true;
+            }
+
+            if (check) {
+                if (isUrlExists(getThumbnailURL(videoId, YoutubeTvConst.THUMBNAIL_QUALITY_LIST.get(i)))) {
+                    return getThumbnailURL(videoId, YoutubeTvConst.THUMBNAIL_QUALITY_LIST.get(i));
+                }
+            }
+        }
+
+        return YoutubeTvConst.DEFAULT_THUMBNAIL_URL;
+    }
+
+    /**
+     * Check if url exists.
+     *
+     * @param url URL to check
+     * @return
+     * @throws IOException
+     */
+    public static boolean isUrlExists(final String url) throws IOException {
+        HttpURLConnection huc = (HttpURLConnection) new URL(url).openConnection();
+        huc.setRequestMethod("GET");
+        huc.connect();
+        int code = huc.getResponseCode();
+        huc.disconnect();
+        return (code != 404);
     }
 
 }

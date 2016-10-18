@@ -380,18 +380,15 @@
     }
 
     var IMG = new Image();
-    IMG.src = 'https://img.youtube.com/vi/' + QueryString.videoId + '/' + QueryString.thumbnailQuality + '.jpg';
 
     IMG.onload = function() {
+
         var thumbnailCanvas = document.getElementById('thumbnail_canvas');
         thumbnailCanvas.width = window.innerWidth;
         thumbnailCanvas.height = window.innerHeight;
         var ctx = thumbnailCanvas.getContext('2d');
         var targetSize = calculateAspectRatioFit2(IMG.width, IMG.height, thumbnailCanvas.width, thumbnailCanvas.height);
         var targetpoint = putImageInMiddle(targetSize.width, targetSize.height, thumbnailCanvas.width, thumbnailCanvas.height);
-        console.log(thumbnailCanvas.width + " et " + thumbnailCanvas.height + " for : " + IMG.width + " et " + IMG.height);
-        console.log("targetpoint : " + targetpoint.x + " et " + targetpoint.y);
-        console.log("targetSize  : " + targetSize.width + " et " + targetSize.height);
         ctx.drawImage(IMG, targetpoint.x, targetpoint.y, targetSize.width, targetSize.height);
     };
 
@@ -402,7 +399,6 @@
      * @param {number} height value
      */
     function setSize(width, height) {
-        console.log("setSize  : " + width + " et " + height);
         viewport = document.querySelector("meta[name=viewport]");
         viewport.setAttribute('content', 'width=' + width + ', height=' + height);
         player.setSize(width, height);
@@ -582,6 +578,13 @@
 
         return false;
     }
+
+    $(document).ready(function() {
+        if (isMobile) {
+            IMG.src = window.JSInterface.getThumbnailQuality(QueryString.videoId, QueryString.thumbnailQuality);
+        }
+    });
+
     </script>
 </head>
 

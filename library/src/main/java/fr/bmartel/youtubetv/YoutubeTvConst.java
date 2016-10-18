@@ -26,6 +26,9 @@ package fr.bmartel.youtubetv;
 
 import android.graphics.Color;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import fr.bmartel.youtubetv.model.ThumbnailQuality;
 import fr.bmartel.youtubetv.model.UserAgents;
 import fr.bmartel.youtubetv.model.VideoAutoHide;
@@ -119,4 +122,21 @@ public class YoutubeTvConst {
      */
     public final static ThumbnailQuality DEFAULT_THUMBNAIL_QUALITY = ThumbnailQuality.MAXRES_DEFAULT;
 
+    /**
+     * Thumbnail quality list (https://gist.github.com/akinaru/052e7f120fcc5cdef771dd28b57ce756).
+     */
+    public final static List<String> THUMBNAIL_QUALITY_LIST = new ArrayList<>();
+
+    static {
+        THUMBNAIL_QUALITY_LIST.add("maxresdefault");
+        THUMBNAIL_QUALITY_LIST.add("sddefault");
+        THUMBNAIL_QUALITY_LIST.add("hqdefault");
+        THUMBNAIL_QUALITY_LIST.add("mqdefault");
+        THUMBNAIL_QUALITY_LIST.add("default");
+    }
+
+    /**
+     * Default thumbnail URL in case no thumbnail is available for videoId.
+     */
+    public final static String DEFAULT_THUMBNAIL_URL = "";
 }
