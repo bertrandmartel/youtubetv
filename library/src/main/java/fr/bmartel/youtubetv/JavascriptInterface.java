@@ -32,7 +32,10 @@ import android.widget.ImageView;
 import android.widget.ProgressBar;
 
 import java.io.IOException;
+import java.util.Iterator;
+import java.util.List;
 
+import fr.bmartel.youtubetv.inter.IVolumeListener;
 import fr.bmartel.youtubetv.utils.WebviewUtils;
 
 /**
@@ -68,6 +71,11 @@ public class JavascriptInterface {
      * Handler instanciated in Webview thread.
      */
     private Handler mHandler;
+
+    /**
+     * List of volume listener that are waiting for the volume value to be returned from JS.
+     */
+    private List<IVolumeListener> volumeListenerList;
 
     /**
      * Build JS interface.
@@ -118,6 +126,17 @@ public class JavascriptInterface {
         Log.v(header, message);
     }
 
+
+    @android.webkit.JavascriptInterface
+    public void onVolumeReceived(final int volume) {
+
+        Iterator<IVolumeListener> iterator = volumeListenerList.iterator();
+        while (iterator.hasNext()) {
+            iterator.next().onVolumeReceived(volume);
+            iterator.remove();
+        }
+    }
+
     /**
      * Hide progress bar.
      */
@@ -161,12 +180,7 @@ public class JavascriptInterface {
     public void onPageLoaded() {
         mLoaded = true;
         if (mWaitLoaded) {
-            mWebview.post(new Runnable() {
-                @Override
-                public void run() {
-                    WebviewUtils.callJavaScript(mWebview, "setSize", mViewWidth, mViewHeight);
-                }
-            });
+            WebviewUtils.callOnWebviewThread(mWebview, "setSize", mViewWidth, mViewHeight);
         }
     }
 
@@ -196,5 +210,14 @@ public class JavascriptInterface {
         mWaitLoaded = true;
         mViewWidth = viewWidth;
         mViewHeight = viewHeight;
+    }
+
+    /**
+     * Add a new volume listener to volume listener list.
+     *
+     * @param volumeListener volume listener
+     */
+    public void addVolumeListener(IVolumeListener volumeListener) {
+        volumeListenerList.add(volumeListener);
     }
 }

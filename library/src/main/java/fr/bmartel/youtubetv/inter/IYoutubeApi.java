@@ -1,0 +1,233 @@
+/*
+ * The MIT License (MIT)
+ * <p/>
+ * Copyright (c) 2016 Bertrand Martel
+ * <p/>
+ * Permission is hereby granted, free of charge, to any person obtaining a copy
+ * of this software and associated documentation files (the "Software"), to deal
+ * in the Software without restriction, including without limitation the rights
+ * to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+ * copies of the Software, and to permit persons to whom the Software is
+ * furnished to do so, subject to the following conditions:
+ * <p/>
+ * The above copyright notice and this permission notice shall be included in
+ * all copies or substantial portions of the Software.
+ * <p/>
+ * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+ * IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+ * FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+ * AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+ * LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+ * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
+ * THE SOFTWARE.
+ */
+package fr.bmartel.youtubetv.inter;
+
+import java.util.List;
+
+import fr.bmartel.youtubetv.model.VideoQuality;
+import fr.bmartel.youtubetv.model.VideoState;
+
+/**
+ * Youtube API interface.
+ *
+ * @author Bertrand Martel
+ */
+public interface IYoutubeApi {
+
+    /**
+     * Plays the currently cued/loaded video.
+     */
+    void playVideo();
+
+    /**
+     * Pauses the currently playing video.
+     */
+    void pauseVideo();
+
+    /**
+     * Play the video if not playing, pause the video if playing.
+     */
+    void playPause();
+
+    /**
+     * Stops and cancels loading of the current video.
+     */
+    void stopVideo();
+
+    /**
+     * Seeks to a specified time in the video.
+     *
+     * @param seconds        identifies the time to which the player should advance
+     * @param allowSeekAhead determines whether the player will make a new request to the server if the seconds parameter specifies a time outside of the currently buffered video data
+     */
+    void seekTo(int seconds, boolean allowSeekAhead);
+
+    /**
+     * Loads and plays the next video in the playlist.
+     */
+    void nextVideo();
+
+    /**
+     * Loads and plays the previous video in the playlist.
+     */
+    void previousVideo();
+
+    /**
+     * Loads and plays the specified video in the playlist.
+     *
+     * @param index playlist index
+     */
+    void playVideoAt(int index);
+
+    /**
+     * Mute player.
+     */
+    void mute();
+
+    /**
+     * Unmute player.
+     */
+    void unMute();
+
+    /**
+     * Check if player is muted.
+     *
+     * @return true if the player is muted, false if not
+     */
+    boolean isMuted();
+
+    /**
+     * Set volume
+     *
+     * @param volume volume value between 0 and 100
+     */
+    void setVolume(int volume);
+
+    /**
+     * Returns the player's current volume, an integer between 0 and 100.
+     *
+     * @return {number} volume between 0 and 100
+     */
+    int getVolume();
+
+    /**
+     * Sets the size in pixels of the <iframe> that contains the player.
+     *
+     * @param width  width valuedrawImage
+     * @param height height value
+     */
+    void setSize(int width, int height);
+
+    /**
+     * Retrieves the playback rate of the currently playing video.
+     *
+     * @return playback rate
+     */
+    int getPlaybackRate();
+
+    /**
+     * Set the playback rate.
+     *
+     * @param suggestedRate the suggested playback rate for the current video
+     */
+    void setPlaybackRate(int suggestedRate);
+
+    /**
+     * List of playback rates in which the current video is available.
+     *
+     * @return the set of playback rates in which the current video is available. The default value is 1, which indicates that the video is playing in normal speed
+     */
+    String getAvailablePlaybackRates();
+
+    /**
+     * Loop the playlist or not.
+     *
+     * @param loopPlaylists indicates whether the video player should continuously play a playlist or if it should stop playing after the last video in the playlist ends
+     */
+    void setLoop(boolean loopPlaylists);
+
+    /**
+     * Shuffle the playlist or not.
+     *
+     * @param shufflePlaylist indicates whether a playlist's videos should be shuffled so that they play back in an order different from the one that the playlist creator designated.
+     */
+    void setShuffle(boolean shufflePlaylist);
+
+    /**
+     * Get video loaded fraction.
+     *
+     * @return a number between 0 and 1 that specifies the percentage of the video that the player shows as buffered
+     */
+    float getVideoLoadedFraction();
+
+    /**
+     * Get current player state.
+     *
+     * @return state of the player
+     */
+    VideoState getPlayerState();
+
+    /**
+     * Get time since video is playing.
+     *
+     * @return elapsed time in seconds since the video started playing
+     */
+    int getCurrentTime();
+
+    /**
+     * Set the suggested video quality for the current video.
+     *
+     * @param suggestedQuality video quality
+     */
+    void setPlaybackQuality(VideoQuality suggestedQuality);
+
+    /**
+     * Get current video quality.
+     *
+     * @return the actual video quality of the current video
+     */
+    VideoQuality getPlaybackQuality();
+
+    /**
+     * Get all available quality levels.
+     *
+     * @return the set of quality formats in which the current video is available
+     */
+    List<VideoQuality> getAvailableQualityLevels();
+
+    /**
+     * Get duration.
+     *
+     * @return the duration in seconds of the currently playing video
+     */
+    int getDuration();
+
+    /**
+     * Get video URL.
+     *
+     * @return {string}  the YouTube.com URL for the currently loaded/playing video
+     */
+    String getVideoUrl();
+
+    /**
+     * Get video embed code.
+     *
+     * @return {string} the embed code for the currently loaded/playing video
+     */
+    String getVideoEmbedCode();
+
+    /**
+     * Get playlist.
+     *
+     * @return an array of the video IDs in the playlist as they are currently ordered
+     */
+    List<String> getPlaylist();
+
+    /**
+     * Get playlist index.
+     *
+     * @return returns the index of the playlist video that is currently playing
+     */
+    int getPlaylistIndex();
+}
