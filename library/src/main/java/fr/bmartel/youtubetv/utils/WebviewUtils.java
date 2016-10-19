@@ -24,11 +24,9 @@
 
 package fr.bmartel.youtubetv.utils;
 
-import android.util.Log;
 import android.webkit.WebView;
 
 import java.io.IOException;
-import java.io.OutputStream;
 import java.net.HttpURLConnection;
 import java.net.URL;
 
@@ -127,4 +125,19 @@ public class WebviewUtils {
         return (code != 404);
     }
 
+    /**
+     * Call javascript functions in webview thread.
+     *
+     * @param webView    webview object
+     * @param methodName function name
+     * @param params     function parameters
+     */
+    public static void callOnWebviewThread(final WebView webView, final String methodName, final Object... params) {
+        webView.post(new Runnable() {
+            @Override
+            public void run() {
+                WebviewUtils.callJavaScript(webView, methodName, params);
+            }
+        });
+    }
 }

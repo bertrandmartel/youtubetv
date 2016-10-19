@@ -359,7 +359,13 @@
      * @return {number} volume between 0 and 100
      */
     function getVolume() {
-        return player.getVolume();
+
+        var volume = player.getVolume();
+        
+        if (isMobile){
+             window.JSInterface.onVolumeReceived(volume);
+        }
+        return volume;
     }
 
     function calculateAspectRatioFit2(srcWidth, srcHeight, maxWidth, maxHeight) {

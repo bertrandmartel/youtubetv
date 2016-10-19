@@ -44,16 +44,16 @@ import android.widget.FrameLayout;
 import android.widget.ImageView;
 import android.widget.ProgressBar;
 
-import java.io.IOException;
-import java.io.OutputStream;
-import java.net.HttpURLConnection;
-import java.net.URL;
+import java.util.List;
 
+import fr.bmartel.youtubetv.inter.IVolumeListener;
+import fr.bmartel.youtubetv.inter.IYoutubeApi;
 import fr.bmartel.youtubetv.model.ThumbnailQuality;
 import fr.bmartel.youtubetv.model.UserAgents;
 import fr.bmartel.youtubetv.model.VideoAutoHide;
 import fr.bmartel.youtubetv.model.VideoControls;
 import fr.bmartel.youtubetv.model.VideoQuality;
+import fr.bmartel.youtubetv.model.VideoState;
 import fr.bmartel.youtubetv.utils.WebviewUtils;
 
 /**
@@ -61,7 +61,7 @@ import fr.bmartel.youtubetv.utils.WebviewUtils;
  *
  * @author Bertrand Martel
  */
-public class YoutubeTvView extends FrameLayout {
+public class YoutubeTvView extends FrameLayout implements IYoutubeApi {
 
     private final static String TAG = YoutubeTvView.class.getSimpleName();
 
@@ -395,5 +395,156 @@ public class YoutubeTvView extends FrameLayout {
             }
         }
         return dispatchFirst;
+    }
+
+    @Override
+    public void playVideo() {
+        WebviewUtils.callOnWebviewThread(mWebView, "playVideo");
+    }
+
+    @Override
+    public void pauseVideo() {
+        WebviewUtils.callOnWebviewThread(mWebView, "pauseVideo");
+    }
+
+    @Override
+    public void playPause() {
+        WebviewUtils.callOnWebviewThread(mWebView, "playPause");
+    }
+
+    @Override
+    public void stopVideo() {
+        WebviewUtils.callOnWebviewThread(mWebView, "stopVideo");
+    }
+
+    @Override
+    public void seekTo(int seconds, boolean allowSeekAhead) {
+        WebviewUtils.callOnWebviewThread(mWebView, "seekTo", seconds, allowSeekAhead);
+    }
+
+    @Override
+    public void nextVideo() {
+        WebviewUtils.callOnWebviewThread(mWebView, "nextVideo");
+    }
+
+    @Override
+    public void previousVideo() {
+        WebviewUtils.callOnWebviewThread(mWebView, "previousVideo");
+    }
+
+    @Override
+    public void playVideoAt(int index) {
+        WebviewUtils.callOnWebviewThread(mWebView, "playVideoAt", index);
+    }
+
+    @Override
+    public void mute() {
+        WebviewUtils.callOnWebviewThread(mWebView, "mute");
+    }
+
+    @Override
+    public void unMute() {
+        WebviewUtils.callOnWebviewThread(mWebView, "unMute");
+    }
+
+    @Override
+    public boolean isMuted() {
+        return false;
+    }
+
+    @Override
+    public void setVolume(int volume) {
+        WebviewUtils.callOnWebviewThread(mWebView, "setVolume", volume);
+    }
+
+    @Override
+    public void getVolume(IVolumeListener volumeListener) {
+        mJavascriptInterface.addVolumeListener(volumeListener);
+        WebviewUtils.callOnWebviewThread(mWebView, "getVolume");
+    }
+
+    @Override
+    public void setSize(int width, int height) {
+        WebviewUtils.callOnWebviewThread(mWebView, "setSize", width, height);
+    }
+
+    @Override
+    public int getPlaybackRate() {
+        return 0;
+    }
+
+    @Override
+    public void setPlaybackRate(int suggestedRate) {
+        WebviewUtils.callOnWebviewThread(mWebView, "setPlaybackRate", suggestedRate);
+    }
+
+    @Override
+    public String getAvailablePlaybackRates() {
+        return null;
+    }
+
+    @Override
+    public void setLoop(boolean loopPlaylists) {
+        WebviewUtils.callOnWebviewThread(mWebView, "setLoop", loopPlaylists);
+    }
+
+    @Override
+    public void setShuffle(boolean shufflePlaylist) {
+        WebviewUtils.callOnWebviewThread(mWebView, "setShuffle", shufflePlaylist);
+    }
+
+    @Override
+    public float getVideoLoadedFraction() {
+        return 0;
+    }
+
+    @Override
+    public VideoState getPlayerState() {
+        return null;
+    }
+
+    @Override
+    public int getCurrentTime() {
+        return 0;
+    }
+
+    @Override
+    public void setPlaybackQuality(VideoQuality suggestedQuality) {
+        WebviewUtils.callOnWebviewThread(mWebView, "setPlaybackQuality", suggestedQuality.getValue());
+    }
+
+    @Override
+    public VideoQuality getPlaybackQuality() {
+        return null;
+    }
+
+    @Override
+    public List<VideoQuality> getAvailableQualityLevels() {
+        return null;
+    }
+
+    @Override
+    public int getDuration() {
+        return 0;
+    }
+
+    @Override
+    public String getVideoUrl() {
+        return null;
+    }
+
+    @Override
+    public String getVideoEmbedCode() {
+        return null;
+    }
+
+    @Override
+    public List<String> getPlaylist() {
+        return null;
+    }
+
+    @Override
+    public int getPlaylistIndex() {
+        return 0;
     }
 }
