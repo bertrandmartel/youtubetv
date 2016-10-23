@@ -187,6 +187,9 @@ public class JavascriptInterface {
 
     private String mVideoUrl;
 
+    private String mVideoId;
+    private String mVideoTitle;
+
     private String mEmbedCode;
 
     private int mPlaylistIndex;
@@ -327,6 +330,20 @@ public class JavascriptInterface {
         if (mLock != null) {
             mLock.open();
         }
+    }
+
+    @android.webkit.JavascriptInterface
+    public void onVideoIdReceived(final String videoId) {
+        Log.i(TAG, "onVideoIdReceived");
+        mVideoId = videoId;
+        mLock.open();
+    }
+
+    @android.webkit.JavascriptInterface
+    public void onVideoTitleReceived(final String videoTitle) {
+        Log.i(TAG, "onVideoTitleReceived");
+        mVideoTitle = videoTitle;
+        mLock.open();
     }
 
     @android.webkit.JavascriptInterface
@@ -546,4 +563,11 @@ public class JavascriptInterface {
         return mPlaylist;
     }
 
+    public String getVideoId() {
+        return mVideoId;
+    }
+
+    public String getVideoTitle() {
+        return mVideoTitle;
+    }
 }

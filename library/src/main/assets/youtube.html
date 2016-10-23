@@ -295,6 +295,26 @@
     }
 
     /**
+     * Get current video Id.
+     * @return {string} video ID
+     */
+    function getVideoId() {
+        if (isMobile) {
+            window.JSInterface.onVideoIdReceived(player.getVideoData()['video_id']);
+        }
+    }
+
+    /**
+     * Get current video Title.
+     * @return {string} video Title
+     */
+    function getVideoTitle() {
+        if (isMobile) {
+            window.JSInterface.onVideoTitleReceived(player.getVideoData().title);
+        }
+    }
+
+    /**
      * Seeks to a specified time in the video.
      * 
      * @param  {number} identifies the time to which the player should advance
