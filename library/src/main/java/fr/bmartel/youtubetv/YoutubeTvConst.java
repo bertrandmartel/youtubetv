@@ -123,6 +123,11 @@ public class YoutubeTvConst {
     public final static ThumbnailQuality DEFAULT_THUMBNAIL_QUALITY = ThumbnailQuality.MAXRES_DEFAULT;
 
     /**
+     * Default value for javascript timeout in milliseconds.
+     */
+    public final static int DEFAULT_JAVASCRIPT_TIMEOUT = 1500;
+
+    /**
      * Thumbnail quality list (https://gist.github.com/akinaru/052e7f120fcc5cdef771dd28b57ce756).
      */
     public final static List<String> THUMBNAIL_QUALITY_LIST = new ArrayList<>();

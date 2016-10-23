@@ -30,6 +30,7 @@ import android.graphics.drawable.Drawable;
 import android.graphics.drawable.DrawableContainer;
 import android.graphics.drawable.GradientDrawable;
 import android.graphics.drawable.StateListDrawable;
+import android.os.ConditionVariable;
 import android.os.Handler;
 import android.util.AttributeSet;
 import android.util.Log;
@@ -44,10 +45,10 @@ import android.widget.FrameLayout;
 import android.widget.ImageView;
 import android.widget.ProgressBar;
 
+import java.util.ArrayList;
 import java.util.List;
 
-import fr.bmartel.youtubetv.inter.IVolumeListener;
-import fr.bmartel.youtubetv.inter.IYoutubeApi;
+import fr.bmartel.youtubetv.listener.IPlayerListener;
 import fr.bmartel.youtubetv.model.ThumbnailQuality;
 import fr.bmartel.youtubetv.model.UserAgents;
 import fr.bmartel.youtubetv.model.VideoAutoHide;
@@ -171,6 +172,11 @@ public class YoutubeTvView extends FrameLayout implements IYoutubeApi {
     private String mClosedCaptionLangPref;
 
     /**
+     * Playlist ID for the loaded video.
+     */
+    private String mPlaylistId;
+
+    /**
      * youtube player languge (http://www.loc.gov/standards/iso639-2/php/code_list.php)
      */
     private String mPlayerLanguage;
@@ -179,6 +185,23 @@ public class YoutubeTvView extends FrameLayout implements IYoutubeApi {
      * Thumbnail quality.
      */
     private ThumbnailQuality mThumbnailQuality;
+
+    /**
+     * condition variable used to lock JS call that return data.
+     */
+    private ConditionVariable mBlock = new ConditionVariable();
+
+    /**
+     * Javascript call timeout in milliseconds.
+     */
+    private int mJavascriptTimeout = YoutubeTvConst.DEFAULT_JAVASCRIPT_TIMEOUT;
+
+    /**
+     * List of player listener.
+     */
+    private List<IPlayerListener> mPlayerListenerList = new ArrayList<>();
+
+    private final Object mLock = new Object();
 
     /**
      * Build Custom view.
@@ -247,6 +270,8 @@ public class YoutubeTvView extends FrameLayout implements IYoutubeApi {
             mThumbnailQuality = ThumbnailQuality.getThumbnail(styledAttr.getInteger(R.styleable.YoutubeTvView_thumbnailQuality, YoutubeTvConst.DEFAULT_THUMBNAIL_QUALITY.getIndex()));
             mClosedCaptionLangPref = styledAttr.getString(R.styleable.YoutubeTvView_closedCaptionLangPref);
             mPlayerLanguage = styledAttr.getString(R.styleable.YoutubeTvView_playerLanguage);
+            mJavascriptTimeout = styledAttr.getInteger(R.styleable.YoutubeTvView_javascriptTimeout, YoutubeTvConst.DEFAULT_JAVASCRIPT_TIMEOUT);
+            mPlaylistId = styledAttr.getString(R.styleable.YoutubeTvView_playlistId);
         } finally {
             styledAttr.recycle();
         }
@@ -324,7 +349,7 @@ public class YoutubeTvView extends FrameLayout implements IYoutubeApi {
         mWebView.setPadding(0, 0, 0, 0);
         mWebView.setScrollbarFadingEnabled(true);
 
-        mJavascriptInterface = new JavascriptInterface(mHandler, loadingProgress, playIcon, mWebView);
+        mJavascriptInterface = new JavascriptInterface(mPlayerListenerList, mHandler, loadingProgress, playIcon, mWebView);
         mWebView.addJavascriptInterface(mJavascriptInterface, "JSInterface");
 
         mWebView.getSettings().setUserAgentString(mUserAgent.getValue());
@@ -344,6 +369,7 @@ public class YoutubeTvView extends FrameLayout implements IYoutubeApi {
                 "&thumbnailQuality=" + mThumbnailQuality.getValue() +
                 "&cc_lang_pref=" + mClosedCaptionLangPref +
                 "&hl=" + mPlayerLanguage +
+                "&playlist_id=" + mPlaylistId +
                 "&debug=" + mDebug;
 
 
@@ -448,8 +474,15 @@ public class YoutubeTvView extends FrameLayout implements IYoutubeApi {
     }
 
     @Override
-    public boolean isMuted() {
-        return false;
+    public boolean isMuted() throws InterruptedException {
+        synchronized (mLock) {
+            mBlock = new ConditionVariable();
+            mJavascriptInterface.setBlock(mBlock);
+            Log.i(TAG, "getMute");
+            WebviewUtils.callOnWebviewThread(mWebView, "isMuted");
+            mBlock.block(mJavascriptTimeout);
+        }
+        return mJavascriptInterface.isMuted();
     }
 
     @Override
@@ -458,9 +491,16 @@ public class YoutubeTvView extends FrameLayout implements IYoutubeApi {
     }
 
     @Override
-    public void getVolume(IVolumeListener volumeListener) {
-        mJavascriptInterface.addVolumeListener(volumeListener);
-        WebviewUtils.callOnWebviewThread(mWebView, "getVolume");
+    public int getVolume() throws InterruptedException {
+        synchronized (mLock) {
+            mBlock = new ConditionVariable();
+            mJavascriptInterface.setBlock(mBlock);
+            Log.i(TAG, "getVolume");
+            Log.i(TAG, "before");
+            WebviewUtils.callOnWebviewThread(mWebView, "getVolume");
+            mBlock.block(mJavascriptTimeout);
+        }
+        return mJavascriptInterface.getVolume();
     }
 
     @Override
@@ -469,8 +509,15 @@ public class YoutubeTvView extends FrameLayout implements IYoutubeApi {
     }
 
     @Override
-    public int getPlaybackRate() {
-        return 0;
+    public int getPlaybackRate() throws InterruptedException {
+        synchronized (mLock) {
+            mBlock = new ConditionVariable();
+            mJavascriptInterface.setBlock(mBlock);
+            Log.i(TAG, "getPlaybackRate");
+            WebviewUtils.callOnWebviewThread(mWebView, "getPlaybackRate");
+            mBlock.block(mJavascriptTimeout);
+        }
+        return mJavascriptInterface.getPlaybackRate();
     }
 
     @Override
@@ -479,8 +526,15 @@ public class YoutubeTvView extends FrameLayout implements IYoutubeApi {
     }
 
     @Override
-    public String getAvailablePlaybackRates() {
-        return null;
+    public List<Integer> getAvailablePlaybackRates() throws InterruptedException {
+        synchronized (mLock) {
+            mBlock = new ConditionVariable();
+            mJavascriptInterface.setBlock(mBlock);
+            Log.i(TAG, "getAvailablePlaybackRates");
+            WebviewUtils.callOnWebviewThread(mWebView, "getAvailablePlaybackRateList");
+            mBlock.block(mJavascriptTimeout);
+        }
+        return mJavascriptInterface.getAvailablePlaybackRates();
     }
 
     @Override
@@ -495,17 +549,38 @@ public class YoutubeTvView extends FrameLayout implements IYoutubeApi {
 
     @Override
     public float getVideoLoadedFraction() {
-        return 0;
+        synchronized (mLock) {
+            mBlock = new ConditionVariable();
+            mJavascriptInterface.setBlock(mBlock);
+            Log.i(TAG, "getVideoLoadedFraction");
+            WebviewUtils.callOnWebviewThread(mWebView, "getVideoLoadedFraction");
+            mBlock.block(mJavascriptTimeout);
+        }
+        return mJavascriptInterface.getVideoLoadedFraction();
     }
 
     @Override
     public VideoState getPlayerState() {
-        return null;
+        synchronized (mLock) {
+            mBlock = new ConditionVariable();
+            mJavascriptInterface.setBlock(mBlock);
+            Log.i(TAG, "getPlayerState");
+            WebviewUtils.callOnWebviewThread(mWebView, "getPlayerState");
+            mBlock.block(mJavascriptTimeout);
+        }
+        return mJavascriptInterface.getPlayerState();
     }
 
     @Override
-    public int getCurrentTime() {
-        return 0;
+    public float getCurrentTime() {
+        synchronized (mLock) {
+            mBlock = new ConditionVariable();
+            mJavascriptInterface.setBlock(mBlock);
+            Log.i(TAG, "getCurrentTime");
+            WebviewUtils.callOnWebviewThread(mWebView, "getCurrentTime");
+            mBlock.block(mJavascriptTimeout);
+        }
+        return mJavascriptInterface.getCurrentTime();
     }
 
     @Override
@@ -515,36 +590,103 @@ public class YoutubeTvView extends FrameLayout implements IYoutubeApi {
 
     @Override
     public VideoQuality getPlaybackQuality() {
-        return null;
+        synchronized (mLock) {
+            mBlock = new ConditionVariable();
+            mJavascriptInterface.setBlock(mBlock);
+            Log.i(TAG, "getPlaybackQuality");
+            WebviewUtils.callOnWebviewThread(mWebView, "getPlaybackQuality");
+            mBlock.block(mJavascriptTimeout);
+        }
+        return mJavascriptInterface.getPlaybackQuality();
     }
 
     @Override
     public List<VideoQuality> getAvailableQualityLevels() {
-        return null;
+        synchronized (mLock) {
+            mBlock = new ConditionVariable();
+            mJavascriptInterface.setBlock(mBlock);
+            Log.i(TAG, "getAvailableQualityLevels");
+            WebviewUtils.callOnWebviewThread(mWebView, "getAvailableQualityLevels");
+            mBlock.block(mJavascriptTimeout);
+        }
+        return mJavascriptInterface.getAvailableQualityLevels();
     }
 
     @Override
-    public int getDuration() {
-        return 0;
+    public float getDuration() {
+        synchronized (mLock) {
+            mBlock = new ConditionVariable();
+            mJavascriptInterface.setBlock(mBlock);
+            Log.i(TAG, "getDuration");
+            WebviewUtils.callOnWebviewThread(mWebView, "getDuration");
+            mBlock.block(mJavascriptTimeout);
+        }
+        return mJavascriptInterface.getDuration();
     }
 
     @Override
     public String getVideoUrl() {
-        return null;
+        synchronized (mLock) {
+            mBlock = new ConditionVariable();
+            mJavascriptInterface.setBlock(mBlock);
+            Log.i(TAG, "getVideoUrl");
+            WebviewUtils.callOnWebviewThread(mWebView, "getVideoUrl");
+            mBlock.block(mJavascriptTimeout);
+        }
+        return mJavascriptInterface.getVideoUrl();
     }
 
     @Override
     public String getVideoEmbedCode() {
-        return null;
+        synchronized (mLock) {
+            mBlock = new ConditionVariable();
+            mJavascriptInterface.setBlock(mBlock);
+            Log.i(TAG, "getVideoEmbedCode");
+            WebviewUtils.callOnWebviewThread(mWebView, "getVideoEmbedCode");
+            mBlock.block(mJavascriptTimeout);
+        }
+        return mJavascriptInterface.getVideoEmbedCode();
     }
 
     @Override
     public List<String> getPlaylist() {
-        return null;
+        synchronized (mLock) {
+            mBlock = new ConditionVariable();
+            mJavascriptInterface.setBlock(mBlock);
+            Log.i(TAG, "getPlaylist");
+            WebviewUtils.callOnWebviewThread(mWebView, "getPlaylist");
+            mBlock.block(mJavascriptTimeout);
+        }
+        return mJavascriptInterface.getPlaylist();
     }
 
     @Override
     public int getPlaylistIndex() {
-        return 0;
+        synchronized (mLock) {
+            mBlock = new ConditionVariable();
+            mJavascriptInterface.setBlock(mBlock);
+            Log.i(TAG, "getPlaylistIndex");
+            WebviewUtils.callOnWebviewThread(mWebView, "getPlaylistIndex");
+            mBlock.block(mJavascriptTimeout);
+        }
+        return mJavascriptInterface.getPlaylistIndex();
+    }
+
+    /**
+     * Add a player listener.
+     *
+     * @param listener
+     */
+    public void addPlayerListener(final IPlayerListener listener) {
+        mPlayerListenerList.add(listener);
+    }
+
+    /**
+     * Remove player listener.
+     *
+     * @param listener
+     */
+    public void removePlayerListener(final IPlayerListener listener) {
+        mPlayerListenerList.remove(listener);
     }
 }

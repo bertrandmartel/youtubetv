@@ -21,7 +21,7 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
  * THE SOFTWARE.
  */
-package fr.bmartel.youtubetv.inter;
+package fr.bmartel.youtubetv;
 
 import java.util.List;
 
@@ -95,7 +95,7 @@ public interface IYoutubeApi {
      *
      * @return true if the player is muted, false if not
      */
-    boolean isMuted();
+    boolean isMuted() throws InterruptedException;
 
     /**
      * Set volume
@@ -109,7 +109,7 @@ public interface IYoutubeApi {
      *
      * @return {number} volume between 0 and 100
      */
-    int getVolume();
+    int getVolume() throws InterruptedException;
 
     /**
      * Sets the size in pixels of the <iframe> that contains the player.
@@ -124,7 +124,7 @@ public interface IYoutubeApi {
      *
      * @return playback rate
      */
-    int getPlaybackRate();
+    int getPlaybackRate() throws InterruptedException;
 
     /**
      * Set the playback rate.
@@ -138,7 +138,7 @@ public interface IYoutubeApi {
      *
      * @return the set of playback rates in which the current video is available. The default value is 1, which indicates that the video is playing in normal speed
      */
-    String getAvailablePlaybackRates();
+    List<Integer> getAvailablePlaybackRates() throws InterruptedException;
 
     /**
      * Loop the playlist or not.
@@ -173,7 +173,7 @@ public interface IYoutubeApi {
      *
      * @return elapsed time in seconds since the video started playing
      */
-    int getCurrentTime();
+    float getCurrentTime();
 
     /**
      * Set the suggested video quality for the current video.
@@ -201,7 +201,7 @@ public interface IYoutubeApi {
      *
      * @return the duration in seconds of the currently playing video
      */
-    int getDuration();
+    float getDuration();
 
     /**
      * Get video URL.

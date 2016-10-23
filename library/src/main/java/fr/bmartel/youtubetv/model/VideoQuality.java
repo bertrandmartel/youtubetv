@@ -32,13 +32,16 @@ package fr.bmartel.youtubetv.model;
  */
 public enum VideoQuality {
 
-    SMALL(0, "small"),
-    MEDIUM(1, "medium"),
-    LARGE(2, "large"),
-    HD_720(3, "hd720"),
-    HD_1080(4, "hd1080"),
-    HIGH_RES(5, "highres"),
-    DEFAULT(6, "default");
+    AUTO(0, "auto"),
+    TINY(1, "tiny"),
+    SMALL(2, "small"),
+    MEDIUM(3, "medium"),
+    LARGE(4, "large"),
+    HD_720(5, "hd720"),
+    HD_1080(6, "hd1080"),
+    HIGH_RES(7, "highres"),
+    HD_1440(8, "hd1440"),
+    HD_2160(9, "hd2160");
 
     private String mValue;
     private int mIndex;
@@ -62,7 +65,16 @@ public enum VideoQuality {
             if (value == quality.getIndex())
                 return quality;
         }
-        return DEFAULT;
+        return AUTO;
+    }
+
+    public static VideoQuality getVideoQuality(String value) {
+
+        for (VideoQuality quality : VideoQuality.values()) {
+            if (value.equals(quality.getValue()))
+                return quality;
+        }
+        return AUTO;
     }
 
 }

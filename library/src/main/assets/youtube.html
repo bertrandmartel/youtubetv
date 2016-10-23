@@ -43,6 +43,7 @@
     /* The Overlay (background) */
     
     .overlay {
+        display: none;
         /* Height & width depends on how you want to reveal the overlay (see JS below) */
         height: 60%;
         width: 35%;
@@ -128,20 +129,20 @@
      */
     function updateDebugMode() {
         if (debug == 1) {
-            var state = getPlayerState();
+            var state = player.getPlayerState();
             document.getElementById('videoState').innerHTML = getVideoStateStr(state) + " (" + state + ")";
-            document.getElementById('videoQuality').innerHTML = getPlaybackQuality();
-            document.getElementById('videoVolume').innerHTML = getVolume();
-            document.getElementById('videoCurrentTime').innerHTML = getCurrentTime();
-            document.getElementById('videoPlaybackRate').innerHTML = getPlaybackRate();
-            document.getElementById('videoAvailablePlaybackRates').innerHTML = getAvailablePlaybackRates();
-            document.getElementById('videoLoadedFraction').innerHTML = getVideoLoadedFraction();
-            document.getElementById('videoAvailableQualityLevels').innerHTML = getAvailableQualityLevels();
-            document.getElementById('videoDuration').innerHTML = getDuration();
-            document.getElementById('videoURL').innerHTML = getVideoUrl();
-            document.getElementById('videoEmbedCode').innerHTML = getVideoEmbedCode();
-            document.getElementById('videoPlaylist').innerHTML = getPlaylist();
-            document.getElementById('videoPlaylistIndex').innerHTML = getPlaylistIndex();
+            document.getElementById('videoQuality').innerHTML = player.getPlaybackQuality();
+            document.getElementById('videoVolume').innerHTML = player.getVolume();
+            document.getElementById('videoCurrentTime').innerHTML = player.getCurrentTime();
+            document.getElementById('videoPlaybackRate').innerHTML = player.getPlaybackRate();
+            document.getElementById('videoAvailablePlaybackRates').innerHTML = JSON.stringify(player.getAvailablePlaybackRates());
+            document.getElementById('videoLoadedFraction').innerHTML = player.getVideoLoadedFraction();
+            document.getElementById('videoAvailableQualityLevels').innerHTML = JSON.stringify(player.getAvailableQualityLevels());
+            document.getElementById('videoDuration').innerHTML = player.getDuration();
+            document.getElementById('videoURL').innerHTML = player.getVideoUrl();
+            document.getElementById('videoEmbedCode').innerHTML = player.getVideoEmbedCode();
+            document.getElementById('videoPlaylist').innerHTML = JSON.stringify(player.getPlaylist());
+            document.getElementById('videoPlaylistIndex').innerHTML = player.getPlaylistIndex();
         }
     }
 
@@ -184,14 +185,15 @@
 
         debug = QueryString.debug;
 
-        if (debug == 0) {
-            document.getElementById('debugWindow').style.display = 'none';
+        if (debug == 1) {
+            document.getElementById('debugWindow').style.display = 'block';
         }
 
         player = new YT.Player('player', {
             height: QueryString.playerHeight,
             width: QueryString.playerWidth,
             suggestedQuality: QueryString.videoQuality,
+            videoId: QueryString.videoId,
             playerVars: {
                 rel: QueryString.rel,
                 showinfo: QueryString.showinfo,
@@ -201,14 +203,15 @@
                 iv_load_policy: QueryString.iv_load_policy,
                 cc_lang_pref: QueryString.cc_lang_pref,
                 hl: QueryString.hl,
-                enablejsapi: 1
+                enablejsapi: 1,
+                listType: 'playlist',
+                list: QueryString.playlist_id
             },
             events: {
                 'onReady': onPlayerReady,
                 'onStateChange': onPlayerStateChange
             }
         });
-        log(onYouTubeIframeAPIReady.name, "after setting player");
         if (isMobile) {
             window.JSInterface.onPageLoaded();
         }
@@ -253,7 +256,7 @@
                 log(onPlayerStateChange.name, "state changed to " + event.data);
                 break;
         }
-
+        window.JSInterface.onPlayerStateChange(event.data);
         //window.JSInterface.log(event.data);
     }
 
@@ -275,7 +278,7 @@
      * Play the video if not playing, pause the video if playing.
      */
     function playPause() {
-        if (getPlayerState() == YT.PlayerState.PLAYING) {
+        if (player.getPlayerState() == YT.PlayerState.PLAYING) {
             pauseVideo();
         } else {
             playVideo();
@@ -341,7 +344,9 @@
      * @return {boolean} true if the player is muted, false if not
      */
     function isMuted() {
-        return player.isMuted();
+        if (isMobile) {
+            window.JSInterface.onMuteReceived(player.isMuted());
+        }
     }
 
     /**
@@ -359,13 +364,9 @@
      * @return {number} volume between 0 and 100
      */
     function getVolume() {
-
-        var volume = player.getVolume();
-        
-        if (isMobile){
-             window.JSInterface.onVolumeReceived(volume);
+        if (isMobile) {
+            window.JSInterface.onVolumeReceived(player.getVolume());
         }
-        return volume;
     }
 
     function calculateAspectRatioFit2(srcWidth, srcHeight, maxWidth, maxHeight) {
@@ -416,7 +417,9 @@
      * @return {number} playback rate
      */
     function getPlaybackRate() {
-        return player.getPlaybackRate();
+        if (isMobile) {
+            window.JSInterface.onPlaybackRateReceived(player.getPlaybackRate());
+        }
     }
 
     /**
@@ -433,8 +436,10 @@
      * 
      * @return {string} the set of playback rates in which the current video is available. The default value is 1, which indicates that the video is playing in normal speed
      */
-    function getAvailablePlaybackRates() {
-        return JSON.stringify(player.getAvailablePlaybackRates());
+    function getAvailablePlaybackRateList() {
+        if (isMobile) {
+            window.JSInterface.onPlaybackRatesListReceived(JSON.stringify(player.getAvailablePlaybackRates()));
+        }
     }
 
     /**
@@ -461,7 +466,9 @@
      * @return {number} a number between 0 and 1 that specifies the percentage of the video that the player shows as buffered
      */
     function getVideoLoadedFraction() {
-        return player.getVideoLoadedFraction();
+        if (isMobile) {
+            window.JSInterface.onVideoLoadedFractionReceived(player.getVideoLoadedFraction());
+        }
     }
 
     /**
@@ -470,7 +477,9 @@
      * @return {number} state of the player
      */
     function getPlayerState() {
-        return player.getPlayerState();
+        if (isMobile) {
+            window.JSInterface.onPlayerStateReceived(player.getPlayerState());
+        }
     }
 
     /**
@@ -479,7 +488,9 @@
      * @return {number} elapsed time in seconds since the video started playing
      */
     function getCurrentTime() {
-        return player.getCurrentTime();
+        if (isMobile) {
+            window.JSInterface.onCurrentTimeReceived(player.getCurrentTime());
+        }
     }
 
     /**
@@ -497,7 +508,9 @@
      * @return {string} the actual video quality of the current video
      */
     function getPlaybackQuality() {
-        return player.getPlaybackQuality();
+        if (isMobile) {
+            window.JSInterface.onPlaybackQualityReceived(player.getPlaybackQuality());
+        }
     }
 
     /**
@@ -506,7 +519,9 @@
      * @return {string} the set of quality formats in which the current video is available
      */
     function getAvailableQualityLevels() {
-        return JSON.stringify(player.getAvailableQualityLevels());
+        if (isMobile) {
+            window.JSInterface.onAvailableQualityLevelsReceived(JSON.stringify(player.getAvailableQualityLevels()));
+        }
     }
 
     /**
@@ -515,7 +530,9 @@
      * @return {number} the duration in seconds of the currently playing video
      */
     function getDuration() {
-        return player.getDuration();
+        if (isMobile) {
+            window.JSInterface.onDurationReceived(player.getDuration());
+        }
     }
 
     /**
@@ -524,7 +541,9 @@
      * @return {string}  the YouTube.com URL for the currently loaded/playing video
      */
     function getVideoUrl() {
-        return player.getVideoUrl();
+        if (isMobile) {
+            window.JSInterface.onVideoUrlReceived(player.getVideoUrl());
+        }
     }
 
     /**
@@ -533,7 +552,9 @@
      * @return {string} the embed code for the currently loaded/playing video
      */
     function getVideoEmbedCode() {
-        return player.getVideoEmbedCode();
+        if (isMobile) {
+            window.JSInterface.onVideoEmbedCodeReceived(player.getVideoEmbedCode());
+        }
     }
 
     /**
@@ -542,7 +563,9 @@
      * @return {string} an array of the video IDs in the playlist as they are currently ordered
      */
     function getPlaylist() {
-        return JSON.stringify(player.getPlaylist());
+        if (isMobile) {
+            window.JSInterface.onPlaylistReceived(JSON.stringify(player.getPlaylist()));
+        }
     }
 
     /**
@@ -551,7 +574,9 @@
      * @return {number} returns the index of the playlist video that is currently playing
      */
     function getPlaylistIndex() {
-        return player.getPlaylistIndex();
+        if (isMobile) {
+            window.JSInterface.onPlaylistIndexReceived(player.getPlaylistIndex());
+        }
     }
 
     // when ready, wait for clicks
@@ -566,7 +591,7 @@
         iframe = document.getElementById('player');
 
         log(onPlayerReady.name, "before loadVideo " + QueryString.videoQuality);
-        loadVideo();
+        //loadVideo();
 
         if (isMobile) {
 
@@ -580,6 +605,7 @@
             } else {
                 window.JSInterface.hideLoading(true);
             }
+            window.JSInterface.onPlayerReady();
         }
 
         return false;
@@ -590,7 +616,6 @@
             IMG.src = window.JSInterface.getThumbnailQuality(QueryString.videoId, QueryString.thumbnailQuality);
         }
     });
-
     </script>
 </head>
 
