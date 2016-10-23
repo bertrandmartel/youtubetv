@@ -24,6 +24,7 @@
 
 package fr.bmartel.youtubetv;
 
+import android.media.session.PlaybackState;
 import android.os.ConditionVariable;
 import android.os.Handler;
 import android.util.Log;
@@ -117,10 +118,19 @@ public class JavascriptInterface {
     private float mDuration;
 
     /**
+     * define if media session should rebuild media info (if play->pause or pause->play).
+     */
+    private boolean rebuildMedia = true;
+
+    /**
      * List of player listener.
      */
     private List<IPlayerListener> mPlayerListenerList = new ArrayList<>();
     private ConditionVariable block;
+
+    private YoutubeTvView mYoutubeTvView;
+
+    private String suggestedThumbnailQuality = YoutubeTvConst.DEFAULT_THUMBNAIL_QUALITY.getValue();
 
     /**
      * Build JS interface.
@@ -133,12 +143,16 @@ public class JavascriptInterface {
                                final Handler handler,
                                final ProgressBar loadingBar,
                                final ImageView playIcon,
-                               final WebView webView) {
+                               final WebView webView,
+                               final YoutubeTvView youtubeTvView,
+                               final String suggestedThumbnailQuality) {
         this.mPlayerListenerList = playerListenerList;
         this.mWebview = webView;
         this.mLoadingProgress = loadingBar;
         this.mHandler = handler;
         this.mPlayIcon = playIcon;
+        mYoutubeTvView = youtubeTvView;
+        this.suggestedThumbnailQuality = suggestedThumbnailQuality;
     }
 
     /**
@@ -214,12 +228,57 @@ public class JavascriptInterface {
     }
 
     @android.webkit.JavascriptInterface
-    public void onPlayerStateChange(final int state) {
+    public void onPlayerStateChange(final int state,
+                                    final long position,
+                                    final float speed,
+                                    final String title,
+                                    final String videoId) {
         new Thread(new Runnable() {
             @Override
             public void run() {
+
+                final VideoState videoState = VideoState.getPlayerState(state);
+
+                int playbackState = PlaybackState.STATE_STOPPED;
+
+                switch (videoState) {
+                    case UNSTARTED:
+                        rebuildMedia = true;
+                        playbackState = PlaybackState.STATE_STOPPED;
+                        break;
+                    case ENDED:
+                        rebuildMedia = true;
+                        playbackState = PlaybackState.STATE_STOPPED;
+                        break;
+                    case PLAYING:
+                        rebuildMedia = false;
+                        playbackState = PlaybackState.STATE_PLAYING;
+                        break;
+                    case PAUSED:
+                        rebuildMedia = false;
+                        playbackState = PlaybackState.STATE_PAUSED;
+                        break;
+                    case BUFFERING:
+                        rebuildMedia = true;
+                        playbackState = PlaybackState.STATE_BUFFERING;
+                        break;
+                    case VIDEO_CUED:
+                        rebuildMedia = true;
+                        playbackState = PlaybackState.STATE_PLAYING;
+                        break;
+                }
+
+                String thumbnailUrl = WebviewUtils.getThumbnailURL(videoId, suggestedThumbnailQuality);
+                try {
+                    thumbnailUrl = WebviewUtils.getThumbnailQuality(videoId, suggestedThumbnailQuality);
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+
+                WebviewUtils.updateMediaSession(rebuildMedia, mYoutubeTvView.getMediaSession(), thumbnailUrl, playbackState, position, speed, title);
+
                 for (IPlayerListener listener : mPlayerListenerList) {
-                    listener.onPlayerStateChange(VideoState.getPlayerState(state));
+                    listener.onPlayerStateChange(videoState, position, speed, title);
                 }
             }
         }).start();
@@ -486,4 +545,5 @@ public class JavascriptInterface {
     public List<String> getPlaylist() {
         return mPlaylist;
     }
+
 }

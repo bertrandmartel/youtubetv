@@ -256,8 +256,11 @@
                 log(onPlayerStateChange.name, "state changed to " + event.data);
                 break;
         }
-        window.JSInterface.onPlayerStateChange(event.data);
-        //window.JSInterface.log(event.data);
+
+        window.JSInterface.onPlayerStateChange(event.data, player.getCurrentTime() * 1000,
+            player.getPlaybackRate(),
+            player.getVideoData().title,
+            player.getVideoData()['video_id']);
     }
 
     /**

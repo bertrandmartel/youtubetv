@@ -25,11 +25,13 @@
 package fr.bmartel.youtubetv;
 
 import android.content.Context;
+import android.content.Intent;
 import android.content.res.TypedArray;
 import android.graphics.drawable.Drawable;
 import android.graphics.drawable.DrawableContainer;
 import android.graphics.drawable.GradientDrawable;
 import android.graphics.drawable.StateListDrawable;
+import android.media.session.MediaSession;
 import android.os.ConditionVariable;
 import android.os.Handler;
 import android.util.AttributeSet;
@@ -203,6 +205,10 @@ public class YoutubeTvView extends FrameLayout implements IYoutubeApi {
 
     private final Object mLock = new Object();
 
+    private MediaSession mMediaSession;
+
+    private final static String MEDIA_SESSION_TAG = "fr.bmartel.youtubetv.MediaSession";
+
     /**
      * Build Custom view.
      *
@@ -349,10 +355,32 @@ public class YoutubeTvView extends FrameLayout implements IYoutubeApi {
         mWebView.setPadding(0, 0, 0, 0);
         mWebView.setScrollbarFadingEnabled(true);
 
-        mJavascriptInterface = new JavascriptInterface(mPlayerListenerList, mHandler, loadingProgress, playIcon, mWebView);
+        mJavascriptInterface = new JavascriptInterface(mPlayerListenerList,
+                mHandler,
+                loadingProgress,
+                playIcon,
+                mWebView,
+                this,
+                mThumbnailQuality.getValue());
+
         mWebView.addJavascriptInterface(mJavascriptInterface, "JSInterface");
 
         mWebView.getSettings().setUserAgentString(mUserAgent.getValue());
+
+        mMediaSession = new MediaSession(context, MEDIA_SESSION_TAG);
+        mMediaSession.setCallback(new MediaSession.Callback() {
+            @Override
+            public boolean onMediaButtonEvent(Intent mediaButtonIntent) {
+                // Consume the media button event here. Should not send it to other apps.
+                return true;
+            }
+        });
+        mMediaSession.setFlags(MediaSession.FLAG_HANDLES_MEDIA_BUTTONS |
+                MediaSession.FLAG_HANDLES_TRANSPORT_CONTROLS);
+
+        if (!mMediaSession.isActive()) {
+            mMediaSession.setActive(true);
+        }
 
         final String videoUrl = "file:///android_asset/youtube.html" +
                 "?videoId=" + mVideoId +
@@ -688,5 +716,9 @@ public class YoutubeTvView extends FrameLayout implements IYoutubeApi {
      */
     public void removePlayerListener(final IPlayerListener listener) {
         mPlayerListenerList.remove(listener);
+    }
+
+    public MediaSession getMediaSession() {
+        return mMediaSession;
     }
 }

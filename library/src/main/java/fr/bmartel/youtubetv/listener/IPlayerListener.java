@@ -19,6 +19,6 @@ public interface IPlayerListener {
      *
      * @param state player state
      */
-    void onPlayerStateChange(VideoState state);
+    void onPlayerStateChange(VideoState state, long position, float speed, String title);
 
 }
