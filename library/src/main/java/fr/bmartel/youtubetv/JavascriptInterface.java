@@ -24,6 +24,7 @@
 
 package fr.bmartel.youtubetv;
 
+import android.os.ConditionVariable;
 import android.os.Handler;
 import android.util.Log;
 import android.view.View;
@@ -32,10 +33,12 @@ import android.widget.ImageView;
 import android.widget.ProgressBar;
 
 import java.io.IOException;
-import java.util.Iterator;
+import java.util.ArrayList;
 import java.util.List;
 
-import fr.bmartel.youtubetv.inter.IVolumeListener;
+import fr.bmartel.youtubetv.listener.IPlayerListener;
+import fr.bmartel.youtubetv.model.VideoQuality;
+import fr.bmartel.youtubetv.model.VideoState;
 import fr.bmartel.youtubetv.utils.WebviewUtils;
 
 /**
@@ -72,10 +75,52 @@ public class JavascriptInterface {
      */
     private Handler mHandler;
 
+
     /**
-     * List of volume listener that are waiting for the volume value to be returned from JS.
+     * Lock used to wait for Javascript task completion.
      */
-    private List<IVolumeListener> volumeListenerList;
+    private ConditionVariable mLock;
+
+    /**
+     * Player temporary volume value.
+     */
+    private int mVolume;
+
+    /**
+     * Player temporary muted state.
+     */
+    private boolean mMuted;
+
+    /**
+     * Player playback rate.
+     */
+    private int mPlaybackRate;
+
+    /**
+     * Player state.
+     */
+    private VideoState mPlayerState;
+
+    /**
+     * playback rates list.
+     */
+    private List<Integer> mAvailablePlaybackRates = new ArrayList<>();
+
+    /**
+     * playlist containing videoId.
+     */
+    private List<String> mPlaylist = new ArrayList<>();
+
+    /**
+     * video duration.
+     */
+    private float mDuration;
+
+    /**
+     * List of player listener.
+     */
+    private List<IPlayerListener> mPlayerListenerList = new ArrayList<>();
+    private ConditionVariable block;
 
     /**
      * Build JS interface.
@@ -84,7 +129,12 @@ public class JavascriptInterface {
      * @param loadingBar layout containing the progress bar
      * @param webView    Webview object
      */
-    public JavascriptInterface(final Handler handler, final ProgressBar loadingBar, final ImageView playIcon, final WebView webView) {
+    public JavascriptInterface(final List<IPlayerListener> playerListenerList,
+                               final Handler handler,
+                               final ProgressBar loadingBar,
+                               final ImageView playIcon,
+                               final WebView webView) {
+        this.mPlayerListenerList = playerListenerList;
         this.mWebview = webView;
         this.mLoadingProgress = loadingBar;
         this.mHandler = handler;
@@ -107,6 +157,29 @@ public class JavascriptInterface {
     private int mViewHeight;
 
     /**
+     * video loaded fraction.
+     */
+    private float mVideoLoadedFraction;
+
+    /**
+     * video current time.
+     */
+    private float mCurrentTime;
+
+    /**
+     * video quality.
+     */
+    private VideoQuality mPlaybackQuality;
+
+    private String mVideoUrl;
+
+    private String mEmbedCode;
+
+    private int mPlaylistIndex;
+
+    private List<VideoQuality> mAvailableQualityLevels = new ArrayList<>();
+
+    /**
      * check if pageLoad callback has been called.
      *
      * @return
@@ -126,16 +199,142 @@ public class JavascriptInterface {
         Log.v(header, message);
     }
 
+    @android.webkit.JavascriptInterface
+    public void onPlayerReady() {
+
+        new Thread(new Runnable() {
+            @Override
+            public void run() {
+                for (IPlayerListener listener : mPlayerListenerList) {
+                    listener.onPlayerReady();
+                }
+            }
+        }).start();
+
+    }
+
+    @android.webkit.JavascriptInterface
+    public void onPlayerStateChange(final int state) {
+        new Thread(new Runnable() {
+            @Override
+            public void run() {
+                for (IPlayerListener listener : mPlayerListenerList) {
+                    listener.onPlayerStateChange(VideoState.getPlayerState(state));
+                }
+            }
+        }).start();
+    }
+
+    @android.webkit.JavascriptInterface
+    public void onMuteReceived(final boolean muted) {
+        Log.i(TAG, "onMuteReceived");
+        mMuted = muted;
+        if (mLock != null) {
+            mLock.open();
+        }
+    }
 
     @android.webkit.JavascriptInterface
     public void onVolumeReceived(final int volume) {
-
-        Iterator<IVolumeListener> iterator = volumeListenerList.iterator();
-        while (iterator.hasNext()) {
-            iterator.next().onVolumeReceived(volume);
-            iterator.remove();
+        Log.i(TAG, "onVolumeReceived");
+        mVolume = volume;
+        if (mLock != null) {
+            mLock.open();
         }
     }
+
+    @android.webkit.JavascriptInterface
+    public void onVideoLoadedFractionReceived(final float fraction) {
+        Log.i(TAG, "onVideoLoadedFractionReceived");
+        mVideoLoadedFraction = fraction;
+        if (mLock != null) {
+            mLock.open();
+        }
+    }
+
+    @android.webkit.JavascriptInterface
+    public void onPlaybackRateReceived(final int playbackRate) {
+        Log.i(TAG, "onPlaybackRateReceived");
+        mPlaybackRate = playbackRate;
+        if (mLock != null) {
+            mLock.open();
+        }
+    }
+
+    @android.webkit.JavascriptInterface
+    public void onPlayerStateReceived(final int playerState) {
+        Log.i(TAG, "onPlayerStateReceived");
+        mPlayerState = VideoState.getPlayerState(playerState);
+        if (mLock != null) {
+            mLock.open();
+        }
+    }
+
+    @android.webkit.JavascriptInterface
+    public void onCurrentTimeReceived(final float currentTime) {
+        Log.i(TAG, "onCurrentTimeReceived");
+        mCurrentTime = currentTime;
+        mLock.open();
+    }
+
+    @android.webkit.JavascriptInterface
+    public void onPlaybackQualityReceived(final String videoQuality) {
+        Log.i(TAG, "onPlaybackQualityReceived");
+        mPlaybackQuality = VideoQuality.getVideoQuality(videoQuality);
+        mLock.open();
+    }
+
+    @android.webkit.JavascriptInterface
+    public void onPlaylistIndexReceived(final int playListIndex) {
+        Log.i(TAG, "onPlaylistIndexReceived");
+        mPlaylistIndex = playListIndex;
+        mLock.open();
+    }
+
+    @android.webkit.JavascriptInterface
+    public void onPlaylistReceived(final String playlist) {
+        Log.i(TAG, "onPlaylistReceived");
+        mPlaylist = WebviewUtils.parsePlaylist(playlist);
+        mLock.open();
+    }
+
+    @android.webkit.JavascriptInterface
+    public void onPlaybackRatesListReceived(final String playbackRates) {
+        mAvailablePlaybackRates = WebviewUtils.parsePlaybackRates(playbackRates);
+        if (mLock != null) {
+            mLock.open();
+        }
+    }
+
+    @android.webkit.JavascriptInterface
+    public void onDurationReceived(final float duration) {
+        Log.i(TAG, "onDurationReceived");
+        mDuration = duration;
+        mLock.open();
+    }
+
+    @android.webkit.JavascriptInterface
+    public void onVideoUrlReceived(final String videoUrl) {
+        Log.i(TAG, "onVideoUrlReceived");
+        mVideoUrl = videoUrl;
+        mLock.open();
+    }
+
+    @android.webkit.JavascriptInterface
+    public void onVideoEmbedCodeReceived(final String embedCode) {
+        Log.i(TAG, "onVideoEmbedCodeReceived");
+        mEmbedCode = embedCode;
+        mLock.open();
+    }
+
+    @android.webkit.JavascriptInterface
+    public void onAvailableQualityLevelsReceived(final String qualityLevels) {
+        mAvailableQualityLevels = WebviewUtils.parseQualityLevels(qualityLevels);
+        if (mLock != null) {
+            mLock.open();
+        }
+    }
+
 
     /**
      * Hide progress bar.
@@ -165,7 +364,6 @@ public class JavascriptInterface {
         String quality = "";
         try {
             quality = WebviewUtils.getThumbnailQuality(videoId, thumbnailQuality);
-            Log.v(TAG, "best thumbnail quality is : " + quality);
         } catch (IOException e) {
             e.printStackTrace();
         }
@@ -189,9 +387,6 @@ public class JavascriptInterface {
      */
     @android.webkit.JavascriptInterface
     public void startVideo() {
-
-        Log.v(TAG, "start video");
-
         mWebview.post(new Runnable() {
             @Override
             public void run() {
@@ -213,11 +408,82 @@ public class JavascriptInterface {
     }
 
     /**
-     * Add a new volume listener to volume listener list.
+     * Get temporary player volume value.
      *
-     * @param volumeListener volume listener
+     * @return
      */
-    public void addVolumeListener(IVolumeListener volumeListener) {
-        volumeListenerList.add(volumeListener);
+    public int getVolume() {
+        return mVolume;
+    }
+
+    /**
+     * Get player muted state.
+     *
+     * @return
+     */
+    public boolean isMuted() {
+        return mMuted;
+    }
+
+    /**
+     * Get player playback rate.
+     *
+     * @return
+     */
+    public int getPlaybackRate() {
+        return mPlaybackRate;
+    }
+
+    /**
+     * Get available playback rates list.
+     *
+     * @return
+     */
+    public List<Integer> getAvailablePlaybackRates() {
+        return mAvailablePlaybackRates;
+    }
+
+    public float getVideoLoadedFraction() {
+        return mVideoLoadedFraction;
+    }
+
+    public VideoState getPlayerState() {
+        return mPlayerState;
+    }
+
+    public float getCurrentTime() {
+        return mCurrentTime;
+    }
+
+    public void setBlock(final ConditionVariable lock) {
+        this.mLock = lock;
+    }
+
+    public VideoQuality getPlaybackQuality() {
+        return mPlaybackQuality;
+    }
+
+    public List<VideoQuality> getAvailableQualityLevels() {
+        return mAvailableQualityLevels;
+    }
+
+    public float getDuration() {
+        return mDuration;
+    }
+
+    public String getVideoUrl() {
+        return mVideoUrl;
+    }
+
+    public String getVideoEmbedCode() {
+        return mEmbedCode;
+    }
+
+    public int getPlaylistIndex() {
+        return mPlaylistIndex;
+    }
+
+    public List<String> getPlaylist() {
+        return mPlaylist;
     }
 }

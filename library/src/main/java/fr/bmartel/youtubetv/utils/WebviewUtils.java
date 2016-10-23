@@ -24,13 +24,20 @@
 
 package fr.bmartel.youtubetv.utils;
 
+import android.util.Log;
 import android.webkit.WebView;
+
+import org.json.JSONArray;
+import org.json.JSONException;
 
 import java.io.IOException;
 import java.net.HttpURLConnection;
 import java.net.URL;
+import java.util.ArrayList;
+import java.util.List;
 
 import fr.bmartel.youtubetv.YoutubeTvConst;
+import fr.bmartel.youtubetv.model.VideoQuality;
 
 /**
  * Utility functions for Webview.
@@ -139,5 +146,59 @@ public class WebviewUtils {
                 WebviewUtils.callJavaScript(webView, methodName, params);
             }
         });
+    }
+
+    public static List<Integer> parsePlaybackRates(String playbackRates) {
+        List<Integer> playBackList = new ArrayList<>();
+
+        if (playbackRates != null && !playbackRates.isEmpty()) {
+            try {
+                JSONArray playBackArr = new JSONArray(playbackRates);
+
+                for (int i = 0; i < playBackArr.length(); i++) {
+                    playBackList.add(playBackArr.getInt(i));
+                }
+            } catch (JSONException e) {
+                e.printStackTrace();
+            }
+        }
+        return playBackList;
+    }
+
+    public static List<VideoQuality> parseQualityLevels(String qualityLevels) {
+        List<VideoQuality> qualityLevelList = new ArrayList<>();
+
+        if (qualityLevels != null && !qualityLevels.isEmpty()) {
+            try {
+                JSONArray playBackArr = new JSONArray(qualityLevels);
+
+                for (int i = 0; i < playBackArr.length(); i++) {
+                    qualityLevelList.add(VideoQuality.getVideoQuality(playBackArr.getString(i)));
+                }
+            } catch (JSONException e) {
+                e.printStackTrace();
+            }
+        }
+        return qualityLevelList;
+    }
+
+    public static List<String> parsePlaylist(String playlist) {
+
+        List<String> playlistRet = new ArrayList<>();
+
+        if (playlist != null && !playlist.isEmpty() && !playlist.equals("null")) {
+
+            Log.i("test", "playlist : " + playlist);
+            try {
+                JSONArray playBackArr = new JSONArray(playlist);
+
+                for (int i = 0; i < playBackArr.length(); i++) {
+                    playlistRet.add(playBackArr.getString(i));
+                }
+            } catch (JSONException e) {
+                e.printStackTrace();
+            }
+        }
+        return playlistRet;
     }
 }
