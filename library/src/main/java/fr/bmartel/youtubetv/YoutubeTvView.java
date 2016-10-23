@@ -700,6 +700,30 @@ public class YoutubeTvView extends FrameLayout implements IYoutubeApi {
         return mJavascriptInterface.getPlaylistIndex();
     }
 
+    @Override
+    public String getVideoId() {
+        synchronized (mLock) {
+            mBlock = new ConditionVariable();
+            mJavascriptInterface.setBlock(mBlock);
+            Log.i(TAG, "getVideoId");
+            WebviewUtils.callOnWebviewThread(mWebView, "getVideoId");
+            mBlock.block(mJavascriptTimeout);
+        }
+        return mJavascriptInterface.getVideoId();
+    }
+
+    @Override
+    public String getVideoTitle() {
+        synchronized (mLock) {
+            mBlock = new ConditionVariable();
+            mJavascriptInterface.setBlock(mBlock);
+            Log.i(TAG, "getVideoTitle");
+            WebviewUtils.callOnWebviewThread(mWebView, "getVideoTitle");
+            mBlock.block(mJavascriptTimeout);
+        }
+        return mJavascriptInterface.getVideoTitle();
+    }
+
     /**
      * Add a player listener.
      *

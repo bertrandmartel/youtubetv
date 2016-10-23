@@ -230,4 +230,18 @@ public interface IYoutubeApi {
      * @return returns the index of the playlist video that is currently playing
      */
     int getPlaylistIndex();
+
+    /**
+     * Get Youtube current video ID.
+     *
+     * @return
+     */
+    String getVideoId();
+
+    /**
+     * Get Youtube current video title.
+     *
+     * @return
+     */
+    String getVideoTitle();
 }
