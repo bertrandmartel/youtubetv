@@ -52,5 +52,6 @@
         <attr name="closedCaptionLangPref" format="string" />
         <attr name="playerLanguage" format="string" />
         <attr name="javascriptTimeout" format="integer" />
+        <attr name="showNowPlayingCard" format="boolean" />
     </declare-styleable>
 </resources>

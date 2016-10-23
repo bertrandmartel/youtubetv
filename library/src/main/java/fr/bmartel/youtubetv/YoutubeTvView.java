@@ -219,6 +219,11 @@ public class YoutubeTvView extends FrameLayout implements IYoutubeApi {
     private final static String MEDIA_SESSION_TAG = "fr.bmartel.youtubetv.MediaSession";
 
     /**
+     * define if now playing card is shown or not.
+     */
+    private boolean mShowNowPlayingCard;
+
+    /**
      * Build Custom view.
      *
      * @param context android context
@@ -287,6 +292,7 @@ public class YoutubeTvView extends FrameLayout implements IYoutubeApi {
             mPlayerLanguage = styledAttr.getString(R.styleable.YoutubeTvView_playerLanguage);
             mJavascriptTimeout = styledAttr.getInteger(R.styleable.YoutubeTvView_javascriptTimeout, YoutubeTvConst.DEFAULT_JAVASCRIPT_TIMEOUT);
             mPlaylistId = styledAttr.getString(R.styleable.YoutubeTvView_playlistId);
+            mShowNowPlayingCard = styledAttr.getBoolean(R.styleable.YoutubeTvView_showNowPlayingCard, YoutubeTvConst.DEFAULT_SHOW_NOWPLAYINGCARD);
         } finally {
             styledAttr.recycle();
         }
@@ -376,19 +382,21 @@ public class YoutubeTvView extends FrameLayout implements IYoutubeApi {
 
         mWebView.getSettings().setUserAgentString(mUserAgent.getValue());
 
-        mMediaSession = new MediaSession(context, MEDIA_SESSION_TAG);
-        mMediaSession.setCallback(new MediaSession.Callback() {
-            @Override
-            public boolean onMediaButtonEvent(Intent mediaButtonIntent) {
-                // Consume the media button event here. Should not send it to other apps.
-                return true;
-            }
-        });
-        mMediaSession.setFlags(MediaSession.FLAG_HANDLES_MEDIA_BUTTONS |
-                MediaSession.FLAG_HANDLES_TRANSPORT_CONTROLS);
+        if (mShowNowPlayingCard) {
+            mMediaSession = new MediaSession(context, MEDIA_SESSION_TAG);
+            mMediaSession.setCallback(new MediaSession.Callback() {
+                @Override
+                public boolean onMediaButtonEvent(Intent mediaButtonIntent) {
+                    // Consume the media button event here. Should not send it to other apps.
+                    return true;
+                }
+            });
+            mMediaSession.setFlags(MediaSession.FLAG_HANDLES_MEDIA_BUTTONS |
+                    MediaSession.FLAG_HANDLES_TRANSPORT_CONTROLS);
 
-        if (!mMediaSession.isActive()) {
-            mMediaSession.setActive(true);
+            if (!mMediaSession.isActive()) {
+                mMediaSession.setActive(true);
+            }
         }
 
         final String videoUrl = "file:///android_asset/youtube.html" +
@@ -741,5 +749,14 @@ public class YoutubeTvView extends FrameLayout implements IYoutubeApi {
      */
     public MediaSession getMediaSession() {
         return mMediaSession;
+    }
+
+    /**
+     * Check if now playing card is to be shown.
+     *
+     * @return
+     */
+    public boolean isShowingNowPlayingCard() {
+        return mShowNowPlayingCard;
     }
 }

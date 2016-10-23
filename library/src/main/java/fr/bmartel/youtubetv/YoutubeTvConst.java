@@ -132,6 +132,11 @@ public class YoutubeTvConst {
      */
     public final static List<String> THUMBNAIL_QUALITY_LIST = new ArrayList<>();
 
+    /**
+     * Show now playing card for YoutubeView.
+     */
+    public static final boolean DEFAULT_SHOW_NOWPLAYINGCARD = true;
+
     static {
         THUMBNAIL_QUALITY_LIST.add("maxresdefault");
         THUMBNAIL_QUALITY_LIST.add("sddefault");
