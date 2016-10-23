@@ -118,9 +118,9 @@ public class JavascriptInterface {
     private float mDuration;
 
     /**
-     * define if media session should rebuild media info (if play->pause or pause->play).
+     * define if last state was pause or play.
      */
-    private boolean rebuildMedia = true;
+    private boolean previousPlayPause;
 
     /**
      * List of player listener.
@@ -270,43 +270,54 @@ public class JavascriptInterface {
 
                 final VideoState videoState = VideoState.getPlayerState(state);
 
-                int playbackState = PlaybackState.STATE_STOPPED;
+                if (mYoutubeTvView.isShowingNowPlayingCard()) {
+                    
+                    int playbackState = PlaybackState.STATE_STOPPED;
 
-                switch (videoState) {
-                    case UNSTARTED:
-                        rebuildMedia = true;
-                        playbackState = PlaybackState.STATE_STOPPED;
-                        break;
-                    case ENDED:
-                        rebuildMedia = true;
-                        playbackState = PlaybackState.STATE_STOPPED;
-                        break;
-                    case PLAYING:
-                        rebuildMedia = false;
-                        playbackState = PlaybackState.STATE_PLAYING;
-                        break;
-                    case PAUSED:
-                        rebuildMedia = false;
-                        playbackState = PlaybackState.STATE_PAUSED;
-                        break;
-                    case BUFFERING:
-                        rebuildMedia = true;
-                        playbackState = PlaybackState.STATE_BUFFERING;
-                        break;
-                    case VIDEO_CUED:
-                        rebuildMedia = true;
-                        playbackState = PlaybackState.STATE_PLAYING;
-                        break;
+                    boolean rebuildMedia = true;
+
+                    switch (videoState) {
+                        case UNSTARTED:
+                            previousPlayPause = false;
+                            playbackState = PlaybackState.STATE_STOPPED;
+                            break;
+                        case ENDED:
+                            previousPlayPause = false;
+                            playbackState = PlaybackState.STATE_STOPPED;
+                            break;
+                        case PLAYING:
+                            if (previousPlayPause) {
+                                rebuildMedia = false;
+                            }
+                            previousPlayPause = true;
+                            playbackState = PlaybackState.STATE_PLAYING;
+                            break;
+                        case PAUSED:
+                            if (previousPlayPause) {
+                                rebuildMedia = false;
+                            }
+                            previousPlayPause = true;
+                            playbackState = PlaybackState.STATE_PAUSED;
+                            break;
+                        case BUFFERING:
+                            previousPlayPause = false;
+                            playbackState = PlaybackState.STATE_BUFFERING;
+                            break;
+                        case VIDEO_CUED:
+                            previousPlayPause = false;
+                            playbackState = PlaybackState.STATE_PLAYING;
+                            break;
+                    }
+
+                    String thumbnailUrl = WebviewUtils.getThumbnailURL(videoId, suggestedThumbnailQuality);
+                    try {
+                        thumbnailUrl = WebviewUtils.getThumbnailQuality(videoId, suggestedThumbnailQuality);
+                    } catch (IOException e) {
+                        e.printStackTrace();
+                    }
+
+                    WebviewUtils.updateMediaSession(rebuildMedia, mYoutubeTvView.getMediaSession(), thumbnailUrl, playbackState, position, speed, title);
                 }
-
-                String thumbnailUrl = WebviewUtils.getThumbnailURL(videoId, suggestedThumbnailQuality);
-                try {
-                    thumbnailUrl = WebviewUtils.getThumbnailQuality(videoId, suggestedThumbnailQuality);
-                } catch (IOException e) {
-                    e.printStackTrace();
-                }
-
-                WebviewUtils.updateMediaSession(rebuildMedia, mYoutubeTvView.getMediaSession(), thumbnailUrl, playbackState, position, speed, title);
 
                 for (IPlayerListener listener : mPlayerListenerList) {
                     listener.onPlayerStateChange(videoState, position, speed);
