@@ -29,7 +29,6 @@ import android.graphics.BitmapFactory;
 import android.media.MediaMetadata;
 import android.media.session.MediaSession;
 import android.media.session.PlaybackState;
-import android.util.Log;
 import android.webkit.WebView;
 
 import org.json.JSONArray;
@@ -193,7 +192,6 @@ public class WebviewUtils {
 
         if (playlist != null && !playlist.isEmpty() && !playlist.equals("null")) {
 
-            Log.i("test", "playlist : " + playlist);
             try {
                 JSONArray playBackArr = new JSONArray(playlist);
 
@@ -221,7 +219,7 @@ public class WebviewUtils {
                 URL url = new URL(thumbnailUrl);
                 bitmap = BitmapFactory.decodeStream(url.openConnection().getInputStream());
             } catch (IOException e) {
-                System.out.println(e);
+                e.printStackTrace();
             }
 
             MediaMetadata.Builder mediaBuilder = new MediaMetadata.Builder();

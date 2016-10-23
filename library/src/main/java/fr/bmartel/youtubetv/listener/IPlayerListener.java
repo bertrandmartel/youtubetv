@@ -17,8 +17,10 @@ public interface IPlayerListener {
     /**
      * Called when player state change.
      *
-     * @param state player state
+     * @param state    video state
+     * @param position video position in milliseconds
+     * @param speed    video speed (playback rate)
      */
-    void onPlayerStateChange(VideoState state, long position, float speed, String title);
+    void onPlayerStateChange(VideoState state, long position, float speed);
 
 }

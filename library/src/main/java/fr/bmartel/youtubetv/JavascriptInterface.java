@@ -126,34 +126,16 @@ public class JavascriptInterface {
      * List of player listener.
      */
     private List<IPlayerListener> mPlayerListenerList = new ArrayList<>();
-    private ConditionVariable block;
-
-    private YoutubeTvView mYoutubeTvView;
-
-    private String suggestedThumbnailQuality = YoutubeTvConst.DEFAULT_THUMBNAIL_QUALITY.getValue();
 
     /**
-     * Build JS interface.
-     *
-     * @param handler    Webview handler
-     * @param loadingBar layout containing the progress bar
-     * @param webView    Webview object
+     * Youtube TV view.
      */
-    public JavascriptInterface(final List<IPlayerListener> playerListenerList,
-                               final Handler handler,
-                               final ProgressBar loadingBar,
-                               final ImageView playIcon,
-                               final WebView webView,
-                               final YoutubeTvView youtubeTvView,
-                               final String suggestedThumbnailQuality) {
-        this.mPlayerListenerList = playerListenerList;
-        this.mWebview = webView;
-        this.mLoadingProgress = loadingBar;
-        this.mHandler = handler;
-        this.mPlayIcon = playIcon;
-        mYoutubeTvView = youtubeTvView;
-        this.suggestedThumbnailQuality = suggestedThumbnailQuality;
-    }
+    private YoutubeTvView mYoutubeTvView;
+
+    /**
+     * Suggested thumbnail quality to be used for preview & for now playing card.
+     */
+    private String suggestedThumbnailQuality = YoutubeTvConst.DEFAULT_THUMBNAIL_QUALITY.getValue();
 
     /**
      * Variable to check if onWindowFocusChanged has been called.
@@ -185,16 +167,62 @@ public class JavascriptInterface {
      */
     private VideoQuality mPlaybackQuality;
 
+    /**
+     * current video URL.
+     */
     private String mVideoUrl;
 
+    /**
+     * current video ID.
+     */
     private String mVideoId;
+
+    /**
+     * current video Title.
+     */
     private String mVideoTitle;
 
+    /**
+     * video embed code.
+     */
     private String mEmbedCode;
 
+    /**
+     * current playlist index.
+     */
     private int mPlaylistIndex;
 
+    /**
+     * list featuring available quality for the current video.
+     */
     private List<VideoQuality> mAvailableQualityLevels = new ArrayList<>();
+
+    /**
+     * Build JS interface.
+     *
+     * @param playerListenerList        reference to list of player listener
+     * @param handler                   Webview handler
+     * @param loadingBar                layout containing the progress bar
+     * @param playIcon                  overlay icon used to play the video when clicked
+     * @param webView                   Webview object
+     * @param youtubeTvView             YoutubeTv view
+     * @param suggestedThumbnailQuality suggested quality for thumbnail
+     */
+    public JavascriptInterface(final List<IPlayerListener> playerListenerList,
+                               final Handler handler,
+                               final ProgressBar loadingBar,
+                               final ImageView playIcon,
+                               final WebView webView,
+                               final YoutubeTvView youtubeTvView,
+                               final String suggestedThumbnailQuality) {
+        this.mPlayerListenerList = playerListenerList;
+        this.mWebview = webView;
+        this.mLoadingProgress = loadingBar;
+        this.mHandler = handler;
+        this.mPlayIcon = playIcon;
+        mYoutubeTvView = youtubeTvView;
+        this.suggestedThumbnailQuality = suggestedThumbnailQuality;
+    }
 
     /**
      * check if pageLoad callback has been called.
@@ -281,7 +309,7 @@ public class JavascriptInterface {
                 WebviewUtils.updateMediaSession(rebuildMedia, mYoutubeTvView.getMediaSession(), thumbnailUrl, playbackState, position, speed, title);
 
                 for (IPlayerListener listener : mPlayerListenerList) {
-                    listener.onPlayerStateChange(videoState, position, speed, title);
+                    listener.onPlayerStateChange(videoState, position, speed);
                 }
             }
         }).start();
@@ -289,7 +317,6 @@ public class JavascriptInterface {
 
     @android.webkit.JavascriptInterface
     public void onMuteReceived(final boolean muted) {
-        Log.i(TAG, "onMuteReceived");
         mMuted = muted;
         if (mLock != null) {
             mLock.open();
@@ -298,7 +325,6 @@ public class JavascriptInterface {
 
     @android.webkit.JavascriptInterface
     public void onVolumeReceived(final int volume) {
-        Log.i(TAG, "onVolumeReceived");
         mVolume = volume;
         if (mLock != null) {
             mLock.open();
@@ -307,7 +333,6 @@ public class JavascriptInterface {
 
     @android.webkit.JavascriptInterface
     public void onVideoLoadedFractionReceived(final float fraction) {
-        Log.i(TAG, "onVideoLoadedFractionReceived");
         mVideoLoadedFraction = fraction;
         if (mLock != null) {
             mLock.open();
@@ -316,7 +341,6 @@ public class JavascriptInterface {
 
     @android.webkit.JavascriptInterface
     public void onPlaybackRateReceived(final int playbackRate) {
-        Log.i(TAG, "onPlaybackRateReceived");
         mPlaybackRate = playbackRate;
         if (mLock != null) {
             mLock.open();
@@ -325,7 +349,6 @@ public class JavascriptInterface {
 
     @android.webkit.JavascriptInterface
     public void onPlayerStateReceived(final int playerState) {
-        Log.i(TAG, "onPlayerStateReceived");
         mPlayerState = VideoState.getPlayerState(playerState);
         if (mLock != null) {
             mLock.open();
@@ -334,42 +357,36 @@ public class JavascriptInterface {
 
     @android.webkit.JavascriptInterface
     public void onVideoIdReceived(final String videoId) {
-        Log.i(TAG, "onVideoIdReceived");
         mVideoId = videoId;
         mLock.open();
     }
 
     @android.webkit.JavascriptInterface
     public void onVideoTitleReceived(final String videoTitle) {
-        Log.i(TAG, "onVideoTitleReceived");
         mVideoTitle = videoTitle;
         mLock.open();
     }
 
     @android.webkit.JavascriptInterface
     public void onCurrentTimeReceived(final float currentTime) {
-        Log.i(TAG, "onCurrentTimeReceived");
         mCurrentTime = currentTime;
         mLock.open();
     }
 
     @android.webkit.JavascriptInterface
     public void onPlaybackQualityReceived(final String videoQuality) {
-        Log.i(TAG, "onPlaybackQualityReceived");
         mPlaybackQuality = VideoQuality.getVideoQuality(videoQuality);
         mLock.open();
     }
 
     @android.webkit.JavascriptInterface
     public void onPlaylistIndexReceived(final int playListIndex) {
-        Log.i(TAG, "onPlaylistIndexReceived");
         mPlaylistIndex = playListIndex;
         mLock.open();
     }
 
     @android.webkit.JavascriptInterface
     public void onPlaylistReceived(final String playlist) {
-        Log.i(TAG, "onPlaylistReceived");
         mPlaylist = WebviewUtils.parsePlaylist(playlist);
         mLock.open();
     }
@@ -384,21 +401,18 @@ public class JavascriptInterface {
 
     @android.webkit.JavascriptInterface
     public void onDurationReceived(final float duration) {
-        Log.i(TAG, "onDurationReceived");
         mDuration = duration;
         mLock.open();
     }
 
     @android.webkit.JavascriptInterface
     public void onVideoUrlReceived(final String videoUrl) {
-        Log.i(TAG, "onVideoUrlReceived");
         mVideoUrl = videoUrl;
         mLock.open();
     }
 
     @android.webkit.JavascriptInterface
     public void onVideoEmbedCodeReceived(final String embedCode) {
-        Log.i(TAG, "onVideoEmbedCodeReceived");
         mEmbedCode = embedCode;
         mLock.open();
     }
@@ -519,54 +533,119 @@ public class JavascriptInterface {
         return mAvailablePlaybackRates;
     }
 
+    /**
+     * Get video loaded fraction.
+     *
+     * @return a number between 0 and 1 that specifies the percentage of the video that the player shows as buffered
+     */
     public float getVideoLoadedFraction() {
         return mVideoLoadedFraction;
     }
 
+    /**
+     * Get current player state.
+     *
+     * @return state of the player
+     */
     public VideoState getPlayerState() {
         return mPlayerState;
     }
 
+    /**
+     * Get time since video is playing.
+     *
+     * @return elapsed time in seconds since the video started playing
+     */
     public float getCurrentTime() {
         return mCurrentTime;
     }
 
+    /**
+     * Set blocking parameter used to be released when response is retrieved from JS side.
+     *
+     * @param lock
+     */
     public void setBlock(final ConditionVariable lock) {
         this.mLock = lock;
     }
 
+    /**
+     * Get current video quality.
+     *
+     * @return the actual video quality of the current video
+     */
     public VideoQuality getPlaybackQuality() {
         return mPlaybackQuality;
     }
 
+    /**
+     * Get all available quality levels.
+     *
+     * @return the set of quality formats in which the current video is available
+     */
     public List<VideoQuality> getAvailableQualityLevels() {
         return mAvailableQualityLevels;
     }
 
+    /**
+     * Get duration.
+     *
+     * @return the duration in seconds of the currently playing video
+     */
     public float getDuration() {
         return mDuration;
     }
 
+    /**
+     * Get video URL.
+     *
+     * @return {string}  the YouTube.com URL for the currently loaded/playing video
+     */
     public String getVideoUrl() {
         return mVideoUrl;
     }
 
+    /**
+     * Get video embed code.
+     *
+     * @return {string} the embed code for the currently loaded/playing video
+     */
     public String getVideoEmbedCode() {
         return mEmbedCode;
     }
 
+    /**
+     * Get playlist index.
+     *
+     * @return returns the index of the playlist video that is currently playing
+     */
     public int getPlaylistIndex() {
         return mPlaylistIndex;
     }
 
+    /**
+     * Get playlist.
+     *
+     * @return an array of the video IDs in the playlist as they are currently ordered
+     */
     public List<String> getPlaylist() {
         return mPlaylist;
     }
 
+    /**
+     * Get Youtube current video ID.
+     *
+     * @return
+     */
     public String getVideoId() {
         return mVideoId;
     }
 
+    /**
+     * Get Youtube current video title.
+     *
+     * @return
+     */
     public String getVideoTitle() {
         return mVideoTitle;
     }

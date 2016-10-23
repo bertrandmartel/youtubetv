@@ -203,10 +203,19 @@ public class YoutubeTvView extends FrameLayout implements IYoutubeApi {
      */
     private List<IPlayerListener> mPlayerListenerList = new ArrayList<>();
 
+    /**
+     * Lock object used to synchronize Javascript calls.
+     */
     private final Object mLock = new Object();
 
+    /**
+     * Media session used to manage now playing card.
+     */
     private MediaSession mMediaSession;
 
+    /**
+     * Media session tag used for now playing card.
+     */
     private final static String MEDIA_SESSION_TAG = "fr.bmartel.youtubetv.MediaSession";
 
     /**
@@ -506,7 +515,6 @@ public class YoutubeTvView extends FrameLayout implements IYoutubeApi {
         synchronized (mLock) {
             mBlock = new ConditionVariable();
             mJavascriptInterface.setBlock(mBlock);
-            Log.i(TAG, "getMute");
             WebviewUtils.callOnWebviewThread(mWebView, "isMuted");
             mBlock.block(mJavascriptTimeout);
         }
@@ -523,8 +531,6 @@ public class YoutubeTvView extends FrameLayout implements IYoutubeApi {
         synchronized (mLock) {
             mBlock = new ConditionVariable();
             mJavascriptInterface.setBlock(mBlock);
-            Log.i(TAG, "getVolume");
-            Log.i(TAG, "before");
             WebviewUtils.callOnWebviewThread(mWebView, "getVolume");
             mBlock.block(mJavascriptTimeout);
         }
@@ -541,7 +547,6 @@ public class YoutubeTvView extends FrameLayout implements IYoutubeApi {
         synchronized (mLock) {
             mBlock = new ConditionVariable();
             mJavascriptInterface.setBlock(mBlock);
-            Log.i(TAG, "getPlaybackRate");
             WebviewUtils.callOnWebviewThread(mWebView, "getPlaybackRate");
             mBlock.block(mJavascriptTimeout);
         }
@@ -558,7 +563,6 @@ public class YoutubeTvView extends FrameLayout implements IYoutubeApi {
         synchronized (mLock) {
             mBlock = new ConditionVariable();
             mJavascriptInterface.setBlock(mBlock);
-            Log.i(TAG, "getAvailablePlaybackRates");
             WebviewUtils.callOnWebviewThread(mWebView, "getAvailablePlaybackRateList");
             mBlock.block(mJavascriptTimeout);
         }
@@ -580,7 +584,6 @@ public class YoutubeTvView extends FrameLayout implements IYoutubeApi {
         synchronized (mLock) {
             mBlock = new ConditionVariable();
             mJavascriptInterface.setBlock(mBlock);
-            Log.i(TAG, "getVideoLoadedFraction");
             WebviewUtils.callOnWebviewThread(mWebView, "getVideoLoadedFraction");
             mBlock.block(mJavascriptTimeout);
         }
@@ -592,7 +595,6 @@ public class YoutubeTvView extends FrameLayout implements IYoutubeApi {
         synchronized (mLock) {
             mBlock = new ConditionVariable();
             mJavascriptInterface.setBlock(mBlock);
-            Log.i(TAG, "getPlayerState");
             WebviewUtils.callOnWebviewThread(mWebView, "getPlayerState");
             mBlock.block(mJavascriptTimeout);
         }
@@ -604,7 +606,6 @@ public class YoutubeTvView extends FrameLayout implements IYoutubeApi {
         synchronized (mLock) {
             mBlock = new ConditionVariable();
             mJavascriptInterface.setBlock(mBlock);
-            Log.i(TAG, "getCurrentTime");
             WebviewUtils.callOnWebviewThread(mWebView, "getCurrentTime");
             mBlock.block(mJavascriptTimeout);
         }
@@ -621,7 +622,6 @@ public class YoutubeTvView extends FrameLayout implements IYoutubeApi {
         synchronized (mLock) {
             mBlock = new ConditionVariable();
             mJavascriptInterface.setBlock(mBlock);
-            Log.i(TAG, "getPlaybackQuality");
             WebviewUtils.callOnWebviewThread(mWebView, "getPlaybackQuality");
             mBlock.block(mJavascriptTimeout);
         }
@@ -633,7 +633,6 @@ public class YoutubeTvView extends FrameLayout implements IYoutubeApi {
         synchronized (mLock) {
             mBlock = new ConditionVariable();
             mJavascriptInterface.setBlock(mBlock);
-            Log.i(TAG, "getAvailableQualityLevels");
             WebviewUtils.callOnWebviewThread(mWebView, "getAvailableQualityLevels");
             mBlock.block(mJavascriptTimeout);
         }
@@ -645,7 +644,6 @@ public class YoutubeTvView extends FrameLayout implements IYoutubeApi {
         synchronized (mLock) {
             mBlock = new ConditionVariable();
             mJavascriptInterface.setBlock(mBlock);
-            Log.i(TAG, "getDuration");
             WebviewUtils.callOnWebviewThread(mWebView, "getDuration");
             mBlock.block(mJavascriptTimeout);
         }
@@ -657,7 +655,6 @@ public class YoutubeTvView extends FrameLayout implements IYoutubeApi {
         synchronized (mLock) {
             mBlock = new ConditionVariable();
             mJavascriptInterface.setBlock(mBlock);
-            Log.i(TAG, "getVideoUrl");
             WebviewUtils.callOnWebviewThread(mWebView, "getVideoUrl");
             mBlock.block(mJavascriptTimeout);
         }
@@ -669,7 +666,6 @@ public class YoutubeTvView extends FrameLayout implements IYoutubeApi {
         synchronized (mLock) {
             mBlock = new ConditionVariable();
             mJavascriptInterface.setBlock(mBlock);
-            Log.i(TAG, "getVideoEmbedCode");
             WebviewUtils.callOnWebviewThread(mWebView, "getVideoEmbedCode");
             mBlock.block(mJavascriptTimeout);
         }
@@ -681,7 +677,6 @@ public class YoutubeTvView extends FrameLayout implements IYoutubeApi {
         synchronized (mLock) {
             mBlock = new ConditionVariable();
             mJavascriptInterface.setBlock(mBlock);
-            Log.i(TAG, "getPlaylist");
             WebviewUtils.callOnWebviewThread(mWebView, "getPlaylist");
             mBlock.block(mJavascriptTimeout);
         }
@@ -693,7 +688,6 @@ public class YoutubeTvView extends FrameLayout implements IYoutubeApi {
         synchronized (mLock) {
             mBlock = new ConditionVariable();
             mJavascriptInterface.setBlock(mBlock);
-            Log.i(TAG, "getPlaylistIndex");
             WebviewUtils.callOnWebviewThread(mWebView, "getPlaylistIndex");
             mBlock.block(mJavascriptTimeout);
         }
@@ -705,7 +699,6 @@ public class YoutubeTvView extends FrameLayout implements IYoutubeApi {
         synchronized (mLock) {
             mBlock = new ConditionVariable();
             mJavascriptInterface.setBlock(mBlock);
-            Log.i(TAG, "getVideoId");
             WebviewUtils.callOnWebviewThread(mWebView, "getVideoId");
             mBlock.block(mJavascriptTimeout);
         }
@@ -717,7 +710,6 @@ public class YoutubeTvView extends FrameLayout implements IYoutubeApi {
         synchronized (mLock) {
             mBlock = new ConditionVariable();
             mJavascriptInterface.setBlock(mBlock);
-            Log.i(TAG, "getVideoTitle");
             WebviewUtils.callOnWebviewThread(mWebView, "getVideoTitle");
             mBlock.block(mJavascriptTimeout);
         }
@@ -742,6 +734,11 @@ public class YoutubeTvView extends FrameLayout implements IYoutubeApi {
         mPlayerListenerList.remove(listener);
     }
 
+    /**
+     * Get media session (for now playing card management).
+     *
+     * @return
+     */
     public MediaSession getMediaSession() {
         return mMediaSession;
     }
