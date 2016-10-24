@@ -271,7 +271,7 @@ public class JavascriptInterface {
                 final VideoState videoState = VideoState.getPlayerState(state);
 
                 if (mYoutubeTvView.isShowingNowPlayingCard()) {
-                    
+
                     int playbackState = PlaybackState.STATE_STOPPED;
 
                     boolean rebuildMedia = true;
@@ -282,6 +282,9 @@ public class JavascriptInterface {
                             playbackState = PlaybackState.STATE_STOPPED;
                             break;
                         case ENDED:
+                            if (mYoutubeTvView.getPlaylistIndex() != -1) {
+                                mYoutubeTvView.playVideo();
+                            }
                             previousPlayPause = false;
                             playbackState = PlaybackState.STATE_STOPPED;
                             break;
