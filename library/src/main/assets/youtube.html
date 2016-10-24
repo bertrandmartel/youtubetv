@@ -325,6 +325,30 @@
     }
 
     /**
+     * Move forward to current video time + seconds
+     * 
+     * @param  {number} seconds number of additionnal seconds
+     */
+    function moveForward(seconds) {
+        player.seekTo(player.getCurrentTime() + seconds, true);
+    }
+
+    /**
+     * Move backward from current video time - seconds
+     * 
+     * @param  {number} seconds number of soustracted seconds
+     */
+    function moveBackward(seconds) {
+        var diff = player.getCurrentTime() - seconds;
+
+        if (diff <= 0) {
+            player.seekTo(0, true);
+        } else {
+            player.seekTo(player.getCurrentTime() - seconds, true);
+        }
+    }
+
+    /**
      * Loads and plays the next video in the playlist.
      */
     function nextVideo() {

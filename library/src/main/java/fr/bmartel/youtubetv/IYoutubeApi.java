@@ -244,4 +244,18 @@ public interface IYoutubeApi {
      * @return
      */
     String getVideoTitle();
+
+    /**
+     * Move forward to current video time + seconds.
+     *
+     * @param seconds number of additionnal seconds
+     */
+    void moveForward(int seconds);
+
+    /**
+     * Move backward from current video time - seconds.
+     *
+     * @param seconds number of soustracted seconds
+     */
+    void moveBackward(int seconds);
 }
