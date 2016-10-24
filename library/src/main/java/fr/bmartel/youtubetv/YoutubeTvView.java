@@ -519,6 +519,16 @@ public class YoutubeTvView extends FrameLayout implements IYoutubeApi {
     }
 
     @Override
+    public void moveForward(int seconds) {
+        WebviewUtils.callOnWebviewThread(mWebView, "moveForward", seconds);
+    }
+
+    @Override
+    public void moveBackward(int seconds) {
+        WebviewUtils.callOnWebviewThread(mWebView, "moveBackward", seconds);
+    }
+
+    @Override
     public boolean isMuted() throws InterruptedException {
         synchronized (mLock) {
             mBlock = new ConditionVariable();
