@@ -9,9 +9,11 @@
 
     <fr.bmartel.youtubetv.YoutubeTvView xmlns:android="http://schemas.android.com/apk/res/android"
         xmlns:app="http://schemas.android.com/apk/res-auto"
-        android:id="@+id/video1"
+        android:id="@+id/youtubetv_view"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
+        android:focusable="false"
+        android:focusableInTouchMode="false"
         app:autoHide="auto"
         app:autoplay="true"
         app:closedCaptionLangPref="fr"

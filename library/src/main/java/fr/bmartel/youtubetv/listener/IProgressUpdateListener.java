@@ -23,28 +23,17 @@
  */
 package fr.bmartel.youtubetv.listener;
 
-import fr.bmartel.youtubetv.model.VideoState;
-
 /**
- * Youtube Player listener.
+ * Progress update listener.
  *
  * @author Bertrand Martel
  */
-public interface IPlayerListener {
+public interface IProgressUpdateListener {
 
     /**
-     * Called when player is ready.
-     */
-    void onPlayerReady();
-
-    /**
-     * Called when player state change.
+     * called when video progress is updated.
      *
-     * @param state    video state
-     * @param position video position in milliseconds
-     * @param speed    video speed (playback rate)
-     * @param duration video duration in seconds
+     * @param currentTime current position in seconds
      */
-    void onPlayerStateChange(VideoState state, long position, float speed, float duration);
-
+    void onProgressUpdate(float currentTime);
 }

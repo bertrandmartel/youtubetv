@@ -23,28 +23,19 @@
  */
 package fr.bmartel.youtubetv.listener;
 
-import fr.bmartel.youtubetv.model.VideoState;
 
 /**
- * Youtube Player listener.
+ * Buffer state listener.
  *
  * @author Bertrand Martel
  */
-public interface IPlayerListener {
+public interface IBufferStateListener {
 
     /**
-     * Called when player is ready.
-     */
-    void onPlayerReady();
-
-    /**
-     * Called when player state change.
+     * called when buffer state is received with up-to-date value of loadedFraction.
      *
-     * @param state    video state
-     * @param position video position in milliseconds
-     * @param speed    video speed (playback rate)
-     * @param duration video duration in seconds
+     * @param videoDuration  complete video duration in seconds
+     * @param loadedFraction number between 0 and 1 that specifies the percentage of the video that the player shows as buffered
      */
-    void onPlayerStateChange(VideoState state, long position, float speed, float duration);
-
+    void onBufferUpdate(float videoDuration, float loadedFraction);
 }

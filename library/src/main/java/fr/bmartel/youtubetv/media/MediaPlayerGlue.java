@@ -38,7 +38,9 @@ import android.view.View;
 
 import fr.bmartel.youtubetv.IYoutubeApi;
 import fr.bmartel.youtubetv.R;
+import fr.bmartel.youtubetv.listener.IBufferStateListener;
 import fr.bmartel.youtubetv.listener.IPlayerListener;
+import fr.bmartel.youtubetv.listener.IProgressUpdateListener;
 import fr.bmartel.youtubetv.model.VideoState;
 
 /**
@@ -74,6 +76,9 @@ public abstract class MediaPlayerGlue extends PlaybackControlGlue implements
     private MetaData mMetaData;
     private Uri mMediaSourceUri = null;
     private String mMediaSourcePath = null;
+    private int mCurrentTime;
+    private int mVideoDuration;
+    private boolean isPlaying;
 
     public MediaPlayerGlue(Context context, PlaybackOverlayFragment fragment, IYoutubeApi youtubePlayer) {
         super(context, fragment, new int[]{1});
@@ -89,6 +94,13 @@ public abstract class MediaPlayerGlue extends PlaybackControlGlue implements
 
         // Register selected listener such that we know what action the user currently has focused.
         fragment.setOnItemViewSelectedListener(this);
+
+        mPlayer.setOnProgressUpdateListener(new IProgressUpdateListener() {
+            @Override
+            public void onProgressUpdate(float currentTime) {
+                mCurrentTime = (int) (currentTime * 100);
+            }
+        });
     }
 
     /**
@@ -159,6 +171,7 @@ public abstract class MediaPlayerGlue extends PlaybackControlGlue implements
             if (mRunnable != null) mHandler.removeCallbacks(mRunnable);
             return;
         }
+        /*
         mRunnable = new Runnable() {
             @Override
             public void run() {
@@ -168,6 +181,7 @@ public abstract class MediaPlayerGlue extends PlaybackControlGlue implements
             }
         };
         mHandler.postDelayed(mRunnable, getUpdatePeriod());
+        */
     }
 
     @Override
@@ -232,7 +246,7 @@ public abstract class MediaPlayerGlue extends PlaybackControlGlue implements
 
     @Override
     public boolean isMediaPlaying() {
-        return mPlayer.isPlaying();
+        return isPlaying;
     }
 
     @Override
@@ -247,7 +261,7 @@ public abstract class MediaPlayerGlue extends PlaybackControlGlue implements
 
     @Override
     public int getMediaDuration() {
-        return mInitialized ? mPlayer.getDuration() : 0;
+        return mInitialized ? mVideoDuration : 0;
     }
 
     @Override
@@ -263,12 +277,12 @@ public abstract class MediaPlayerGlue extends PlaybackControlGlue implements
     @Override
     public int getCurrentSpeedId() {
         // 0 = Pause, 1 = Normal Playback Speed
-        return mPlayer.isPlaying() ? 1 : 0;
+        return isPlaying ? 1 : 0;
     }
 
     @Override
     public int getCurrentPosition() {
-        return mInitialized ? mPlayer.getCurrentPosition() : 0;
+        return mInitialized ? mCurrentTime : 0;
     }
 
     @Override
@@ -278,7 +292,7 @@ public abstract class MediaPlayerGlue extends PlaybackControlGlue implements
 
     @Override
     protected void pausePlayback() {
-        if (mPlayer.isPlaying()) {
+        if (isPlaying) {
             mPlayer.pause();
         }
     }
@@ -348,51 +362,42 @@ public abstract class MediaPlayerGlue extends PlaybackControlGlue implements
         mPlayer.addPlayerListener(new IPlayerListener() {
             @Override
             public void onPlayerReady() {
-
+                Log.i(TAG, "in onPlayerReady");
                 mInitialized = true;
-                mPlayer.start();
+                //mPlayer.start();
                 onMetadataChanged();
                 onStateChanged();
                 updateProgress();
-
+                Log.i(TAG, "after onPlayerReady");
             }
 
             @Override
-            public void onPlayerStateChange(VideoState state, long position, float speed) {
-
-                if (state == VideoState.BUFFERING) {
-                    mControlsRow.setBufferedProgress((int) (mp.getDuration() * (percent / 100f)));
-                } else if (state == VideoState.ENDED) {
+            public void onPlayerStateChange(final VideoState state, long position, float speed, float duration) {
+                Log.i(TAG, "state : " + state);
+                if (state == VideoState.ENDED) {
                     if (mInitialized && mMediaFileFinishedPlayingListener != null)
                         mMediaFileFinishedPlayingListener.onMediaFileFinishedPlaying(mMetaData);
+                } else if (state == VideoState.PAUSED) {
+                    //onStateChanged();
+                    //updateProgress();
                 }
+                if (state == VideoState.PLAYING) {
+                    isPlaying = true;
+                } else {
+                    isPlaying = false;
+                }
+                mVideoDuration = (int) (duration * 100);
             }
         });
-        /*
-        mPlayer.setOnPreparedListener(new MediaPlayer.OnPreparedListener() {
+
+        mPlayer.setOnBufferingUpdateListener(new IBufferStateListener() {
             @Override
-            public void onPrepared(MediaPlayer mp) {
-                mInitialized = true;
-                mPlayer.start();
-                onMetadataChanged();
-                onStateChanged();
-                updateProgress();
+            public void onBufferUpdate(final float videoDuration, final float loadedFraction) {
+                Log.i(TAG, "onBufferUpdate : " + loadedFraction);
+                mControlsRow.setBufferedProgress((int) (videoDuration * 100 * loadedFraction));
             }
         });
-        mPlayer.setOnCompletionListener(new MediaPlayer.OnCompletionListener() {
-            @Override
-            public void onCompletion(MediaPlayer mp) {
-                if (mInitialized && mMediaFileFinishedPlayingListener != null)
-                    mMediaFileFinishedPlayingListener.onMediaFileFinishedPlaying(mMetaData);
-            }
-        });
-        mPlayer.setOnBufferingUpdateListener(new MediaPlayer.OnBufferingUpdateListener() {
-            @Override
-            public void onBufferingUpdate(MediaPlayer mp, int percent) {
-                mControlsRow.setBufferedProgress((int) (mp.getDuration() * (percent / 100f)));
-            }
-        });
-        */
+
         //mPlayer.prepareAsync();
         onStateChanged();
     }

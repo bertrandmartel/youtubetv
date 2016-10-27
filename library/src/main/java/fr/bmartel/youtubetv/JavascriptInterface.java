@@ -37,7 +37,9 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
+import fr.bmartel.youtubetv.listener.IBufferStateListener;
 import fr.bmartel.youtubetv.listener.IPlayerListener;
+import fr.bmartel.youtubetv.listener.IProgressUpdateListener;
 import fr.bmartel.youtubetv.model.VideoQuality;
 import fr.bmartel.youtubetv.model.VideoState;
 import fr.bmartel.youtubetv.utils.WebviewUtils;
@@ -193,6 +195,16 @@ public class JavascriptInterface {
     private int mPlaylistIndex;
 
     /**
+     * Buffer state listener.
+     */
+    private IBufferStateListener mBufferStateListener;
+
+    /**
+     * Progress update listener.
+     */
+    private IProgressUpdateListener mProgressUpdateListener;
+
+    /**
      * list featuring available quality for the current video.
      */
     private List<VideoQuality> mAvailableQualityLevels = new ArrayList<>();
@@ -259,11 +271,25 @@ public class JavascriptInterface {
     }
 
     @android.webkit.JavascriptInterface
+    public void onProgressUpdate(final float currentTime) {
+        new Thread(new Runnable() {
+            @Override
+            public void run() {
+                if (mProgressUpdateListener != null) {
+                    mProgressUpdateListener.onProgressUpdate(currentTime);
+                }
+            }
+        }).start();
+    }
+
+    @android.webkit.JavascriptInterface
     public void onPlayerStateChange(final int state,
                                     final long position,
                                     final float speed,
                                     final String title,
-                                    final String videoId) {
+                                    final String videoId,
+                                    final float duration,
+                                    final float loadedFraction) {
         new Thread(new Runnable() {
             @Override
             public void run() {
@@ -305,6 +331,9 @@ public class JavascriptInterface {
                         case BUFFERING:
                             previousPlayPause = false;
                             playbackState = PlaybackState.STATE_BUFFERING;
+                            if (mBufferStateListener != null) {
+                                mBufferStateListener.onBufferUpdate(duration, loadedFraction);
+                            }
                             break;
                         case VIDEO_CUED:
                             previousPlayPause = false;
@@ -323,7 +352,7 @@ public class JavascriptInterface {
                 }
 
                 for (IPlayerListener listener : mPlayerListenerList) {
-                    listener.onPlayerStateChange(videoState, position, speed);
+                    listener.onPlayerStateChange(videoState, position, speed, duration);
                 }
             }
         }).start();
@@ -494,7 +523,7 @@ public class JavascriptInterface {
         mWebview.post(new Runnable() {
             @Override
             public void run() {
-                WebviewUtils.callJavaScript(mWebview, "start");
+                WebviewUtils.callJavaScript(mWebview, "playVideo");
             }
         });
     }
@@ -662,5 +691,23 @@ public class JavascriptInterface {
      */
     public String getVideoTitle() {
         return mVideoTitle;
+    }
+
+    /**
+     * Set buffer update listener.
+     *
+     * @param listener
+     */
+    public void setOnBufferingUpdateListener(IBufferStateListener listener) {
+        mBufferStateListener = listener;
+    }
+
+    /**
+     * Set progress update listener.
+     *
+     * @param listener
+     */
+    public void setOnProgressUpdateListener(IProgressUpdateListener listener) {
+        mProgressUpdateListener = listener;
     }
 }

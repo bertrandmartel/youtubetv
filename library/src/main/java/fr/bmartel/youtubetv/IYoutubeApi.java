@@ -25,7 +25,9 @@ package fr.bmartel.youtubetv;
 
 import java.util.List;
 
+import fr.bmartel.youtubetv.listener.IBufferStateListener;
 import fr.bmartel.youtubetv.listener.IPlayerListener;
+import fr.bmartel.youtubetv.listener.IProgressUpdateListener;
 import fr.bmartel.youtubetv.model.VideoQuality;
 import fr.bmartel.youtubetv.model.VideoState;
 
@@ -280,13 +282,26 @@ public interface IYoutubeApi {
      *
      * @param listener
      */
-    void addPlayerListener(final IPlayerListener listener);
+    void addPlayerListener(IPlayerListener listener);
 
     /**
      * Remove player listener.
      *
      * @param listener
      */
-    void removePlayerListener(final IPlayerListener listener);
+    void removePlayerListener(IPlayerListener listener);
 
+    /**
+     * set buffer state listener.
+     *
+     * @param listener buffer state listener
+     */
+    void setOnBufferingUpdateListener(IBufferStateListener listener);
+
+    /**
+     * Set progress update listener.
+     *
+     * @param listener
+     */
+    void setOnProgressUpdateListener(IProgressUpdateListener listener);
 }

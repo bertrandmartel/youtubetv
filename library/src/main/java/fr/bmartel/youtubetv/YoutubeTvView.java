@@ -50,7 +50,9 @@ import android.widget.ProgressBar;
 import java.util.ArrayList;
 import java.util.List;
 
+import fr.bmartel.youtubetv.listener.IBufferStateListener;
 import fr.bmartel.youtubetv.listener.IPlayerListener;
+import fr.bmartel.youtubetv.listener.IProgressUpdateListener;
 import fr.bmartel.youtubetv.model.ThumbnailQuality;
 import fr.bmartel.youtubetv.model.UserAgents;
 import fr.bmartel.youtubetv.model.VideoAutoHide;
@@ -455,10 +457,10 @@ public class YoutubeTvView extends FrameLayout implements IYoutubeApi {
                     WebviewUtils.callJavaScript(mWebView, "playPause");
                     break;
                 case KeyEvent.KEYCODE_MEDIA_PLAY:
-                    WebviewUtils.callJavaScript(mWebView, "start");
+                    WebviewUtils.callJavaScript(mWebView, "playVideo");
                     break;
                 case KeyEvent.KEYCODE_MEDIA_PAUSE:
-                    WebviewUtils.callJavaScript(mWebView, "pause");
+                    WebviewUtils.callJavaScript(mWebView, "playPause");
                     break;
                 case KeyEvent.KEYCODE_MEDIA_NEXT:
                     WebviewUtils.callJavaScript(mWebView, "nextVideo");
@@ -470,12 +472,12 @@ public class YoutubeTvView extends FrameLayout implements IYoutubeApi {
 
     @Override
     public void start() {
-        WebviewUtils.callOnWebviewThread(mWebView, "start");
+        WebviewUtils.callOnWebviewThread(mWebView, "playVideo");
     }
 
     @Override
     public void pause() {
-        WebviewUtils.callOnWebviewThread(mWebView, "pause");
+        WebviewUtils.callOnWebviewThread(mWebView, "pauseVideo");
     }
 
     @Override
@@ -634,7 +636,7 @@ public class YoutubeTvView extends FrameLayout implements IYoutubeApi {
         synchronized (mLock) {
             mBlock = new ConditionVariable();
             mJavascriptInterface.setBlock(mBlock);
-            WebviewUtils.callOnWebviewThread(mWebView, "getCurrentPosition");
+            WebviewUtils.callOnWebviewThread(mWebView, "getCurrentTime");
             mBlock.block(mJavascriptTimeout);
         }
         return mJavascriptInterface.getCurrentTime();
@@ -764,6 +766,11 @@ public class YoutubeTvView extends FrameLayout implements IYoutubeApi {
         mPlayerListenerList.remove(listener);
     }
 
+    @Override
+    public void setOnBufferingUpdateListener(IBufferStateListener listener) {
+        mJavascriptInterface.setOnBufferingUpdateListener(listener);
+    }
+
     /**
      * Get media session (for now playing card management).
      *
@@ -780,5 +787,15 @@ public class YoutubeTvView extends FrameLayout implements IYoutubeApi {
      */
     public boolean isShowingNowPlayingCard() {
         return mShowNowPlayingCard;
+    }
+
+    /**
+     * Set progress update listener.
+     *
+     * @param listener
+     */
+    @Override
+    public void setOnProgressUpdateListener(IProgressUpdateListener listener) {
+        mJavascriptInterface.setOnProgressUpdateListener(listener);
     }
 }
