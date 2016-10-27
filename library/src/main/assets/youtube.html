@@ -122,6 +122,7 @@
     var debug = 0;
     var videoLaunchTimerId = 0;
     var debugTimerId = 0;
+    var progressTimerId = 0;
 
     /**
      * Upload overlay debug mode if enabled.
@@ -238,12 +239,19 @@
                 break;
             case YT.PlayerState.PLAYING:
                 clearInterval(videoLaunchTimerId);
+                clearInterval(progressTimerId);
+
+                progressTimerId = setInterval(function() {
+                    window.JSInterface.onProgressUpdate(player.getCurrentTime());
+                }, 500);
+
                 window.JSInterface.hideLoading(false);
                 $("#thumbnail_canvas").css("display", "none");
                 $("#video_div").css("display", "block");
                 log(onPlayerStateChange.name, "state changed to YT.PlayerState.PLAYING");
                 break;
             case YT.PlayerState.PAUSED:
+                clearInterval(progressTimerId);
                 log(onPlayerStateChange.name, "state changed to YT.PlayerState.PAUSED");
                 break;
             case YT.PlayerState.BUFFERING:
@@ -260,7 +268,9 @@
         window.JSInterface.onPlayerStateChange(event.data, player.getCurrentTime() * 1000,
             player.getPlaybackRate(),
             player.getVideoData().title,
-            player.getVideoData()['video_id']);
+            player.getVideoData()['video_id'],
+            player.getDuration(),
+            player.getVideoLoadedFraction());
     }
 
     /**

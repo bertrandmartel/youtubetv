@@ -26,6 +26,9 @@ import android.support.v17.leanback.widget.Presenter;
 import android.support.v17.leanback.widget.Row;
 import android.support.v17.leanback.widget.RowPresenter;
 
+import fr.bmartel.youtubetv.R;
+import fr.bmartel.youtubetv.YoutubeTvView;
+
 
 public class VideoConsumptionExampleFragment extends PlaybackOverlayFragment implements
         OnItemViewClickedListener, MediaPlayerGlue.OnMediaFileFinishedPlayingListener {
@@ -39,7 +42,9 @@ public class VideoConsumptionExampleFragment extends PlaybackOverlayFragment imp
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-        mGlue = new VideoMediaPlayerGlue(getActivity(), this) {
+        YoutubeTvView youtubeTvView = (YoutubeTvView) getActivity().findViewById(R.id.youtubetv_view);
+
+        mGlue = new VideoMediaPlayerGlue(getActivity(), this, youtubeTvView) {
 
             @Override
             protected void onRowChanged(PlaybackControlsRow row) {
@@ -53,7 +58,7 @@ public class VideoConsumptionExampleFragment extends PlaybackOverlayFragment imp
         metaData.setTitle("Diving with Sharks");
         mGlue.setMetaData(metaData);
         //mGlue.setMediaSource(URL);
-        //mGlue.prepareMediaForPlaying();
+        mGlue.prepareMediaForPlaying();
 
         Fragment videoSurfaceFragment = getFragmentManager()
                 .findFragmentByTag(VideoSurfaceFragment.TAG);

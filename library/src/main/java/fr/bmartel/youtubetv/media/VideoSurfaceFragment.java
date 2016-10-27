@@ -29,14 +29,17 @@ public class VideoSurfaceFragment extends Fragment {
 
     public static final String TAG = "VideoSurfaceFragment";
 
-    @Override public void onCreate(Bundle savedInstanceState) {
+    @Override
+    public void onCreate(Bundle savedInstanceState) {
         Log.d(TAG, "onCreate started");
         super.onCreate(savedInstanceState);
 
     }
 
-    @Nullable @Override public View onCreateView(LayoutInflater inflater, ViewGroup container,
-                                                 Bundle savedInstanceState) {
+    @Nullable
+    @Override
+    public View onCreateView(LayoutInflater inflater, ViewGroup container,
+                             Bundle savedInstanceState) {
         return inflater.inflate(R.layout.test_view, null);
     }
 }
