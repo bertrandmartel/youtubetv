@@ -455,10 +455,10 @@ public class YoutubeTvView extends FrameLayout implements IYoutubeApi {
                     WebviewUtils.callJavaScript(mWebView, "playPause");
                     break;
                 case KeyEvent.KEYCODE_MEDIA_PLAY:
-                    WebviewUtils.callJavaScript(mWebView, "playVideo");
+                    WebviewUtils.callJavaScript(mWebView, "start");
                     break;
                 case KeyEvent.KEYCODE_MEDIA_PAUSE:
-                    WebviewUtils.callJavaScript(mWebView, "pauseVideo");
+                    WebviewUtils.callJavaScript(mWebView, "pause");
                     break;
                 case KeyEvent.KEYCODE_MEDIA_NEXT:
                     WebviewUtils.callJavaScript(mWebView, "nextVideo");
@@ -469,13 +469,13 @@ public class YoutubeTvView extends FrameLayout implements IYoutubeApi {
     }
 
     @Override
-    public void playVideo() {
-        WebviewUtils.callOnWebviewThread(mWebView, "playVideo");
+    public void start() {
+        WebviewUtils.callOnWebviewThread(mWebView, "start");
     }
 
     @Override
-    public void pauseVideo() {
-        WebviewUtils.callOnWebviewThread(mWebView, "pauseVideo");
+    public void pause() {
+        WebviewUtils.callOnWebviewThread(mWebView, "pause");
     }
 
     @Override
@@ -491,6 +491,11 @@ public class YoutubeTvView extends FrameLayout implements IYoutubeApi {
     @Override
     public void seekTo(int seconds, boolean allowSeekAhead) {
         WebviewUtils.callOnWebviewThread(mWebView, "seekTo", seconds, allowSeekAhead);
+    }
+
+    @Override
+    public void seekTo(int seconds) {
+        seekTo(seconds, true);
     }
 
     @Override
@@ -526,6 +531,11 @@ public class YoutubeTvView extends FrameLayout implements IYoutubeApi {
     @Override
     public void moveBackward(int seconds) {
         WebviewUtils.callOnWebviewThread(mWebView, "moveBackward", seconds);
+    }
+
+    @Override
+    public boolean isPlaying() {
+        return getPlayerState() == VideoState.PLAYING ? true : false;
     }
 
     @Override
@@ -620,11 +630,11 @@ public class YoutubeTvView extends FrameLayout implements IYoutubeApi {
     }
 
     @Override
-    public float getCurrentTime() {
+    public float getCurrentPosition() {
         synchronized (mLock) {
             mBlock = new ConditionVariable();
             mJavascriptInterface.setBlock(mBlock);
-            WebviewUtils.callOnWebviewThread(mWebView, "getCurrentTime");
+            WebviewUtils.callOnWebviewThread(mWebView, "getCurrentPosition");
             mBlock.block(mJavascriptTimeout);
         }
         return mJavascriptInterface.getCurrentTime();
@@ -739,6 +749,7 @@ public class YoutubeTvView extends FrameLayout implements IYoutubeApi {
      *
      * @param listener
      */
+    @Override
     public void addPlayerListener(final IPlayerListener listener) {
         mPlayerListenerList.add(listener);
     }
@@ -748,6 +759,7 @@ public class YoutubeTvView extends FrameLayout implements IYoutubeApi {
      *
      * @param listener
      */
+    @Override
     public void removePlayerListener(final IPlayerListener listener) {
         mPlayerListenerList.remove(listener);
     }
