@@ -25,6 +25,7 @@ package fr.bmartel.youtubetv;
 
 import java.util.List;
 
+import fr.bmartel.youtubetv.listener.IPlayerListener;
 import fr.bmartel.youtubetv.model.VideoQuality;
 import fr.bmartel.youtubetv.model.VideoState;
 
@@ -38,12 +39,12 @@ public interface IYoutubeApi {
     /**
      * Plays the currently cued/loaded video.
      */
-    void playVideo();
+    void start();
 
     /**
      * Pauses the currently playing video.
      */
-    void pauseVideo();
+    void pause();
 
     /**
      * Play the video if not playing, pause the video if playing.
@@ -62,6 +63,14 @@ public interface IYoutubeApi {
      * @param allowSeekAhead determines whether the player will make a new request to the server if the seconds parameter specifies a time outside of the currently buffered video data
      */
     void seekTo(int seconds, boolean allowSeekAhead);
+
+    /**
+     * Seeks to a specified time in the video with bufferization if time outside of the loaded bufferized data.
+     *
+     * @param seconds identifies the time to which the player should advance
+     */
+    void seekTo(int seconds);
+
 
     /**
      * Loads and plays the next video in the playlist.
@@ -173,7 +182,7 @@ public interface IYoutubeApi {
      *
      * @return elapsed time in seconds since the video started playing
      */
-    float getCurrentTime();
+    float getCurrentPosition();
 
     /**
      * Set the suggested video quality for the current video.
@@ -258,4 +267,26 @@ public interface IYoutubeApi {
      * @param seconds number of soustracted seconds
      */
     void moveBackward(int seconds);
+
+    /**
+     * Check if video is playing or not.
+     *
+     * @return
+     */
+    boolean isPlaying();
+
+    /**
+     * Add a player listener.
+     *
+     * @param listener
+     */
+    void addPlayerListener(final IPlayerListener listener);
+
+    /**
+     * Remove player listener.
+     *
+     * @param listener
+     */
+    void removePlayerListener(final IPlayerListener listener);
+
 }

@@ -283,7 +283,7 @@ public class JavascriptInterface {
                             break;
                         case ENDED:
                             if (mYoutubeTvView.getPlaylistIndex() != -1) {
-                                mYoutubeTvView.playVideo();
+                                mYoutubeTvView.start();
                             }
                             previousPlayPause = false;
                             playbackState = PlaybackState.STATE_STOPPED;
@@ -494,7 +494,7 @@ public class JavascriptInterface {
         mWebview.post(new Runnable() {
             @Override
             public void run() {
-                WebviewUtils.callJavaScript(mWebview, "playVideo");
+                WebviewUtils.callJavaScript(mWebview, "start");
             }
         });
     }
