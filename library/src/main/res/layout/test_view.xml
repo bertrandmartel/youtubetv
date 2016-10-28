@@ -18,7 +18,7 @@
         app:autoplay="true"
         app:closedCaptionLangPref="fr"
         app:closedCaptions="true"
-        app:debug="false"
+        app:debug="true"
         app:playlistId="PL34D3510A0ECF96D7"
         app:showControls="none"
         app:showNowPlayingCard="true"

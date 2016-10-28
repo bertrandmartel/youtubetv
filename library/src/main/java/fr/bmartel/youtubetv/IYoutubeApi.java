@@ -28,6 +28,7 @@ import java.util.List;
 import fr.bmartel.youtubetv.listener.IBufferStateListener;
 import fr.bmartel.youtubetv.listener.IPlayerListener;
 import fr.bmartel.youtubetv.listener.IProgressUpdateListener;
+import fr.bmartel.youtubetv.model.VideoInfo;
 import fr.bmartel.youtubetv.model.VideoQuality;
 import fr.bmartel.youtubetv.model.VideoState;
 
@@ -304,4 +305,11 @@ public interface IYoutubeApi {
      * @param listener
      */
     void setOnProgressUpdateListener(IProgressUpdateListener listener);
+
+    /**
+     * Get videoInfo.
+     *
+     * @return
+     */
+    VideoInfo getVideoInfo();
 }

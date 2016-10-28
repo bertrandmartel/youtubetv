@@ -39,6 +39,14 @@ public class VideoExampleActivity extends Activity {
         FragmentTransaction ft2 = getFragmentManager().beginTransaction();
         ft2.add(R.id.videoFragment, new VideoConsumptionExampleFragment(), VideoConsumptionExampleFragment.TAG);
         ft2.commit();
+
+        requestVisibleBehind(true);
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        requestVisibleBehind(true);
     }
 
 }

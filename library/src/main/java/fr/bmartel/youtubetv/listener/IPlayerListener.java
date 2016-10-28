@@ -23,6 +23,7 @@
  */
 package fr.bmartel.youtubetv.listener;
 
+import fr.bmartel.youtubetv.model.VideoInfo;
 import fr.bmartel.youtubetv.model.VideoState;
 
 /**
@@ -34,8 +35,10 @@ public interface IPlayerListener {
 
     /**
      * Called when player is ready.
+     *
+     * @param videoInfo video information
      */
-    void onPlayerReady();
+    void onPlayerReady(final VideoInfo videoInfo);
 
     /**
      * Called when player state change.
@@ -44,7 +47,8 @@ public interface IPlayerListener {
      * @param position video position in milliseconds
      * @param speed    video speed (playback rate)
      * @param duration video duration in seconds
+     * @videoInfo video information
      */
-    void onPlayerStateChange(VideoState state, long position, float speed, float duration);
+    void onPlayerStateChange(VideoState state, long position, float speed, float duration, final VideoInfo videoInfo);
 
 }

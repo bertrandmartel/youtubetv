@@ -269,6 +269,7 @@
             player.getPlaybackRate(),
             player.getVideoData().title,
             player.getVideoData()['video_id'],
+            player.getVideoData()['author'],
             player.getDuration(),
             player.getVideoLoadedFraction());
     }
@@ -311,6 +312,17 @@
     function getVideoId() {
         if (isMobile) {
             window.JSInterface.onVideoIdReceived(player.getVideoData()['video_id']);
+        }
+    }
+
+    /**
+     * Get current video info.
+     * @return {string} videoId
+     */
+    function getVideoInfo() {
+        if (isMobile) {
+            var data = player.getVideoData();
+            window.JSInterface.onVideoInfoReceived(data.title,data.author,data['video_id']);
         }
     }
 
@@ -662,7 +674,10 @@
             } else {
                 window.JSInterface.hideLoading(true);
             }
-            window.JSInterface.onPlayerReady();
+
+            var data = player.getVideoData();
+
+            window.JSInterface.onPlayerReady(data.title,data.author,data['video_id']);
         }
 
         return false;

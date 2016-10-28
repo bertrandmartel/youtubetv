@@ -57,6 +57,7 @@ import fr.bmartel.youtubetv.model.ThumbnailQuality;
 import fr.bmartel.youtubetv.model.UserAgents;
 import fr.bmartel.youtubetv.model.VideoAutoHide;
 import fr.bmartel.youtubetv.model.VideoControls;
+import fr.bmartel.youtubetv.model.VideoInfo;
 import fr.bmartel.youtubetv.model.VideoQuality;
 import fr.bmartel.youtubetv.model.VideoState;
 import fr.bmartel.youtubetv.utils.WebviewUtils;
@@ -745,6 +746,18 @@ public class YoutubeTvView extends FrameLayout implements IYoutubeApi {
         }
         return mJavascriptInterface.getVideoTitle();
     }
+
+    @Override
+    public VideoInfo getVideoInfo() {
+        synchronized (mLock) {
+            mBlock = new ConditionVariable();
+            mJavascriptInterface.setBlock(mBlock);
+            WebviewUtils.callOnWebviewThread(mWebView, "getVideoInfo");
+            mBlock.block(mJavascriptTimeout);
+        }
+        return mJavascriptInterface.getVideoInfo();
+    }
+
 
     /**
      * Add a player listener.
