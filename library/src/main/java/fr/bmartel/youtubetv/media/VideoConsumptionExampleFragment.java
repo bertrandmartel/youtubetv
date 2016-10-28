@@ -53,10 +53,7 @@ public class VideoConsumptionExampleFragment extends PlaybackOverlayFragment imp
             }
         };
         mGlue.setOnMediaFileFinishedPlayingListener(this);
-        MediaPlayerGlue.MetaData metaData = new MediaPlayerGlue.MetaData();
-        metaData.setArtist("A Googler");
-        metaData.setTitle("Diving with Sharks");
-        mGlue.setMetaData(metaData);
+
         //mGlue.setMediaSource(URL);
         mGlue.prepareMediaForPlaying();
 

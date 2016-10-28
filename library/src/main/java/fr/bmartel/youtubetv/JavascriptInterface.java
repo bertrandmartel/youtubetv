@@ -40,6 +40,7 @@ import java.util.List;
 import fr.bmartel.youtubetv.listener.IBufferStateListener;
 import fr.bmartel.youtubetv.listener.IPlayerListener;
 import fr.bmartel.youtubetv.listener.IProgressUpdateListener;
+import fr.bmartel.youtubetv.model.VideoInfo;
 import fr.bmartel.youtubetv.model.VideoQuality;
 import fr.bmartel.youtubetv.model.VideoState;
 import fr.bmartel.youtubetv.utils.WebviewUtils;
@@ -210,6 +211,11 @@ public class JavascriptInterface {
     private List<VideoQuality> mAvailableQualityLevels = new ArrayList<>();
 
     /**
+     * Video information.
+     */
+    private VideoInfo mVideoInfo = new VideoInfo("", "", "");
+
+    /**
      * Build JS interface.
      *
      * @param playerListenerList        reference to list of player listener
@@ -257,13 +263,15 @@ public class JavascriptInterface {
     }
 
     @android.webkit.JavascriptInterface
-    public void onPlayerReady() {
+    public void onPlayerReady(final String title, final String author, final String videoId) {
 
         new Thread(new Runnable() {
             @Override
             public void run() {
+                final VideoInfo videoInfo = new VideoInfo(videoId, author, title);
+
                 for (IPlayerListener listener : mPlayerListenerList) {
-                    listener.onPlayerReady();
+                    listener.onPlayerReady(videoInfo);
                 }
             }
         }).start();
@@ -288,6 +296,7 @@ public class JavascriptInterface {
                                     final float speed,
                                     final String title,
                                     final String videoId,
+                                    final String videoAuthor,
                                     final float duration,
                                     final float loadedFraction) {
         new Thread(new Runnable() {
@@ -352,7 +361,7 @@ public class JavascriptInterface {
                 }
 
                 for (IPlayerListener listener : mPlayerListenerList) {
-                    listener.onPlayerStateChange(videoState, position, speed, duration);
+                    listener.onPlayerStateChange(videoState, position, speed, duration, new VideoInfo(videoId, videoAuthor, title));
                 }
             }
         }).start();
@@ -451,6 +460,12 @@ public class JavascriptInterface {
     @android.webkit.JavascriptInterface
     public void onVideoUrlReceived(final String videoUrl) {
         mVideoUrl = videoUrl;
+        mLock.open();
+    }
+
+    @android.webkit.JavascriptInterface
+    public void onVideoInfoReceived(final String title, final String author, final String videoId) {
+        mVideoInfo = new VideoInfo(videoId, author, title);
         mLock.open();
     }
 
@@ -691,6 +706,15 @@ public class JavascriptInterface {
      */
     public String getVideoTitle() {
         return mVideoTitle;
+    }
+
+    /**
+     * Get video information.
+     *
+     * @return
+     */
+    public VideoInfo getVideoInfo() {
+        return mVideoInfo;
     }
 
     /**

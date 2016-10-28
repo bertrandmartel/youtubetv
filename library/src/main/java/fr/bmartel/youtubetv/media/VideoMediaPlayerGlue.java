@@ -27,34 +27,42 @@ import fr.bmartel.youtubetv.IYoutubeApi;
 
 public abstract class VideoMediaPlayerGlue extends MediaPlayerGlue {
 
-    private final PlaybackControlsRow.ClosedCaptioningAction mClosedCaptioningAction;
+    //private final PlaybackControlsRow.ClosedCaptioningAction mClosedCaptioningAction;
+
+    private final PlaybackControlsRow.HighQualityAction mHighQualityAction;
 
     public VideoMediaPlayerGlue(Context context, PlaybackOverlayFragment fragment, IYoutubeApi youtubePlayer) {
         super(context, fragment, youtubePlayer);
 
         // Instantiate secondary actions
-        mClosedCaptioningAction = new PlaybackControlsRow.ClosedCaptioningAction(context);
+        //mClosedCaptioningAction = new PlaybackControlsRow.ClosedCaptioningAction(context);
+        mHighQualityAction = new PlaybackControlsRow.HighQualityAction(context);
+        mHighQualityAction.setLabel1("Quality");
+
         setFadingEnabled(true);
     }
 
     @Override
     protected void addSecondaryActions(ArrayObjectAdapter secondaryActionsAdapter) {
-        secondaryActionsAdapter.add(mClosedCaptioningAction);
+        //secondaryActionsAdapter.add(mClosedCaptioningAction);
+        secondaryActionsAdapter.add(mHighQualityAction);
+        /*
         secondaryActionsAdapter.add(mThumbsDownAction);
         secondaryActionsAdapter.add(mThumbsUpAction);
+        */
     }
 
     @Override
     public void onActionClicked(Action action) {
         super.onActionClicked(action);
-        if (action == mClosedCaptioningAction) {
-            mClosedCaptioningAction.nextIndex();
+        if (action == mHighQualityAction) {
+            mHighQualityAction.nextIndex();
         }
     }
 
     public void setupControlsRowPresenter(PlaybackControlsRowPresenter presenter) {
         // TODO: hahnr@ move into resources
-        presenter.setProgressColor(Color.parseColor("#EEFF41"));
-        presenter.setBackgroundColor(Color.parseColor("#007236"));
+        presenter.setProgressColor(Color.parseColor("#e3e3e3"));
+        presenter.setBackgroundColor(Color.parseColor("#e52d27"));
     }
 }

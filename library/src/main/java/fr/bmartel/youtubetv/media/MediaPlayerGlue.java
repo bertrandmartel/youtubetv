@@ -41,6 +41,7 @@ import fr.bmartel.youtubetv.R;
 import fr.bmartel.youtubetv.listener.IBufferStateListener;
 import fr.bmartel.youtubetv.listener.IPlayerListener;
 import fr.bmartel.youtubetv.listener.IProgressUpdateListener;
+import fr.bmartel.youtubetv.model.VideoInfo;
 import fr.bmartel.youtubetv.model.VideoState;
 
 /**
@@ -54,14 +55,15 @@ import fr.bmartel.youtubetv.model.VideoState;
  * android.support.v17.leanback.widget.PlaybackControlsRow.ThumbsUpAction}</li> </ul>
  * <p/>
  */
-public abstract class MediaPlayerGlue extends PlaybackControlGlue implements
-        OnItemViewSelectedListener {
+public abstract class MediaPlayerGlue extends PlaybackControlGlue implements OnItemViewSelectedListener {
 
     public static final int FAST_FORWARD_REWIND_STEP = 10 * 1000; // in milliseconds
     public static final int FAST_FORWARD_REWIND_REPEAT_DELAY = 200; // in milliseconds
     private static final String TAG = "MediaPlayerGlue";
+    /*
     protected final PlaybackControlsRow.ThumbsDownAction mThumbsDownAction;
     protected final PlaybackControlsRow.ThumbsUpAction mThumbsUpAction;
+    */
     private final Context mContext;
     private IYoutubeApi mPlayer;
     private final PlaybackControlsRow.RepeatAction mRepeatAction;
@@ -87,18 +89,25 @@ public abstract class MediaPlayerGlue extends PlaybackControlGlue implements
         // Instantiate secondary actions
         mShuffleAction = new PlaybackControlsRow.ShuffleAction(mContext);
         mRepeatAction = new PlaybackControlsRow.RepeatAction(mContext);
+        /*
         mThumbsDownAction = new PlaybackControlsRow.ThumbsDownAction(mContext);
         mThumbsUpAction = new PlaybackControlsRow.ThumbsUpAction(mContext);
         mThumbsDownAction.setIndex(PlaybackControlsRow.ThumbsAction.OUTLINE);
         mThumbsUpAction.setIndex(PlaybackControlsRow.ThumbsAction.OUTLINE);
-
+        */
         // Register selected listener such that we know what action the user currently has focused.
         fragment.setOnItemViewSelectedListener(this);
 
         mPlayer.setOnProgressUpdateListener(new IProgressUpdateListener() {
             @Override
-            public void onProgressUpdate(float currentTime) {
-                mCurrentTime = (int) (currentTime * 100);
+            public void onProgressUpdate(final float currentTime) {
+                mCurrentTime = (int) (currentTime * 1000);
+                mHandler.post(new Runnable() {
+                    @Override
+                    public void run() {
+                        updateProgress();
+                    }
+                });
             }
         });
     }
@@ -125,8 +134,10 @@ public abstract class MediaPlayerGlue extends PlaybackControlGlue implements
     protected void addSecondaryActions(ArrayObjectAdapter secondaryActionsAdapter) {
         secondaryActionsAdapter.add(mShuffleAction);
         secondaryActionsAdapter.add(mRepeatAction);
+        /*
         secondaryActionsAdapter.add(mThumbsDownAction);
         secondaryActionsAdapter.add(mThumbsUpAction);
+        */
     }
 
     /**
@@ -171,17 +182,6 @@ public abstract class MediaPlayerGlue extends PlaybackControlGlue implements
             if (mRunnable != null) mHandler.removeCallbacks(mRunnable);
             return;
         }
-        /*
-        mRunnable = new Runnable() {
-            @Override
-            public void run() {
-                updateProgress();
-                Log.d(TAG, "enableProgressUpdating(boolean)");
-                mHandler.postDelayed(this, getUpdatePeriod());
-            }
-        };
-        mHandler.postDelayed(mRunnable, getUpdatePeriod());
-        */
     }
 
     @Override
@@ -190,10 +190,14 @@ public abstract class MediaPlayerGlue extends PlaybackControlGlue implements
         // is incremented and the UI updated such that we can display the new state.
         super.onActionClicked(action);
         if (action instanceof PlaybackControlsRow.ShuffleAction) {
+            Log.i(TAG, "ShuffleAction");
             mShuffleAction.nextIndex();
         } else if (action instanceof PlaybackControlsRow.RepeatAction) {
+            Log.i(TAG, "RepeatAction");
             mRepeatAction.nextIndex();
-        } else if (action instanceof PlaybackControlsRow.ThumbsUpAction) {
+        }
+        /*
+        else if (action instanceof PlaybackControlsRow.ThumbsUpAction) {
             if (mThumbsUpAction.getIndex() == PlaybackControlsRow.ThumbsAction.SOLID) {
                 mThumbsUpAction.setIndex(PlaybackControlsRow.ThumbsAction.OUTLINE);
             } else {
@@ -208,6 +212,7 @@ public abstract class MediaPlayerGlue extends PlaybackControlGlue implements
                 mThumbsUpAction.setIndex(PlaybackControlsRow.ThumbsAction.OUTLINE);
             }
         }
+        */
         onMetadataChanged();
     }
 
@@ -314,79 +319,49 @@ public abstract class MediaPlayerGlue extends PlaybackControlGlue implements
      * @param newPosition The new position of the media track in milliseconds.
      */
     protected void seekTo(int newPosition) {
-        mPlayer.seekTo(newPosition);
-    }
-
-    /**
-     * Sets the media source of the player witha given URI.
-     *
-     * @return Returns <code>true</code> if uri represents a new media; <code>false</code>
-     * otherwise.
-     * @see MediaPlayer#setDataSource(String)
-     */
-    public boolean setMediaSource(Uri uri) {
-        if (mMediaSourceUri != null && mMediaSourceUri.equals(uri)) {
-            return false;
-        }
-        mMediaSourceUri = uri;
-        return true;
-    }
-
-    /**
-     * Sets the media source of the player with a String path URL.
-     *
-     * @return Returns <code>true</code> if path represents a new media; <code>false</code>
-     * otherwise.
-     * @see MediaPlayer#setDataSource(String)
-     */
-    public boolean setMediaSource(String path) {
-        if (mMediaSourcePath != null && mMediaSourcePath.equals(mMediaSourcePath)) {
-            return false;
-        }
-        mMediaSourcePath = path;
-        return true;
+        mPlayer.seekTo(newPosition / 1000);
     }
 
     public void prepareMediaForPlaying() {
         reset();
-        /*
-        try {
-            if (mMediaSourceUri != null) mPlayer.setDataSource(getContext(), mMediaSourceUri);
-            else mPlayer.setDataSource(mMediaSourcePath);
-        } catch (IOException e) {
-            throw new RuntimeException(e);
-        }
-        */
-        //mPlayer.setAudioStreamType(AudioManager.STREAM_MUSIC);
 
         mPlayer.addPlayerListener(new IPlayerListener() {
             @Override
-            public void onPlayerReady() {
-                Log.i(TAG, "in onPlayerReady");
+            public void onPlayerReady(final VideoInfo videoInfo) {
                 mInitialized = true;
                 //mPlayer.start();
-                onMetadataChanged();
+                MediaPlayerGlue.MetaData metaData = new MediaPlayerGlue.MetaData();
+                metaData.setArtist(videoInfo.getAuthor());
+                metaData.setTitle(videoInfo.getTitle());
+                setMetaData(metaData);
                 onStateChanged();
                 updateProgress();
-                Log.i(TAG, "after onPlayerReady");
             }
 
             @Override
-            public void onPlayerStateChange(final VideoState state, long position, float speed, float duration) {
+            public void onPlayerStateChange(final VideoState state, long position, float speed, float duration, final VideoInfo videoInfo) {
                 Log.i(TAG, "state : " + state);
                 if (state == VideoState.ENDED) {
                     if (mInitialized && mMediaFileFinishedPlayingListener != null)
                         mMediaFileFinishedPlayingListener.onMediaFileFinishedPlaying(mMetaData);
-                } else if (state == VideoState.PAUSED) {
-                    //onStateChanged();
-                    //updateProgress();
                 }
                 if (state == VideoState.PLAYING) {
                     isPlaying = true;
                 } else {
                     isPlaying = false;
                 }
-                mVideoDuration = (int) (duration * 100);
+                mVideoDuration = (int) (duration * 1000);
+                mHandler.post(new Runnable() {
+                    @Override
+                    public void run() {
+                        MediaPlayerGlue.MetaData metaData = new MediaPlayerGlue.MetaData();
+                        metaData.setArtist(videoInfo.getAuthor());
+                        metaData.setTitle(videoInfo.getTitle());
+                        setMetaData(metaData);
+                        onStateChanged();
+                        updateProgress();
+                    }
+                });
             }
         });
 
@@ -394,9 +369,16 @@ public abstract class MediaPlayerGlue extends PlaybackControlGlue implements
             @Override
             public void onBufferUpdate(final float videoDuration, final float loadedFraction) {
                 Log.i(TAG, "onBufferUpdate : " + loadedFraction);
-                mControlsRow.setBufferedProgress((int) (videoDuration * 100 * loadedFraction));
+                mControlsRow.setBufferedProgress((int) (videoDuration * 1000 * loadedFraction));
             }
         });
+
+        MediaPlayerGlue.MetaData metaData = new MediaPlayerGlue.MetaData();
+
+        VideoInfo videoInfo = mPlayer.getVideoInfo();
+        metaData.setArtist(videoInfo.getAuthor());
+        metaData.setTitle(videoInfo.getTitle());
+        setMetaData(metaData);
 
         //mPlayer.prepareAsync();
         onStateChanged();
