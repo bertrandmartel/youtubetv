@@ -15,15 +15,20 @@
 package fr.bmartel.youtubetv.media;
 
 import android.app.Activity;
+import android.app.Fragment;
 import android.app.FragmentTransaction;
 import android.os.Bundle;
 
+import java.util.List;
+
 import fr.bmartel.youtubetv.R;
+import fr.bmartel.youtubetv.listener.IVideoActivity;
+import fr.bmartel.youtubetv.model.VideoQuality;
 
 /**
  * TODO: Javadoc
  */
-public class VideoExampleActivity extends Activity {
+public class VideoExampleActivity extends Activity implements IVideoActivity {
 
     public static final String TAG = "VideoExampleActivity";
 
@@ -41,6 +46,29 @@ public class VideoExampleActivity extends Activity {
         ft2.commit();
 
         requestVisibleBehind(true);
+    }
+
+    @Override
+    public void displayQualityFragment(List<VideoQuality> availableQualities) {
+        FragmentTransaction ft3 = getFragmentManager().beginTransaction();
+        //VideoQualityExport qualityExport = new VideoQualityExport(availableQualities);
+        Fragment fragment = WizardExample1stStepFragment.newInstance(availableQualities);
+        ft3.add(android.R.id.content, fragment, WizardExample1stStepFragment.TAG).addToBackStack(null);
+        ft3.commit();
+    }
+
+    @Override
+    public void onBackPressed() {
+
+        int count = getFragmentManager().getBackStackEntryCount();
+
+        if (count == 0) {
+            super.onBackPressed();
+            //additional code
+        } else {
+            getFragmentManager().popBackStack();
+        }
+
     }
 
     @Override

@@ -213,7 +213,7 @@ public class JavascriptInterface {
     /**
      * Video information.
      */
-    private VideoInfo mVideoInfo = new VideoInfo("", "", "");
+    private VideoInfo mVideoInfo = new VideoInfo("", "", "", new ArrayList<VideoQuality>());
 
     /**
      * Build JS interface.

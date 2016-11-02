@@ -24,16 +24,38 @@ import android.support.v17.leanback.widget.PlaybackControlsRow;
 import android.support.v17.leanback.widget.PlaybackControlsRowPresenter;
 
 import fr.bmartel.youtubetv.IYoutubeApi;
+import fr.bmartel.youtubetv.listener.IVideoInfoListener;
+import fr.bmartel.youtubetv.listener.IVideoActivity;
+import fr.bmartel.youtubetv.model.VideoInfo;
 
-public abstract class VideoMediaPlayerGlue extends MediaPlayerGlue {
+public abstract class VideoMediaPlayerGlue extends MediaPlayerGlue implements IVideoInfoListener {
 
     //private final PlaybackControlsRow.ClosedCaptioningAction mClosedCaptioningAction;
 
     private final PlaybackControlsRow.HighQualityAction mHighQualityAction;
 
-    public VideoMediaPlayerGlue(Context context, PlaybackOverlayFragment fragment, IYoutubeApi youtubePlayer) {
-        super(context, fragment, youtubePlayer);
+    private IVideoActivity mVideoActivity;
 
+    private IYoutubeApi mYoutubePlayer;
+
+    private VideoInfo mVideoInfo;
+
+    public VideoMediaPlayerGlue(Context context, IVideoActivity videoActivity, PlaybackOverlayFragment fragment, IYoutubeApi youtubePlayer) {
+        super(context, fragment, youtubePlayer);
+        this.mVideoActivity = videoActivity;
+        this.mYoutubePlayer = youtubePlayer;
+
+        /*
+        JSONArray jsonData = null;
+        try {
+            jsonData = new JSONArray("");
+
+            JSONObject jsonResponse = jsonData.getJSONObject(0);
+            JSONArray jsonArray = jsonResponse.getJSONArray("trends");
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
+        */
         // Instantiate secondary actions
         //mClosedCaptioningAction = new PlaybackControlsRow.ClosedCaptioningAction(context);
         mHighQualityAction = new PlaybackControlsRow.HighQualityAction(context);
@@ -56,7 +78,9 @@ public abstract class VideoMediaPlayerGlue extends MediaPlayerGlue {
     public void onActionClicked(Action action) {
         super.onActionClicked(action);
         if (action == mHighQualityAction) {
-            mHighQualityAction.nextIndex();
+            //mHighQualityAction.nextIndex();
+            mYoutubePlayer.pause();
+            mVideoActivity.displayQualityFragment(mYoutubePlayer.getAvailableQualityLevels());
         }
     }
 
@@ -64,5 +88,10 @@ public abstract class VideoMediaPlayerGlue extends MediaPlayerGlue {
         // TODO: hahnr@ move into resources
         presenter.setProgressColor(Color.parseColor("#e3e3e3"));
         presenter.setBackgroundColor(Color.parseColor("#e52d27"));
+    }
+
+    @Override
+    public void onQualityReceived(VideoInfo videoInfo) {
+        mVideoInfo = videoInfo;
     }
 }

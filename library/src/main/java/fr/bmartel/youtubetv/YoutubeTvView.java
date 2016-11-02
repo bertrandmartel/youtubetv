@@ -347,6 +347,7 @@ public class YoutubeTvView extends FrameLayout implements IYoutubeApi {
         settings.setLoadWithOverviewMode(true);
         settings.setUseWideViewPort(true);
         settings.setDomStorageEnabled(true);
+        settings.setMediaPlaybackRequiresUserGesture(false);
 
         mWebView.setWebViewClient(new WebViewClient());
 
