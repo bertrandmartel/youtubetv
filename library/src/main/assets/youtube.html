@@ -271,7 +271,8 @@
             player.getVideoData()['video_id'],
             player.getVideoData()['author'],
             player.getDuration(),
-            player.getVideoLoadedFraction());
+            player.getVideoLoadedFraction(),
+            JSON.stringify(player.getAvailableQualityLevels()));
     }
 
     /**
@@ -322,7 +323,7 @@
     function getVideoInfo() {
         if (isMobile) {
             var data = player.getVideoData();
-            window.JSInterface.onVideoInfoReceived(data.title,data.author,data['video_id']);
+            window.JSInterface.onVideoInfoReceived(data.title,data.author,data['video_id'],JSON.stringify(player.getAvailableQualityLevels()));
         }
     }
 
@@ -677,7 +678,7 @@
 
             var data = player.getVideoData();
 
-            window.JSInterface.onPlayerReady(data.title,data.author,data['video_id']);
+            window.JSInterface.onPlayerReady(data.title,data.author,data['video_id'],JSON.stringify(player.getAvailableQualityLevels()));
         }
 
         return false;

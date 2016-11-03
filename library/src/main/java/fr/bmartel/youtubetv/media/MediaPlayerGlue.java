@@ -41,6 +41,7 @@ import fr.bmartel.youtubetv.R;
 import fr.bmartel.youtubetv.listener.IBufferStateListener;
 import fr.bmartel.youtubetv.listener.IPlayerListener;
 import fr.bmartel.youtubetv.listener.IProgressUpdateListener;
+import fr.bmartel.youtubetv.listener.IVideoInfoListener;
 import fr.bmartel.youtubetv.model.VideoInfo;
 import fr.bmartel.youtubetv.model.VideoState;
 
@@ -53,7 +54,7 @@ import fr.bmartel.youtubetv.model.VideoState;
  * android.support.v17.leanback.widget.PlaybackControlsRow.RepeatAction}</li> <li>{@link
  * android.support.v17.leanback.widget.PlaybackControlsRow.ThumbsDownAction}</li> <li>{@link
  * android.support.v17.leanback.widget.PlaybackControlsRow.ThumbsUpAction}</li> </ul>
- * <p/>
+ * <p>
  */
 public abstract class MediaPlayerGlue extends PlaybackControlGlue implements OnItemViewSelectedListener {
 
@@ -81,6 +82,7 @@ public abstract class MediaPlayerGlue extends PlaybackControlGlue implements OnI
     private int mCurrentTime;
     private int mVideoDuration;
     private boolean isPlaying;
+    private IVideoInfoListener mVideoInfoListener;
 
     public MediaPlayerGlue(Context context, PlaybackOverlayFragment fragment, IYoutubeApi youtubePlayer) {
         super(context, fragment, new int[]{1});
@@ -110,6 +112,10 @@ public abstract class MediaPlayerGlue extends PlaybackControlGlue implements OnI
                 });
             }
         });
+    }
+
+    protected void setVideoInfoListener(IVideoInfoListener videoInfoListener) {
+        mVideoInfoListener = videoInfoListener;
     }
 
     /**
@@ -336,6 +342,7 @@ public abstract class MediaPlayerGlue extends PlaybackControlGlue implements OnI
                 setMetaData(metaData);
                 onStateChanged();
                 updateProgress();
+                mVideoInfoListener.onQualityReceived(videoInfo);
             }
 
             @Override
@@ -362,6 +369,7 @@ public abstract class MediaPlayerGlue extends PlaybackControlGlue implements OnI
                         updateProgress();
                     }
                 });
+                mVideoInfoListener.onQualityReceived(videoInfo);
             }
         });
 

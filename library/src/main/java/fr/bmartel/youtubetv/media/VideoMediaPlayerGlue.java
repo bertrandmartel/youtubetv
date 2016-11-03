@@ -23,10 +23,13 @@ import android.support.v17.leanback.widget.ArrayObjectAdapter;
 import android.support.v17.leanback.widget.PlaybackControlsRow;
 import android.support.v17.leanback.widget.PlaybackControlsRowPresenter;
 
+import java.util.ArrayList;
+
 import fr.bmartel.youtubetv.IYoutubeApi;
-import fr.bmartel.youtubetv.listener.IVideoInfoListener;
 import fr.bmartel.youtubetv.listener.IVideoActivity;
+import fr.bmartel.youtubetv.listener.IVideoInfoListener;
 import fr.bmartel.youtubetv.model.VideoInfo;
+import fr.bmartel.youtubetv.model.VideoQuality;
 
 public abstract class VideoMediaPlayerGlue extends MediaPlayerGlue implements IVideoInfoListener {
 
@@ -38,10 +41,14 @@ public abstract class VideoMediaPlayerGlue extends MediaPlayerGlue implements IV
 
     private IYoutubeApi mYoutubePlayer;
 
-    private VideoInfo mVideoInfo;
+    private VideoInfo mVideoInfo = new VideoInfo("", "", "", new ArrayList<VideoQuality>());
 
-    public VideoMediaPlayerGlue(Context context, IVideoActivity videoActivity, PlaybackOverlayFragment fragment, IYoutubeApi youtubePlayer) {
+    public VideoMediaPlayerGlue(Context context,
+                                IVideoActivity videoActivity,
+                                PlaybackOverlayFragment fragment,
+                                IYoutubeApi youtubePlayer) {
         super(context, fragment, youtubePlayer);
+        setVideoInfoListener(this);
         this.mVideoActivity = videoActivity;
         this.mYoutubePlayer = youtubePlayer;
 
@@ -80,7 +87,7 @@ public abstract class VideoMediaPlayerGlue extends MediaPlayerGlue implements IV
         if (action == mHighQualityAction) {
             //mHighQualityAction.nextIndex();
             mYoutubePlayer.pause();
-            mVideoActivity.displayQualityFragment(mYoutubePlayer.getAvailableQualityLevels());
+            mVideoActivity.displayQualityFragment(mVideoInfo.getAvailableQualityList());
         }
     }
 

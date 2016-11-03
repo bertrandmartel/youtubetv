@@ -263,12 +263,12 @@ public class JavascriptInterface {
     }
 
     @android.webkit.JavascriptInterface
-    public void onPlayerReady(final String title, final String author, final String videoId) {
+    public void onPlayerReady(final String title, final String author, final String videoId, final String qualityLevels) {
 
         new Thread(new Runnable() {
             @Override
             public void run() {
-                final VideoInfo videoInfo = new VideoInfo(videoId, author, title);
+                final VideoInfo videoInfo = new VideoInfo(videoId, author, title, WebviewUtils.parseQualityLevels(qualityLevels));
 
                 for (IPlayerListener listener : mPlayerListenerList) {
                     listener.onPlayerReady(videoInfo);
@@ -298,7 +298,8 @@ public class JavascriptInterface {
                                     final String videoId,
                                     final String videoAuthor,
                                     final float duration,
-                                    final float loadedFraction) {
+                                    final float loadedFraction,
+                                    final String qualityLevels) {
         new Thread(new Runnable() {
             @Override
             public void run() {
@@ -361,7 +362,7 @@ public class JavascriptInterface {
                 }
 
                 for (IPlayerListener listener : mPlayerListenerList) {
-                    listener.onPlayerStateChange(videoState, position, speed, duration, new VideoInfo(videoId, videoAuthor, title));
+                    listener.onPlayerStateChange(videoState, position, speed, duration, new VideoInfo(videoId, videoAuthor, title, WebviewUtils.parseQualityLevels(qualityLevels)));
                 }
             }
         }).start();
@@ -464,8 +465,8 @@ public class JavascriptInterface {
     }
 
     @android.webkit.JavascriptInterface
-    public void onVideoInfoReceived(final String title, final String author, final String videoId) {
-        mVideoInfo = new VideoInfo(videoId, author, title);
+    public void onVideoInfoReceived(final String title, final String author, final String videoId, final String qualityLevels) {
+        mVideoInfo = new VideoInfo(videoId, author, title, WebviewUtils.parseQualityLevels(qualityLevels));
         mLock.open();
     }
 
