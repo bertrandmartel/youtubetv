@@ -24,7 +24,12 @@
 
 package fr.bmartel.youtubetv;
 
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
+import android.media.MediaMetadata;
+import android.media.session.MediaSession;
 import android.media.session.PlaybackState;
+import android.os.AsyncTask;
 import android.os.ConditionVariable;
 import android.os.Handler;
 import android.util.Log;
@@ -34,6 +39,7 @@ import android.widget.ImageView;
 import android.widget.ProgressBar;
 
 import java.io.IOException;
+import java.net.URL;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -265,7 +271,7 @@ public class JavascriptInterface {
     @android.webkit.JavascriptInterface
     public void onPlayerReady(final String title, final String author, final String videoId, final String qualityLevels) {
 
-        new Thread(new Runnable() {
+        mHandler.post(new Runnable() {
             @Override
             public void run() {
                 final VideoInfo videoInfo = new VideoInfo(videoId, author, title, WebviewUtils.parseQualityLevels(qualityLevels));
@@ -274,20 +280,20 @@ public class JavascriptInterface {
                     listener.onPlayerReady(videoInfo);
                 }
             }
-        }).start();
+        });
 
     }
 
     @android.webkit.JavascriptInterface
     public void onProgressUpdate(final float currentTime) {
-        new Thread(new Runnable() {
+        mHandler.post(new Runnable() {
             @Override
             public void run() {
                 if (mProgressUpdateListener != null) {
                     mProgressUpdateListener.onProgressUpdate(currentTime);
                 }
             }
-        }).start();
+        });
     }
 
     @android.webkit.JavascriptInterface
@@ -300,7 +306,7 @@ public class JavascriptInterface {
                                     final float duration,
                                     final float loadedFraction,
                                     final String qualityLevels) {
-        new Thread(new Runnable() {
+        mHandler.post(new Runnable() {
             @Override
             public void run() {
 
@@ -351,21 +357,65 @@ public class JavascriptInterface {
                             break;
                     }
 
-                    String thumbnailUrl = WebviewUtils.getThumbnailURL(videoId, suggestedThumbnailQuality);
-                    try {
-                        thumbnailUrl = WebviewUtils.getThumbnailQuality(videoId, suggestedThumbnailQuality);
-                    } catch (IOException e) {
-                        e.printStackTrace();
-                    }
-
-                    WebviewUtils.updateMediaSession(rebuildMedia, mYoutubeTvView.getMediaSession(), thumbnailUrl, playbackState, position, speed, title);
+                    updateMediaSession(videoId, rebuildMedia, playbackState, position, speed, title, mYoutubeTvView.getMediaSession());
                 }
 
                 for (IPlayerListener listener : mPlayerListenerList) {
                     listener.onPlayerStateChange(videoState, position, speed, duration, new VideoInfo(videoId, videoAuthor, title, WebviewUtils.parseQualityLevels(qualityLevels)));
                 }
             }
-        }).start();
+        });
+    }
+
+    private void updateMediaSession(String videoId,
+                                    final boolean rebuildMedia,
+                                    final int playbackState,
+                                    final long position,
+                                    final float speed,
+                                    final String title,
+                                    final MediaSession mediaSession) {
+        new AsyncTask<String, Void, Void>() {
+
+            @Override
+            protected Void doInBackground(String... videoId) {
+
+                String thumbnailUrl = WebviewUtils.getThumbnailURL(videoId[0], suggestedThumbnailQuality);
+                try {
+                    thumbnailUrl = WebviewUtils.getThumbnailQuality(videoId[0], suggestedThumbnailQuality);
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+
+                MediaMetadata.Builder mediaBuilder = null;
+                boolean updateMetadata = false;
+
+                if (rebuildMedia) {
+                    Bitmap bitmap = null;
+                    try {
+                        URL url = new URL(thumbnailUrl);
+                        bitmap = BitmapFactory.decodeStream(url.openConnection().getInputStream());
+                    } catch (IOException e) {
+                        e.printStackTrace();
+                    }
+
+                    mediaBuilder = new MediaMetadata.Builder();
+                    mediaBuilder.putString(MediaMetadata.METADATA_KEY_TITLE, title);
+                    if (bitmap != null) {
+                        mediaBuilder.putBitmap(MediaMetadata.METADATA_KEY_ART, bitmap);
+                    }
+                    updateMetadata = true;
+                }
+
+                WebviewUtils.updateMediaSession(updateMetadata, mediaBuilder, mediaSession, playbackState, position, speed);
+
+                return null;
+            }
+
+            @Override
+            protected void onPostExecute(Void aVoid) {
+                super.onPostExecute(aVoid);
+            }
+        }.execute(videoId);
     }
 
     @android.webkit.JavascriptInterface

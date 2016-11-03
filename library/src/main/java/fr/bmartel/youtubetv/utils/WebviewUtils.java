@@ -24,8 +24,6 @@
 
 package fr.bmartel.youtubetv.utils;
 
-import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
 import android.media.MediaMetadata;
 import android.media.session.MediaSession;
 import android.media.session.PlaybackState;
@@ -205,31 +203,16 @@ public class WebviewUtils {
         return playlistRet;
     }
 
-    public static void updateMediaSession(final boolean rebuildMedia,
+    public static void updateMediaSession(boolean updateMetadata,
+                                          MediaMetadata.Builder mediaBuilder,
                                           final MediaSession mediaSession,
-                                          final String thumbnailUrl,
                                           final int playbackState,
                                           final long position,
-                                          final float speed,
-                                          final String title) {
+                                          final float speed) {
 
-        if (rebuildMedia) {
-            Bitmap bitmap = null;
-            try {
-                URL url = new URL(thumbnailUrl);
-                bitmap = BitmapFactory.decodeStream(url.openConnection().getInputStream());
-            } catch (IOException e) {
-                e.printStackTrace();
-            }
-
-            MediaMetadata.Builder mediaBuilder = new MediaMetadata.Builder();
-            mediaBuilder.putString(MediaMetadata.METADATA_KEY_TITLE, title);
-            if (bitmap != null) {
-                mediaBuilder.putBitmap(MediaMetadata.METADATA_KEY_ART, bitmap);
-            }
+        if (updateMetadata) {
             mediaSession.setMetadata(mediaBuilder.build());
         }
-
         PlaybackState.Builder stateBuilder = new PlaybackState.Builder();
         stateBuilder.setState(playbackState,
                 position,

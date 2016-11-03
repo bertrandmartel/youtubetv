@@ -44,12 +44,10 @@ public abstract class VideoMediaPlayerGlue extends MediaPlayerGlue implements IV
     private VideoInfo mVideoInfo = new VideoInfo("", "", "", new ArrayList<VideoQuality>());
 
     public VideoMediaPlayerGlue(Context context,
-                                IVideoActivity videoActivity,
                                 PlaybackOverlayFragment fragment,
                                 IYoutubeApi youtubePlayer) {
         super(context, fragment, youtubePlayer);
         setVideoInfoListener(this);
-        this.mVideoActivity = videoActivity;
         this.mYoutubePlayer = youtubePlayer;
 
         /*
@@ -87,7 +85,7 @@ public abstract class VideoMediaPlayerGlue extends MediaPlayerGlue implements IV
         if (action == mHighQualityAction) {
             //mHighQualityAction.nextIndex();
             //mYoutubePlayer.pause();
-            mVideoActivity.displayQualityFragment(mVideoInfo.getAvailableQualityList());
+            //mVideoActivity.displayQualityFragment(mVideoInfo.getAvailableQualityList());
         }
     }
 

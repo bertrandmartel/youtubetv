@@ -49,7 +49,7 @@ public class VideoConsumptionExampleFragment extends PlaybackOverlayFragment imp
 
         youtubeTvView = (YoutubeTvView) getActivity().findViewById(R.id.youtubetv_view);
 
-        mGlue = new VideoMediaPlayerGlue(getActivity(), (IVideoActivity) getActivity(), this, youtubeTvView) {
+        mGlue = new VideoMediaPlayerGlue(getActivity(), this, youtubeTvView) {
 
             @Override
             protected void onRowChanged(PlaybackControlsRow row) {
