@@ -1,3 +1,4 @@
 <resources>
     <string name="app_name">YoutubeTvLibrary</string>
+    <string name="video_quality_title">Select a video quality</string>
 </resources>

@@ -1,4 +1,27 @@
 /*
+ * The MIT License (MIT)
+ * <p/>
+ * Copyright (c) 2016 Bertrand Martel
+ * <p/>
+ * Permission is hereby granted, free of charge, to any person obtaining a copy
+ * of this software and associated documentation files (the "Software"), to deal
+ * in the Software without restriction, including without limitation the rights
+ * to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+ * copies of the Software, and to permit persons to whom the Software is
+ * furnished to do so, subject to the following conditions:
+ * <p/>
+ * The above copyright notice and this permission notice shall be included in
+ * all copies or substantial portions of the Software.
+ * <p/>
+ * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+ * IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+ * FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+ * AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+ * LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+ * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
+ * THE SOFTWARE.
+ */
+/*
  * Copyright (C) 2015 The Android Open Source Project
  *
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not use this file except
@@ -26,20 +49,13 @@ import android.support.v17.leanback.widget.PlaybackControlsRowPresenter;
 import java.util.ArrayList;
 
 import fr.bmartel.youtubetv.IYoutubeApi;
-import fr.bmartel.youtubetv.listener.IVideoActivity;
 import fr.bmartel.youtubetv.listener.IVideoInfoListener;
 import fr.bmartel.youtubetv.model.VideoInfo;
 import fr.bmartel.youtubetv.model.VideoQuality;
 
 public abstract class VideoMediaPlayerGlue extends MediaPlayerGlue implements IVideoInfoListener {
 
-    //private final PlaybackControlsRow.ClosedCaptioningAction mClosedCaptioningAction;
-
     private final PlaybackControlsRow.HighQualityAction mHighQualityAction;
-
-    private IVideoActivity mVideoActivity;
-
-    private IYoutubeApi mYoutubePlayer;
 
     private VideoInfo mVideoInfo = new VideoInfo("", "", "", new ArrayList<VideoQuality>());
 
@@ -48,19 +64,7 @@ public abstract class VideoMediaPlayerGlue extends MediaPlayerGlue implements IV
                                 IYoutubeApi youtubePlayer) {
         super(context, fragment, youtubePlayer);
         setVideoInfoListener(this);
-        this.mYoutubePlayer = youtubePlayer;
 
-        /*
-        JSONArray jsonData = null;
-        try {
-            jsonData = new JSONArray("");
-
-            JSONObject jsonResponse = jsonData.getJSONObject(0);
-            JSONArray jsonArray = jsonResponse.getJSONArray("trends");
-        } catch (JSONException e) {
-            e.printStackTrace();
-        }
-        */
         // Instantiate secondary actions
         //mClosedCaptioningAction = new PlaybackControlsRow.ClosedCaptioningAction(context);
         mHighQualityAction = new PlaybackControlsRow.HighQualityAction(context);
@@ -96,7 +100,7 @@ public abstract class VideoMediaPlayerGlue extends MediaPlayerGlue implements IV
     }
 
     @Override
-    public void onQualityReceived(VideoInfo videoInfo) {
+    public void onVideoInfoReceived(VideoInfo videoInfo) {
         mVideoInfo = videoInfo;
     }
 }

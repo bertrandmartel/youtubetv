@@ -1,4 +1,27 @@
 /*
+ * The MIT License (MIT)
+ * <p/>
+ * Copyright (c) 2016 Bertrand Martel
+ * <p/>
+ * Permission is hereby granted, free of charge, to any person obtaining a copy
+ * of this software and associated documentation files (the "Software"), to deal
+ * in the Software without restriction, including without limitation the rights
+ * to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+ * copies of the Software, and to permit persons to whom the Software is
+ * furnished to do so, subject to the following conditions:
+ * <p/>
+ * The above copyright notice and this permission notice shall be included in
+ * all copies or substantial portions of the Software.
+ * <p/>
+ * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+ * IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+ * FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+ * AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+ * LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+ * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
+ * THE SOFTWARE.
+ */
+/*
  * Copyright (C) 2015 The Android Open Source Project
  *
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not use this file except
@@ -14,7 +37,6 @@
 
 package fr.bmartel.youtubetv.media;
 
-import android.app.Fragment;
 import android.os.Bundle;
 import android.support.v17.leanback.app.PlaybackOverlayFragment;
 import android.support.v17.leanback.widget.Action;
@@ -28,19 +50,15 @@ import android.support.v17.leanback.widget.RowPresenter;
 
 import fr.bmartel.youtubetv.R;
 import fr.bmartel.youtubetv.YoutubeTvView;
-import fr.bmartel.youtubetv.listener.IVideoActivity;
-import fr.bmartel.youtubetv.listener.IVideoInfoListener;
 import fr.bmartel.youtubetv.model.VideoQuality;
 
 
-public class VideoConsumptionExampleFragment extends PlaybackOverlayFragment implements
+public class VideoPlayerFragment extends PlaybackOverlayFragment implements
         OnItemViewClickedListener, MediaPlayerGlue.OnMediaFileFinishedPlayingListener {
 
-    private static final String URL = "http://techslides.com/demos/sample-videos/small.mp4";
-    public static final String TAG = "VideoConsumptionExampleFragment";
+    public static final String TAG = "VideoPlayerFragment";
     private ArrayObjectAdapter mRowsAdapter;
     private MediaPlayerGlue mGlue;
-    private IVideoInfoListener mQualityListener;
     private YoutubeTvView youtubeTvView;
 
     @Override
@@ -59,30 +77,7 @@ public class VideoConsumptionExampleFragment extends PlaybackOverlayFragment imp
         };
         mGlue.setOnMediaFileFinishedPlayingListener(this);
 
-        //mGlue.setMediaSource(URL);
         mGlue.prepareMediaForPlaying();
-
-        Fragment videoSurfaceFragment = getFragmentManager()
-                .findFragmentByTag(VideoSurfaceFragment.TAG);
-
-        //YoutubeTvView surface = (YoutubeTvView) videoSurfaceFragment.getView();
-        /*
-        surface.getHolder().addCallback(new SurfaceHolder.Callback() {
-            @Override
-            public void surfaceCreated(SurfaceHolder holder) {
-                mGlue.setDisplay(holder);
-            }
-
-            @Override
-            public void surfaceChanged(SurfaceHolder holder, int format, int width, int height) {
-                // Nothing to do
-            }
-
-            @Override
-            public void surfaceDestroyed(SurfaceHolder holder) {
-            }
-        });
-        */
 
         setBackgroundType(PlaybackOverlayFragment.BG_LIGHT);
         addPlaybackControlsRow();

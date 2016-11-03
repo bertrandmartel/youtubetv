@@ -3,13 +3,12 @@ package fr.bmartel.youtubetv;
 import android.app.Fragment;
 import android.app.FragmentTransaction;
 import android.content.Context;
-import android.net.Uri;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
-import fr.bmartel.youtubetv.media.VideoConsumptionExampleFragment;
+import fr.bmartel.youtubetv.media.VideoPlayerFragment;
 import fr.bmartel.youtubetv.media.VideoSurfaceFragment;
 
 /**
@@ -32,8 +31,8 @@ public class YoutubeTvFragment extends Fragment {
         ft1.commit();
 
         FragmentTransaction ft2 = getChildFragmentManager().beginTransaction();
-        VideoConsumptionExampleFragment videoFragment = new VideoConsumptionExampleFragment();
-        ft2.add(R.id.videoFragment, videoFragment, VideoConsumptionExampleFragment.TAG);
+        VideoPlayerFragment videoFragment = new VideoPlayerFragment();
+        ft2.add(R.id.videoFragment, videoFragment, VideoPlayerFragment.TAG);
         ft2.commit();
     }
 
