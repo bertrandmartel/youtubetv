@@ -7,42 +7,42 @@
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.1.0/jquery.min.js"></script>
     <title></title>
     <style type="text/css">
-    body {
+        body {
         overflow: hidden;
-    }
-    
-    #over {
+        }
+
+        #over {
         position: absolute;
         top: 50%;
         left: 50%;
         z-index: 1000;
         border: 2px solid black;
         pointer-events: none;
-    }
-    
-    iframe {
+        }
+
+        iframe {
         max-width: 100%;
         position: absolute;
         border: none;
         box-sizing: border-box;
         width: 100%;
         height: 100%;
-    }
-    
-    ul {
+        }
+
+        ul {
         list-style-type: none;
         float: left;
         margin: 2px;
         width: 100%;
-    }
-    
-    ul li {
+        }
+
+        ul li {
         float: left;
         width: 30%;
-    }
-    /* The Overlay (background) */
-    
-    .overlay {
+        }
+        /* The Overlay (background) */
+
+        .overlay {
         display: none;
         /* Height & width depends on how you want to reveal the overlay (see JS below) */
         height: 60%;
@@ -60,18 +60,19 @@
         overflow-x: hidden;
         /* Disable horizontal scroll */
         transition: 0.5s;
-        /* 0.5 second transition effect to slide in or slide down the overlay (height or width, depending on reveal) */
-    }
-    /* Position the content inside the overlay */
-    
-    .overlay-content {
+        /* 0.5 second transition effect to slide in or slide down the overlay (height or width,
+        depending on reveal) */
+        }
+        /* Position the content inside the overlay */
+
+        .overlay-content {
         position: relative;
         width: 100%;
-    }
-    
-    canvas {
+        }
+
+        canvas {
         display: block;
-    }
+        }
     </style>
     <script>
     var QueryString = function() {
@@ -569,6 +570,7 @@
      * @param {string} video quality
      */
     function setPlaybackQuality(suggestedQuality) {
+    console.log("SET QUALITY : " + suggestedQuality);
         player.setPlaybackQuality(suggestedQuality);
     }
 
@@ -689,71 +691,72 @@
             IMG.src = window.JSInterface.getThumbnailQuality(QueryString.videoId, QueryString.thumbnailQuality);
         }
     });
+
     </script>
 </head>
 
 <body id="body" style='margin:0;padding:0;'>
-    <canvas id="thumbnail_canvas"></canvas>
-    <div id="debugWindow" class="overlay">
-        <div class="overlay-content" style='color:white;margin-top:100px;'>
-            <ul>
-                <li>state</li>
-                <li id="videoState"></li>
-            </ul>
-            <ul>
-                <li>playback quality</li>
-                <li id="videoQuality"></li>
-            </ul>
-            <ul>
-                <li>volume</li>
-                <li id="videoVolume"></li>
-            </ul>
-            <ul>
-                <li>current time</li>
-                <li id="videoCurrentTime"></li>
-            </ul>
-            <ul>
-                <li>playback rate</li>
-                <li id="videoPlaybackRate"></li>
-            </ul>
-            <ul>
-                <li>available playback rates</li>
-                <li id="videoAvailablePlaybackRates"></li>
-            </ul>
-            <ul>
-                <li>video loaded fraction</li>
-                <li id="videoLoadedFraction"></li>
-            </ul>
-            <ul>
-                <li>available quality levels</li>
-                <li id="videoAvailableQualityLevels"></li>
-            </ul>
-            <ul>
-                <li>video duration</li>
-                <li id="videoDuration"></li>
-            </ul>
-            <ul>
-                <li>video URL</li>
-                <li id="videoURL"></li>
-            </ul>
-            <ul>
-                <li>video embed code</li>
-                <li id="videoEmbedCode"></li>
-            </ul>
-            <ul>
-                <li>video playlist</li>
-                <li id="videoPlaylist"></li>
-            </ul>
-            <ul>
-                <li>video playlist index</li>
-                <li id="videoPlaylistIndex"></li>
-            </ul>
-        </div>
+<canvas id="thumbnail_canvas"></canvas>
+<div id="debugWindow" class="overlay">
+    <div class="overlay-content" style='color:white;margin-top:100px;'>
+        <ul>
+            <li>state</li>
+            <li id="videoState"></li>
+        </ul>
+        <ul>
+            <li>playback quality</li>
+            <li id="videoQuality"></li>
+        </ul>
+        <ul>
+            <li>volume</li>
+            <li id="videoVolume"></li>
+        </ul>
+        <ul>
+            <li>current time</li>
+            <li id="videoCurrentTime"></li>
+        </ul>
+        <ul>
+            <li>playback rate</li>
+            <li id="videoPlaybackRate"></li>
+        </ul>
+        <ul>
+            <li>available playback rates</li>
+            <li id="videoAvailablePlaybackRates"></li>
+        </ul>
+        <ul>
+            <li>video loaded fraction</li>
+            <li id="videoLoadedFraction"></li>
+        </ul>
+        <ul>
+            <li>available quality levels</li>
+            <li id="videoAvailableQualityLevels"></li>
+        </ul>
+        <ul>
+            <li>video duration</li>
+            <li id="videoDuration"></li>
+        </ul>
+        <ul>
+            <li>video URL</li>
+            <li id="videoURL"></li>
+        </ul>
+        <ul>
+            <li>video embed code</li>
+            <li id="videoEmbedCode"></li>
+        </ul>
+        <ul>
+            <li>video playlist</li>
+            <li id="videoPlaylist"></li>
+        </ul>
+        <ul>
+            <li>video playlist index</li>
+            <li id="videoPlaylistIndex"></li>
+        </ul>
     </div>
-    <div id="video_div" style='display:none;'>
-        <script src="https://www.youtube.com/iframe_api"></script>
-        <div id="player"></div>
-    </div>
+</div>
+<div id="video_div" style='display:none;'>
+    <script src="https://www.youtube.com/iframe_api"></script>
+    <div id="player"></div>
+</div>
 </body>
 
 </html>

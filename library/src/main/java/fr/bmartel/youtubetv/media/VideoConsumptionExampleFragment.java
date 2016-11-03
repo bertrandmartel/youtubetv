@@ -28,8 +28,9 @@ import android.support.v17.leanback.widget.RowPresenter;
 
 import fr.bmartel.youtubetv.R;
 import fr.bmartel.youtubetv.YoutubeTvView;
-import fr.bmartel.youtubetv.listener.IVideoInfoListener;
 import fr.bmartel.youtubetv.listener.IVideoActivity;
+import fr.bmartel.youtubetv.listener.IVideoInfoListener;
+import fr.bmartel.youtubetv.model.VideoQuality;
 
 
 public class VideoConsumptionExampleFragment extends PlaybackOverlayFragment implements
@@ -40,12 +41,13 @@ public class VideoConsumptionExampleFragment extends PlaybackOverlayFragment imp
     private ArrayObjectAdapter mRowsAdapter;
     private MediaPlayerGlue mGlue;
     private IVideoInfoListener mQualityListener;
+    private YoutubeTvView youtubeTvView;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-        YoutubeTvView youtubeTvView = (YoutubeTvView) getActivity().findViewById(R.id.youtubetv_view);
+        youtubeTvView = (YoutubeTvView) getActivity().findViewById(R.id.youtubetv_view);
 
         mGlue = new VideoMediaPlayerGlue(getActivity(), (IVideoActivity) getActivity(), this, youtubeTvView) {
 
@@ -121,4 +123,7 @@ public class VideoConsumptionExampleFragment extends PlaybackOverlayFragment imp
         mGlue.startPlayback();
     }
 
+    public void setPlaybackQuality(VideoQuality videoQuality) {
+        youtubeTvView.setPlaybackQuality(videoQuality);
+    }
 }

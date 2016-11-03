@@ -32,6 +32,8 @@ public class VideoExampleActivity extends Activity implements IVideoActivity {
 
     public static final String TAG = "VideoExampleActivity";
 
+    private VideoConsumptionExampleFragment videoFragment;
+
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -42,7 +44,8 @@ public class VideoExampleActivity extends Activity implements IVideoActivity {
         ft1.commit();
 
         FragmentTransaction ft2 = getFragmentManager().beginTransaction();
-        ft2.add(R.id.videoFragment, new VideoConsumptionExampleFragment(), VideoConsumptionExampleFragment.TAG);
+        videoFragment = new VideoConsumptionExampleFragment();
+        ft2.add(R.id.videoFragment, videoFragment, VideoConsumptionExampleFragment.TAG);
         ft2.commit();
 
         requestVisibleBehind(true);
@@ -52,8 +55,8 @@ public class VideoExampleActivity extends Activity implements IVideoActivity {
     public void displayQualityFragment(List<VideoQuality> availableQualities) {
         FragmentTransaction ft3 = getFragmentManager().beginTransaction();
         //VideoQualityExport qualityExport = new VideoQualityExport(availableQualities);
-        Fragment fragment = WizardExample1stStepFragment.newInstance(availableQualities);
-        ft3.add(android.R.id.content, fragment, WizardExample1stStepFragment.TAG).addToBackStack(null);
+        Fragment fragment = QualityStepFragment.newInstance(availableQualities);
+        ft3.add(android.R.id.content, fragment, QualityStepFragment.TAG).addToBackStack(null);
         ft3.commit();
     }
 
@@ -70,6 +73,11 @@ public class VideoExampleActivity extends Activity implements IVideoActivity {
         }
 
     }
+
+    public void setVideoQuality(long index) {
+        videoFragment.setPlaybackQuality(VideoQuality.getVideoQuality((int) index));
+    }
+
 
     @Override
     protected void onResume() {
