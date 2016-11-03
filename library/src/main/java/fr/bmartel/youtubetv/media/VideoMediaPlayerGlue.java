@@ -74,7 +74,7 @@ public abstract class VideoMediaPlayerGlue extends MediaPlayerGlue implements IV
     @Override
     protected void addSecondaryActions(ArrayObjectAdapter secondaryActionsAdapter) {
         //secondaryActionsAdapter.add(mClosedCaptioningAction);
-        secondaryActionsAdapter.add(mHighQualityAction);
+        //secondaryActionsAdapter.add(mHighQualityAction);
         /*
         secondaryActionsAdapter.add(mThumbsDownAction);
         secondaryActionsAdapter.add(mThumbsUpAction);
@@ -86,7 +86,7 @@ public abstract class VideoMediaPlayerGlue extends MediaPlayerGlue implements IV
         super.onActionClicked(action);
         if (action == mHighQualityAction) {
             //mHighQualityAction.nextIndex();
-            mYoutubePlayer.pause();
+            //mYoutubePlayer.pause();
             mVideoActivity.displayQualityFragment(mVideoInfo.getAvailableQualityList());
         }
     }

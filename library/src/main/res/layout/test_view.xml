@@ -25,6 +25,6 @@
         app:showRelatedVideos="false"
         app:showVideoInfo="false"
         app:videoAnnotation="false"
-        app:videoId="jB3cuAbO_4w"
-        app:videoQuality="large" />
+        app:videoId="EZcJEvXmjfY"
+        app:videoQuality="hd720" />
 </FrameLayout>
