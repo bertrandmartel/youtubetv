@@ -1,0 +1,34 @@
+{
+  "cards": [
+    {
+      "type": "YOUTUBETV_FRAGMENT",
+      "title": "YoutubeTv Fragment",
+      "description": "YoutubeTvView with media control bar",
+      "localImageResource": "fragment"
+    },
+    {
+      "type": "YOUTUBETV_FULLSCREEN",
+      "title": "YoutubeTvView fullscreen",
+      "description": "classic YoutubeTvView",
+      "localImageResource": "fullscreen"
+    },
+    {
+      "type": "YOUTUBETV_API",
+      "title": "YoutubeTvView API showcase",
+      "description": "YoutubeTvView with button controls",
+      "localImageResource": "api"
+    },
+    {
+      "type": "YOUTUBETV_SPLITTED",
+      "title": "YoutubeTvView Splitted",
+      "description": "display 2 YoutubeTvView",
+      "localImageResource": "split"
+    },
+    {
+      "type": "YOUTUBETV_DEBUG",
+      "title": "YoutubeTvView Debug",
+      "description": "display debug mode",
+      "localImageResource": "debug"
+    }
+  ]
+}
