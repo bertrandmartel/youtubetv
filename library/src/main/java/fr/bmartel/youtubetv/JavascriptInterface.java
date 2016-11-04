@@ -582,19 +582,6 @@ public class JavascriptInterface {
     }
 
     /**
-     * Start video. This must be called from Java to enable autoplay.
-     */
-    @android.webkit.JavascriptInterface
-    public void startVideo() {
-        mWebview.post(new Runnable() {
-            @Override
-            public void run() {
-                WebviewUtils.callJavaScript(mWebview, "playVideo");
-            }
-        });
-    }
-
-    /**
      * Set size parameters from WebviewonWindowFocusChanged.
      *
      * @param viewWidth  webview actual width
