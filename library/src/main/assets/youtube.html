@@ -671,9 +671,8 @@
 
                 log(onPlayerReady.name, "autoplaying video...");
 
-                videoLaunchTimerId = setInterval(function() {
-                    window.JSInterface.startVideo();
-                }, 1000);
+                player.playVideo();
+
             } else {
                 window.JSInterface.hideLoading(true);
             }
