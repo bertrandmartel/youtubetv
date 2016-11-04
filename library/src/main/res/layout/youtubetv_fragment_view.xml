@@ -14,17 +14,6 @@
         android:layout_height="match_parent"
         android:focusable="false"
         android:focusableInTouchMode="false"
-        app:autoHide="auto"
-        app:autoplay="true"
-        app:closedCaptionLangPref="fr"
-        app:closedCaptions="true"
         app:debug="true"
-        app:playlistId="PL34D3510A0ECF96D7"
-        app:showControls="none"
-        app:showNowPlayingCard="true"
-        app:showRelatedVideos="false"
-        app:showVideoInfo="false"
-        app:videoAnnotation="false"
-        app:videoId="EZcJEvXmjfY"
-        app:videoQuality="hd720" />
+        app:videoId="EZcJEvXmjfY" />
 </FrameLayout>

@@ -186,9 +186,9 @@ public abstract class MediaPlayerGlue extends PlaybackControlGlue implements OnI
     public void setupControlsRowPresenter(PlaybackControlsRowPresenter presenter) {
         // TODO: hahnr@ move into resources
         presenter.setProgressColor(getContext().getResources().getColor(
-                R.color.player_progress_color));
+                R.color.player_progress_color_default));
         presenter.setBackgroundColor(getContext().getResources().getColor(
-                R.color.player_background_color));
+                R.color.player_background_color_default));
     }
 
     @Override

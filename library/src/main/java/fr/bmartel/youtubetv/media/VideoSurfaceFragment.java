@@ -49,6 +49,8 @@ import fr.bmartel.youtubetv.R;
 
 public class VideoSurfaceFragment extends Fragment {
 
+    public final static String TAG = VideoSurfaceFragment.class.getSimpleName();
+
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);

@@ -233,7 +233,7 @@ public class YoutubeTvView extends FrameLayout implements IYoutubeApi {
      */
     public YoutubeTvView(Context context) {
         super(context);
-        init(context);
+        initView(context);
     }
 
     /**
@@ -245,7 +245,7 @@ public class YoutubeTvView extends FrameLayout implements IYoutubeApi {
     public YoutubeTvView(Context context, AttributeSet attrs) {
         super(context, attrs);
         processAttr(context, attrs);
-        init(context);
+        initView(context);
     }
 
     /**
@@ -258,7 +258,7 @@ public class YoutubeTvView extends FrameLayout implements IYoutubeApi {
     public YoutubeTvView(Context context, AttributeSet attrs, int defStyle) {
         super(context, attrs, defStyle);
         processAttr(context, attrs);
-        init(context);
+        initView(context);
     }
 
     /**
@@ -323,9 +323,17 @@ public class YoutubeTvView extends FrameLayout implements IYoutubeApi {
      *
      * @param context view context
      */
-    private void init(final Context context) {
+    private void initView(final Context context) {
 
         inflate(getContext(), R.layout.youtube_view, this);
+
+        init();
+    }
+
+    /**
+     * Init.
+     */
+    private void init() {
 
         setBorder();
 
@@ -387,7 +395,7 @@ public class YoutubeTvView extends FrameLayout implements IYoutubeApi {
         mWebView.getSettings().setUserAgentString(mUserAgent.getValue());
 
         if (mShowNowPlayingCard) {
-            mMediaSession = new MediaSession(context, MEDIA_SESSION_TAG);
+            mMediaSession = new MediaSession(getContext(), MEDIA_SESSION_TAG);
             mMediaSession.setCallback(new MediaSession.Callback() {
                 @Override
                 public boolean onMediaButtonEvent(Intent mediaButtonIntent) {
@@ -759,6 +767,11 @@ public class YoutubeTvView extends FrameLayout implements IYoutubeApi {
         return mJavascriptInterface.getVideoInfo();
     }
 
+    @Override
+    public void playVideo(String videoId) {
+        mVideoId = videoId;
+        init();
+    }
 
     /**
      * Add a player listener.
