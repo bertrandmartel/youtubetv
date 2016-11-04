@@ -1,5 +1,24 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
 
+    <!-- A default card style. Used in cards example. -->
+    <style name="DefaultCardImageStyle" parent="Widget.Leanback.ImageCardView.ImageStyle">
+        <item name="android:layout_width">@dimen/default_image_card_width</item>
+        <item name="android:layout_height">@dimen/default_image_card_height</item>
+    </style>
+
+    <style name="DefaultCardStyle" parent="Widget.Leanback.ImageCardViewStyle">
+        <item name="cardBackground">@null</item>
+    </style>
+
     <style name="AppTheme" parent="@style/Theme.Leanback"></style>
+    <style name="DefaultCardTheme" parent="Theme.Leanback">
+        <item name="imageCardViewStyle"> @style/DefaultCardStyle </item>
+        <item name="imageCardViewImageStyle">@style/DefaultCardImageStyle</item>
+    </style>
+
+    <style name="GameCardStyle" parent="DefaultCardStyle">
+        <item name="lbImageCardViewType">Title|Content|IconOnRight</item>
+    </style>
+
 </resources>

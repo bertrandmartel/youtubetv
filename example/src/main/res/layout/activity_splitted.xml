@@ -1,0 +1,44 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical">
+
+    <fr.bmartel.youtubetv.YoutubeTvView
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_margin="10dp"
+        android:layout_weight="0.5"
+        app:autoHide="auto"
+        app:autoplay="true"
+        app:closedCaptionLangPref="fr"
+        app:closedCaptions="true"
+        app:debug="false"
+        app:showBorder="true"
+        app:showControls="none"
+        app:showNowPlayingCard="true"
+        app:showRelatedVideos="false"
+        app:showVideoInfo="false"
+        app:videoAnnotation="false"
+        app:videoId="eKFTSSKCzWA"
+        app:videoQuality="hd720" />
+
+    <fr.bmartel.youtubetv.YoutubeTvView
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_margin="10dp"
+        android:layout_weight="0.5"
+        app:autoHide="auto"
+        app:autoplay="false"
+        app:closedCaptions="false"
+        app:debug="false"
+        app:showBorder="true"
+        app:showControls="none"
+        app:showRelatedVideos="false"
+        app:showVideoInfo="false"
+        app:videoAnnotation="false"
+        app:videoId="6pxRHBw-k8M"
+        app:videoQuality="hd1440" />
+
+</LinearLayout>
