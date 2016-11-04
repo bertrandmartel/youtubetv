@@ -312,4 +312,11 @@ public interface IYoutubeApi {
      * @return
      */
     VideoInfo getVideoInfo();
+
+    /**
+     * load a new video (reload the page to play a new video).
+     *
+     * @param videoId
+     */
+    void playVideo(String videoId);
 }

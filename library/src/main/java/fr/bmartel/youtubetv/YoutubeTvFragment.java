@@ -16,6 +16,26 @@ import fr.bmartel.youtubetv.media.VideoSurfaceFragment;
  */
 public class YoutubeTvFragment extends Fragment {
 
+    private VideoPlayerFragment mVideoFragment;
+
+    private String mVideoId;
+
+    public static YoutubeTvFragment newInstance(String videoId) {
+        YoutubeTvFragment fragment = new YoutubeTvFragment();
+
+        Bundle args = new Bundle();
+        args.putString("videoId", videoId);
+        fragment.setArguments(args);
+
+        return fragment;
+    }
+
+    @Override
+    public void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        mVideoId = getArguments().getString("videoId", "");
+    }
+
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
@@ -31,8 +51,8 @@ public class YoutubeTvFragment extends Fragment {
         ft1.commit();
 
         FragmentTransaction ft2 = getChildFragmentManager().beginTransaction();
-        VideoPlayerFragment videoFragment = new VideoPlayerFragment();
-        ft2.add(R.id.videoFragment, videoFragment, VideoPlayerFragment.TAG);
+        mVideoFragment = VideoPlayerFragment.newInstance(mVideoId);
+        ft2.add(R.id.videoFragment, mVideoFragment, VideoPlayerFragment.TAG);
         ft2.commit();
     }
 
@@ -46,4 +66,5 @@ public class YoutubeTvFragment extends Fragment {
     public void onDetach() {
         super.onDetach();
     }
+
 }
