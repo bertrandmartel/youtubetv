@@ -32,6 +32,7 @@ import android.graphics.drawable.DrawableContainer;
 import android.graphics.drawable.GradientDrawable;
 import android.graphics.drawable.StateListDrawable;
 import android.media.session.MediaSession;
+import android.media.session.PlaybackState;
 import android.os.ConditionVariable;
 import android.os.Handler;
 import android.util.AttributeSet;
@@ -395,6 +396,11 @@ public class YoutubeTvView extends FrameLayout implements IYoutubeApi {
         mWebView.getSettings().setUserAgentString(mUserAgent.getValue());
 
         if (mShowNowPlayingCard) {
+
+            if (mMediaSession != null) {
+                mMediaSession.setActive(false);
+                mMediaSession.release();
+            }
             mMediaSession = new MediaSession(getContext(), MEDIA_SESSION_TAG);
             mMediaSession.setCallback(new MediaSession.Callback() {
                 @Override
@@ -403,6 +409,7 @@ public class YoutubeTvView extends FrameLayout implements IYoutubeApi {
                     return true;
                 }
             });
+
             mMediaSession.setFlags(MediaSession.FLAG_HANDLES_MEDIA_BUTTONS |
                     MediaSession.FLAG_HANDLES_TRANSPORT_CONTROLS);
 
@@ -824,5 +831,17 @@ public class YoutubeTvView extends FrameLayout implements IYoutubeApi {
     @Override
     public void setOnProgressUpdateListener(IProgressUpdateListener listener) {
         mJavascriptInterface.setOnProgressUpdateListener(listener);
+    }
+
+    @Override
+    public void closePlayer() {
+        stopVideo();
+        PlaybackState.Builder stateBuilder = new PlaybackState.Builder();
+        stateBuilder.setState(PlaybackState.STATE_PAUSED,
+                12,
+                1);
+        mMediaSession.setPlaybackState(stateBuilder.build());
+        mMediaSession.setActive(false);
+        Log.i(TAG, "closePlayer : " + mMediaSession.isActive());
     }
 }

@@ -137,4 +137,8 @@ public class VideoPlayerFragment extends PlaybackOverlayFragment implements
     public void setPlaybackQuality(VideoQuality videoQuality) {
         youtubeTvView.setPlaybackQuality(videoQuality);
     }
+
+    public void closePlayer() {
+        youtubeTvView.closePlayer();
+    }
 }
