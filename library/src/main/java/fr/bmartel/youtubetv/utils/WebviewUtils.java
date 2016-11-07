@@ -27,6 +27,7 @@ package fr.bmartel.youtubetv.utils;
 import android.media.MediaMetadata;
 import android.media.session.MediaSession;
 import android.media.session.PlaybackState;
+import android.util.Log;
 import android.webkit.WebView;
 
 import org.json.JSONArray;
@@ -210,15 +211,16 @@ public class WebviewUtils {
                                           final long position,
                                           final float speed) {
 
-        if (updateMetadata) {
-            mediaSession.setMetadata(mediaBuilder.build());
-        }
-        PlaybackState.Builder stateBuilder = new PlaybackState.Builder();
-        stateBuilder.setState(playbackState,
-                position,
-                speed);
-        mediaSession.setPlaybackState(stateBuilder.build());
+        if (mediaSession.isActive()) {
 
-        mediaSession.setActive(true);
+            if (updateMetadata) {
+                mediaSession.setMetadata(mediaBuilder.build());
+            }
+            PlaybackState.Builder stateBuilder = new PlaybackState.Builder();
+            stateBuilder.setState(playbackState,
+                    position,
+                    speed);
+            mediaSession.setPlaybackState(stateBuilder.build());
+        }
     }
 }

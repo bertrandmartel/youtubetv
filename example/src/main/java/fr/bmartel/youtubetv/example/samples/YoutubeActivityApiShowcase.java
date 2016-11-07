@@ -100,6 +100,12 @@ public class YoutubeActivityApiShowcase extends Activity {
     }
 
     @Override
+    public void onBackPressed() {
+        super.onBackPressed();
+        mYoutubeView1.closePlayer();
+    }
+
+    @Override
     protected void onPause() {
         super.onPause();
 

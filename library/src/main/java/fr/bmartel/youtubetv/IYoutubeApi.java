@@ -319,4 +319,10 @@ public interface IYoutubeApi {
      * @param videoId
      */
     void playVideo(String videoId);
+
+    /**
+     * Stop loading webview, stop video & Release MediaSession.
+     */
+    void closePlayer();
+
 }

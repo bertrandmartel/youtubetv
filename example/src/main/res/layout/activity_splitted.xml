@@ -6,6 +6,7 @@
     android:orientation="vertical">
 
     <fr.bmartel.youtubetv.YoutubeTvView
+        android:id="@+id/youtube_video1"
         android:layout_width="match_parent"
         android:layout_height="0dp"
         android:layout_margin="10dp"
@@ -25,6 +26,7 @@
         app:videoQuality="hd720" />
 
     <fr.bmartel.youtubetv.YoutubeTvView
+        android:id="@+id/youtube_video2"
         android:layout_width="match_parent"
         android:layout_height="0dp"
         android:layout_margin="10dp"

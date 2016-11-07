@@ -67,4 +67,7 @@ public class YoutubeTvFragment extends Fragment {
         super.onDetach();
     }
 
+    public void closePlayer() {
+        mVideoFragment.closePlayer();
+    }
 }
