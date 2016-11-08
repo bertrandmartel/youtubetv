@@ -77,7 +77,7 @@ import fr.bmartel.youtubetv.model.VideoState;
  * android.support.v17.leanback.widget.PlaybackControlsRow.RepeatAction}</li> <li>{@link
  * android.support.v17.leanback.widget.PlaybackControlsRow.ThumbsDownAction}</li> <li>{@link
  * android.support.v17.leanback.widget.PlaybackControlsRow.ThumbsUpAction}</li> </ul>
- * <p>
+ * <p/>
  */
 public abstract class MediaPlayerGlue extends PlaybackControlGlue implements OnItemViewSelectedListener {
 
@@ -388,7 +388,9 @@ public abstract class MediaPlayerGlue extends PlaybackControlGlue implements OnI
                         metaData.setArtist(videoInfo.getAuthor());
                         metaData.setTitle(videoInfo.getTitle());
                         setMetaData(metaData);
-                        onStateChanged();
+                        if (state != VideoState.BUFFERING) {
+                            onStateChanged();
+                        }
                         updateProgress();
                     }
                 });

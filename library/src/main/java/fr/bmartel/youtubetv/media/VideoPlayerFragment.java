@@ -47,7 +47,6 @@ import android.support.v17.leanback.widget.PlaybackControlsRowPresenter;
 import android.support.v17.leanback.widget.Presenter;
 import android.support.v17.leanback.widget.Row;
 import android.support.v17.leanback.widget.RowPresenter;
-import android.util.Log;
 
 import fr.bmartel.youtubetv.R;
 import fr.bmartel.youtubetv.YoutubeTvView;
@@ -62,13 +61,9 @@ public class VideoPlayerFragment extends PlaybackOverlayFragment implements
     private MediaPlayerGlue mGlue;
     private YoutubeTvView youtubeTvView;
 
-    public static VideoPlayerFragment newInstance(String videoId) {
+    public static VideoPlayerFragment newInstance(Bundle arguments) {
         VideoPlayerFragment fragment = new VideoPlayerFragment();
-
-        Bundle args = new Bundle();
-        args.putString("videoId", videoId);
-        fragment.setArguments(args);
-
+        fragment.setArguments(arguments);
         return fragment;
     }
 
@@ -79,7 +74,7 @@ public class VideoPlayerFragment extends PlaybackOverlayFragment implements
 
         youtubeTvView = (YoutubeTvView) getActivity().findViewById(R.id.youtubetv_view);
 
-        Log.i(TAG, "playing : " + getArguments().getString("videoId", ""));
+        youtubeTvView.updateView(getArguments());
 
         youtubeTvView.playVideo(getArguments().getString("videoId", ""));
 

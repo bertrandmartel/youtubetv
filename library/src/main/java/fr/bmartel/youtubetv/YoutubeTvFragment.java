@@ -8,8 +8,16 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
+import java.util.List;
+
+import fr.bmartel.youtubetv.listener.IBufferStateListener;
+import fr.bmartel.youtubetv.listener.IPlayerListener;
+import fr.bmartel.youtubetv.listener.IProgressUpdateListener;
 import fr.bmartel.youtubetv.media.VideoPlayerFragment;
 import fr.bmartel.youtubetv.media.VideoSurfaceFragment;
+import fr.bmartel.youtubetv.model.VideoInfo;
+import fr.bmartel.youtubetv.model.VideoQuality;
+import fr.bmartel.youtubetv.model.VideoState;
 
 /**
  * Created by akinaru on 03/11/16.
@@ -18,22 +26,18 @@ public class YoutubeTvFragment extends Fragment {
 
     private VideoPlayerFragment mVideoFragment;
 
-    private String mVideoId;
+    private Bundle mArgs;
 
-    public static YoutubeTvFragment newInstance(String videoId) {
+    public static YoutubeTvFragment newInstance(Bundle arguments) {
         YoutubeTvFragment fragment = new YoutubeTvFragment();
-
-        Bundle args = new Bundle();
-        args.putString("videoId", videoId);
-        fragment.setArguments(args);
-
+        fragment.setArguments(arguments);
         return fragment;
     }
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        mVideoId = getArguments().getString("videoId", "");
+        mArgs = getArguments();
     }
 
     @Override
@@ -51,7 +55,7 @@ public class YoutubeTvFragment extends Fragment {
         ft1.commit();
 
         FragmentTransaction ft2 = getChildFragmentManager().beginTransaction();
-        mVideoFragment = VideoPlayerFragment.newInstance(mVideoId);
+        mVideoFragment = VideoPlayerFragment.newInstance(mArgs);
         ft2.add(R.id.videoFragment, mVideoFragment, VideoPlayerFragment.TAG);
         ft2.commit();
     }
