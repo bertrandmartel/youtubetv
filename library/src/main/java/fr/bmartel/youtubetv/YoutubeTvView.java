@@ -33,6 +33,7 @@ import android.graphics.drawable.GradientDrawable;
 import android.graphics.drawable.StateListDrawable;
 import android.media.session.MediaSession;
 import android.media.session.PlaybackState;
+import android.os.Bundle;
 import android.os.ConditionVariable;
 import android.os.Handler;
 import android.util.AttributeSet;
@@ -843,5 +844,72 @@ public class YoutubeTvView extends FrameLayout implements IYoutubeApi {
         mMediaSession.setPlaybackState(stateBuilder.build());
         mMediaSession.setActive(false);
         Log.i(TAG, "closePlayer : " + mMediaSession.isActive());
+    }
+
+    public void updateView(Bundle arguments) {
+
+        if (arguments.containsKey("videoId")) {
+            mVideoId = arguments.getString("videoId");
+        }
+        if (arguments.containsKey("playlistId")) {
+            mPlaylistId = arguments.getString("playlistId");
+        }
+        if (arguments.containsKey("videoQuality")) {
+            mVideoQuality = VideoQuality.getVideoQuality(arguments.getString("videoQuality"));
+        }
+        if (arguments.containsKey("showRelatedVideos")) {
+            mShowRelatedVideos = arguments.getBoolean("showRelatedVideos") ? 1 : 0;
+        }
+        if (arguments.containsKey("showVideoInfo")) {
+            mShowVideoInfo = arguments.getBoolean("showVideoInfo") ? 1 : 0;
+        }
+        if (arguments.containsKey("showControls")) {
+            mShowControls = VideoControls.getVideoControls(arguments.getInt("showControls"));
+        }
+        if (arguments.containsKey("autoHide")) {
+            mAutohide = VideoAutoHide.getVideoControls(arguments.getInt("autoHide"));
+        }
+        if (arguments.containsKey("closedCaptions")) {
+            mClosedCaptions = arguments.getBoolean("closedCaptions") ? 1 : 0;
+        }
+        if (arguments.containsKey("videoAnnotation")) {
+            mVideoAnnotation = arguments.getBoolean("videoAnnotation") ? 1 : 0;
+        }
+        if (arguments.containsKey("debug")) {
+            mDebug = arguments.getBoolean("debug") ? 1 : 0;
+        }
+        if (arguments.containsKey("loadingBackgroundColor")) {
+            mLoadBackgroundColor = arguments.getInt("loadingBackgroundColor");
+        }
+        if (arguments.containsKey("autoplay")) {
+            mAutoPlay = arguments.getBoolean("autoplay") ? 1 : 0;
+        }
+        if (arguments.containsKey("userAgentString")) {
+            mUserAgent = UserAgents.getUserAgent(arguments.getInt("userAgentString"));
+        }
+        if (arguments.containsKey("showBorder")) {
+            mShowBorder = arguments.getBoolean("showBorder");
+        }
+        if (arguments.containsKey("borderWidth")) {
+            mBorderWidth = arguments.getInt("borderWidth");
+        }
+        if (arguments.containsKey("borderColor")) {
+            mBorderColor = arguments.getInt("borderColor");
+        }
+        if (arguments.containsKey("thumbnailQuality")) {
+            mThumbnailQuality = ThumbnailQuality.getThumbnail(arguments.getInt("thumbnailQuality"));
+        }
+        if (arguments.containsKey("closedCaptionLangPref")) {
+            mClosedCaptionLangPref = arguments.getString("closedCaptionLangPref");
+        }
+        if (arguments.containsKey("playerLanguage")) {
+            mPlayerLanguage = arguments.getString("playerLanguage");
+        }
+        if (arguments.containsKey("javascriptTimeout")) {
+            mJavascriptTimeout = arguments.getInt("javascriptTimeout");
+        }
+        if (arguments.containsKey("showNowPlayingCard")) {
+            mShowNowPlayingCard = arguments.getBoolean("showNowPlayingCard");
+        }
     }
 }
