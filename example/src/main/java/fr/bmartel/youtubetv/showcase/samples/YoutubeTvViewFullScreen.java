@@ -1,22 +1,21 @@
-package fr.bmartel.youtubetv.example.samples;
-
+package fr.bmartel.youtubetv.showcase.samples;
 
 import android.app.Activity;
 import android.os.Bundle;
 
 import fr.bmartel.youtubetv.YoutubeTvView;
-import fr.bmartel.youtubetv.example.R;
+import fr.bmartel.youtubetv.showcase.R;
 
 /**
  * Created by akinaru on 04/11/16.
  */
-public class YoutubeTvViewDebug extends Activity {
+public class YoutubeTvViewFullScreen extends Activity {
 
     private YoutubeTvView mYoutubeView;
 
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_view_debug);
+        setContentView(R.layout.activity_viewfullscreen);
 
         mYoutubeView = (YoutubeTvView) findViewById(R.id.youtube_video);
 

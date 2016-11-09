@@ -13,7 +13,7 @@
  *
  */
 
-package fr.bmartel.youtubetv.example.cards.presenter;
+package fr.bmartel.youtubetv.showcase.cards.presenter;
 
 import android.content.Context;
 import android.support.v17.leanback.widget.Presenter;
@@ -21,7 +21,7 @@ import android.support.v17.leanback.widget.PresenterSelector;
 
 import java.util.HashMap;
 
-import fr.bmartel.youtubetv.example.model.Card;
+import fr.bmartel.youtubetv.showcase.model.Card;
 
 /**
  * This PresenterSelector will decide what Presenter to use depending on a given card's type.

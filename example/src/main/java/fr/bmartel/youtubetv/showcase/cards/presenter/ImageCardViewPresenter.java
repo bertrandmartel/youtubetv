@@ -12,7 +12,7 @@
  * the License.
  */
 
-package fr.bmartel.youtubetv.example.cards.presenter;
+package fr.bmartel.youtubetv.showcase.cards.presenter;
 
 import android.content.Context;
 import android.content.Intent;
@@ -22,13 +22,13 @@ import android.view.View;
 
 import com.squareup.picasso.Picasso;
 
-import fr.bmartel.youtubetv.example.R;
-import fr.bmartel.youtubetv.example.model.Card;
-import fr.bmartel.youtubetv.example.samples.YoutubeActivityApiShowcase;
-import fr.bmartel.youtubetv.example.samples.YoutubeActivityFragment;
-import fr.bmartel.youtubetv.example.samples.YoutubeTvViewDebug;
-import fr.bmartel.youtubetv.example.samples.YoutubeTvViewFullScreen;
-import fr.bmartel.youtubetv.example.samples.YoutubeTvViewSplitted;
+import fr.bmartel.youtubetv.showcase.R;
+import fr.bmartel.youtubetv.showcase.model.Card;
+import fr.bmartel.youtubetv.showcase.samples.YoutubeActivityApiShowcase;
+import fr.bmartel.youtubetv.showcase.samples.YoutubeActivityFragment;
+import fr.bmartel.youtubetv.showcase.samples.YoutubeTvViewDebug;
+import fr.bmartel.youtubetv.showcase.samples.YoutubeTvViewFullScreen;
+import fr.bmartel.youtubetv.showcase.samples.YoutubeTvViewSplitted;
 
 /**
  * A very basic {@link ImageCardView} {@link android.support.v17.leanback.widget.Presenter}.You can
