@@ -11,14 +11,14 @@
  * or implied. See the License for the specific language governing permissions and limitations under
  * the License.
  */
-package fr.bmartel.youtubetv.example.cards.presenter;
+package fr.bmartel.youtubetv.showcase.cards.presenter;
 
 import android.content.Context;
 import android.support.v17.leanback.widget.BaseCardView;
 import android.support.v17.leanback.widget.Presenter;
 import android.view.ViewGroup;
 
-import fr.bmartel.youtubetv.example.model.Card;
+import fr.bmartel.youtubetv.showcase.model.Card;
 
 /**
  * This abstract, generic class will create and manage the

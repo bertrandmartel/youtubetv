@@ -12,7 +12,7 @@
  * the License.
  */
 
-package fr.bmartel.youtubetv.example.model;
+package fr.bmartel.youtubetv.showcase.model;
 
 import android.content.Context;
 import android.graphics.Color;

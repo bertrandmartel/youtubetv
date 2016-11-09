@@ -12,7 +12,7 @@
  * the License.
  */
 
-package fr.bmartel.youtubetv.example.utils;
+package fr.bmartel.youtubetv.showcase.utils;
 
 import android.content.ContentResolver;
 import android.content.Context;

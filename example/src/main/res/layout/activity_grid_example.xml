@@ -19,7 +19,7 @@
 
     <fragment
         android:id="@+id/cardsFragment"
-        android:name="fr.bmartel.youtubetv.example.fragment.YoutubeTvFragment"
+        android:name="fr.bmartel.youtubetv.showcase.fragment.YoutubeTvFragment"
         android:layout_width="match_parent"
         android:layout_height="match_parent"></fragment>
 </RelativeLayout>

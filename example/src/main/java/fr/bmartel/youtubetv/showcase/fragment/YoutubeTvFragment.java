@@ -1,4 +1,4 @@
-package fr.bmartel.youtubetv.example.fragment;
+package fr.bmartel.youtubetv.showcase.fragment;
 
 /*
  * Copyright (C) 2015 The Android Open Source Project
@@ -24,10 +24,10 @@ import android.support.v17.leanback.widget.VerticalGridPresenter;
 
 import com.google.gson.Gson;
 
-import fr.bmartel.youtubetv.example.cards.presenter.CardPresenterSelector;
-import fr.bmartel.youtubetv.example.R;
-import fr.bmartel.youtubetv.example.model.CardRow;
-import fr.bmartel.youtubetv.example.utils.Utils;
+import fr.bmartel.youtubetv.showcase.cards.presenter.CardPresenterSelector;
+import fr.bmartel.youtubetv.showcase.R;
+import fr.bmartel.youtubetv.showcase.model.CardRow;
+import fr.bmartel.youtubetv.showcase.utils.Utils;
 
 /**
  * An example how to use leanback's {@link VerticalGridFragment}.

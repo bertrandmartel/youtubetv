@@ -1,4 +1,4 @@
-package fr.bmartel.youtubetv.example.samples;
+package fr.bmartel.youtubetv.showcase.samples;
 
 import android.app.Activity;
 import android.os.Bundle;
@@ -7,7 +7,7 @@ import android.view.View;
 import android.widget.Button;
 
 import fr.bmartel.youtubetv.YoutubeTvView;
-import fr.bmartel.youtubetv.example.R;
+import fr.bmartel.youtubetv.showcase.R;
 import fr.bmartel.youtubetv.listener.IPlayerListener;
 import fr.bmartel.youtubetv.model.VideoInfo;
 import fr.bmartel.youtubetv.model.VideoState;

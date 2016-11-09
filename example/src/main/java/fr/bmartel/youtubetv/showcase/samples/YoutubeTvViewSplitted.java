@@ -1,10 +1,10 @@
-package fr.bmartel.youtubetv.example.samples;
+package fr.bmartel.youtubetv.showcase.samples;
 
 import android.app.Activity;
 import android.os.Bundle;
 
 import fr.bmartel.youtubetv.YoutubeTvView;
-import fr.bmartel.youtubetv.example.R;
+import fr.bmartel.youtubetv.showcase.R;
 
 /**
  * Created by akinaru on 04/11/16.

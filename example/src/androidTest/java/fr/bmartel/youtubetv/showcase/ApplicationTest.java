@@ -1,4 +1,4 @@
-package fr.bmartel.youtubetv.example;
+package fr.bmartel.youtubetv.showcase;
 
 import android.app.Application;
 import android.test.ApplicationTestCase;

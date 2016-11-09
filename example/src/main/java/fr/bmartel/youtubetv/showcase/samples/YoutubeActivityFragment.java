@@ -1,11 +1,11 @@
-package fr.bmartel.youtubetv.example.samples;
+package fr.bmartel.youtubetv.showcase.samples;
 
 import android.app.Activity;
 import android.app.FragmentTransaction;
 import android.os.Bundle;
 
 import fr.bmartel.youtubetv.YoutubeTvFragment;
-import fr.bmartel.youtubetv.example.R;
+import fr.bmartel.youtubetv.showcase.R;
 
 /**
  * Created by akinaru on 03/11/16.
