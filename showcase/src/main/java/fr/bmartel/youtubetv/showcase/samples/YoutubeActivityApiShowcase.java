@@ -7,10 +7,10 @@ import android.view.View;
 import android.widget.Button;
 
 import fr.bmartel.youtubetv.YoutubeTvView;
-import fr.bmartel.youtubetv.showcase.R;
 import fr.bmartel.youtubetv.listener.IPlayerListener;
 import fr.bmartel.youtubetv.model.VideoInfo;
 import fr.bmartel.youtubetv.model.VideoState;
+import fr.bmartel.youtubetv.showcase.R;
 
 /**
  * YoutubeActivityApiShowcase
@@ -103,6 +103,7 @@ public class YoutubeActivityApiShowcase extends Activity {
     public void onBackPressed() {
         super.onBackPressed();
         mYoutubeView1.closePlayer();
+        finish();
     }
 
     @Override
