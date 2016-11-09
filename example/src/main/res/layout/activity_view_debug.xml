@@ -11,8 +11,6 @@
         android:layout_height="match_parent"
         app:autoHide="auto"
         app:autoplay="true"
-        app:closedCaptionLangPref="fr"
-        app:closedCaptions="true"
         app:debug="true"
         app:showControls="none"
         app:showNowPlayingCard="true"
