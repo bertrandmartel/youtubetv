@@ -2,9 +2,8 @@ apply plugin: 'com.android.application'
 
 
 android {
-    compileSdkVersion 24
-    buildToolsVersion "24.0.3"
-
+    compileSdkVersion 25
+    buildToolsVersion "25.0.0"
     signingConfigs {
         playStore
     }
@@ -12,7 +11,7 @@ android {
     defaultConfig {
         applicationId "fr.bmartel.youtubetv.example"
         minSdkVersion 21
-        targetSdkVersion 24
+        targetSdkVersion 25
         versionCode 1
         versionName "1.0"
     }
@@ -24,12 +23,15 @@ android {
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
         }
     }
+    lintOptions {
+        abortOnError false
+    }
 }
 
 dependencies {
     compile fileTree(dir: 'libs', include: ['*.jar'])
-    compile 'com.android.support:leanback-v17:24.0.0'
-    compile project(':library')
+    compile "com.android.support:leanback-v17:25.0.0"
+    compile 'fr.bmartel:youtubetv:1.0'
     compile 'com.google.code.gson:gson:2.8.0'
     compile 'com.squareup.picasso:picasso:2.5.2'
 }
