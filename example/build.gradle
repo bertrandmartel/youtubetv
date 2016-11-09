@@ -5,6 +5,10 @@ android {
     compileSdkVersion 24
     buildToolsVersion "24.0.3"
 
+    signingConfigs {
+        playStore
+    }
+
     defaultConfig {
         applicationId "fr.bmartel.youtubetv.example"
         minSdkVersion 21
@@ -14,7 +18,9 @@ android {
     }
     buildTypes {
         release {
-            minifyEnabled false
+            minifyEnabled true
+            zipAlignEnabled true
+            signingConfig signingConfigs.playStore
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
         }
     }
@@ -27,3 +33,24 @@ dependencies {
     compile 'com.google.code.gson:gson:2.8.0'
     compile 'com.squareup.picasso:picasso:2.5.2'
 }
+
+def Properties props = new Properties()
+def propFile = new File('signing.properties')
+
+if (propFile.canRead()) {
+    props.load(new FileInputStream(propFile))
+}
+
+if (props.containsKey('STORE_FILE')
+        && props.containsKey('STORE_PASSWORD')
+        && props.containsKey('KEY_ALIAS')
+        && props.containsKey('KEY_PASSWORD')) {
+    android.signingConfigs.playStore.storeFile = file(props['STORE_FILE'])
+    android.signingConfigs.playStore.storePassword = props['STORE_PASSWORD']
+    android.signingConfigs.playStore.keyAlias = props['KEY_ALIAS']
+    android.signingConfigs.playStore.keyPassword = props['KEY_PASSWORD']
+} else {
+    println 'signing.properties not found or incomplete'
+    android.buildTypes.release.signingConfig = null
+}
+
