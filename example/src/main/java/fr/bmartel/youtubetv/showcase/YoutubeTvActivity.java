@@ -16,6 +16,8 @@ package fr.bmartel.youtubetv.showcase;
 
 import android.app.Activity;
 import android.os.Bundle;
+import com.crashlytics.android.Crashlytics;
+import io.fabric.sdk.android.Fabric;
 
 /**
  * TODO: Javadoc
@@ -25,6 +27,11 @@ public class YoutubeTvActivity extends Activity {
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+
+        if (BuildConfig.USE_CRASHLYTICS) {
+            Fabric.with(this, new Crashlytics());
+        }
+
         setContentView(R.layout.activity_grid_example);
     }
 }
