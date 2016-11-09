@@ -13,8 +13,6 @@
         android:layout_margin="10dp"
         android:layout_weight="0.9"
         app:autoHide="auto"
-        app:autoplay="true"
-        app:closedCaptionLangPref="fr"
         app:closedCaptions="true"
         app:debug="false"
         app:playlistId="PL6q9nZDPOFMcsE51ZgLgFzStLiUjxdlpl"
@@ -38,7 +36,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginRight="10dp"
-            android:background="@drawable/ripple"
+            android:background="@drawable/button"
             android:text="PLAY" />
 
         <Button
@@ -48,7 +46,7 @@
             android:layout_alignParentTop="true"
             android:layout_marginRight="10dp"
             android:layout_toEndOf="@+id/play_button"
-            android:background="@drawable/ripple"
+            android:background="@drawable/button"
             android:padding="2dp"
             android:text="PAUSE" />
 
@@ -58,7 +56,7 @@
             android:layout_height="wrap_content"
             android:layout_marginRight="10dp"
             android:layout_toRightOf="@+id/pause_button"
-            android:background="@drawable/ripple"
+            android:background="@drawable/button"
             android:text="NEXT" />
 
         <Button
@@ -67,7 +65,7 @@
             android:layout_height="wrap_content"
             android:layout_marginRight="10dp"
             android:layout_toRightOf="@+id/next_button"
-            android:background="@drawable/ripple"
+            android:background="@drawable/button"
             android:text="PREVIOUS" />
 
         <Button
@@ -76,7 +74,7 @@
             android:layout_height="wrap_content"
             android:layout_marginRight="10dp"
             android:layout_toRightOf="@+id/previous_button"
-            android:background="@drawable/ripple"
+            android:background="@drawable/button"
             android:text="&lt;&lt;" />
 
         <Button
@@ -85,7 +83,7 @@
             android:layout_height="wrap_content"
             android:layout_alignParentTop="true"
             android:layout_toEndOf="@+id/backward_button"
-            android:background="@drawable/ripple"
+            android:background="@drawable/button"
             android:text="&gt;&gt;" />
 
     </RelativeLayout>

@@ -13,8 +13,6 @@
         android:layout_weight="0.5"
         app:autoHide="auto"
         app:autoplay="true"
-        app:closedCaptionLangPref="fr"
-        app:closedCaptions="true"
         app:debug="false"
         app:showBorder="true"
         app:showControls="none"
