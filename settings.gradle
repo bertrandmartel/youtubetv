@@ -1,1 +1,1 @@
-include ':youtubetv',':example'
+include ':youtubetv',':showcase'

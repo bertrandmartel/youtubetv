@@ -9,15 +9,17 @@ import fr.bmartel.youtubetv.showcase.R;
 /**
  * Created by akinaru on 04/11/16.
  */
-public class YoutubeTvViewFullScreen extends Activity {
+public class YoutubeTvViewSplitted extends Activity {
 
-    private YoutubeTvView mYoutubeView;
+    private YoutubeTvView mYoutubeView1;
+    private YoutubeTvView mYoutubeView2;
 
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_viewfullscreen);
+        setContentView(R.layout.activity_splitted);
 
-        mYoutubeView = (YoutubeTvView) findViewById(R.id.youtube_video);
+        mYoutubeView1 = (YoutubeTvView) findViewById(R.id.youtube_video1);
+        mYoutubeView2 = (YoutubeTvView) findViewById(R.id.youtube_video2);
 
         requestVisibleBehind(true);
     }
@@ -31,7 +33,9 @@ public class YoutubeTvViewFullScreen extends Activity {
     @Override
     public void onBackPressed() {
         super.onBackPressed();
-        mYoutubeView.closePlayer();
+        mYoutubeView1.closePlayer();
+        mYoutubeView2.closePlayer();
+        finish();
     }
 
     @Override

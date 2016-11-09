@@ -40,6 +40,7 @@ public class YoutubeActivityFragment extends Activity {
     public void onBackPressed() {
         super.onBackPressed();
         mYtFragment.closePlayer();
+        finish();
     }
 
     @Override

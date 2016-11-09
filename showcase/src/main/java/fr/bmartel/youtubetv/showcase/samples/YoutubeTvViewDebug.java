@@ -1,5 +1,6 @@
 package fr.bmartel.youtubetv.showcase.samples;
 
+
 import android.app.Activity;
 import android.os.Bundle;
 
@@ -9,17 +10,15 @@ import fr.bmartel.youtubetv.showcase.R;
 /**
  * Created by akinaru on 04/11/16.
  */
-public class YoutubeTvViewSplitted extends Activity {
+public class YoutubeTvViewDebug extends Activity {
 
-    private YoutubeTvView mYoutubeView1;
-    private YoutubeTvView mYoutubeView2;
+    private YoutubeTvView mYoutubeView;
 
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_splitted);
+        setContentView(R.layout.activity_view_debug);
 
-        mYoutubeView1 = (YoutubeTvView) findViewById(R.id.youtube_video1);
-        mYoutubeView2 = (YoutubeTvView) findViewById(R.id.youtube_video2);
+        mYoutubeView = (YoutubeTvView) findViewById(R.id.youtube_video);
 
         requestVisibleBehind(true);
     }
@@ -33,8 +32,8 @@ public class YoutubeTvViewSplitted extends Activity {
     @Override
     public void onBackPressed() {
         super.onBackPressed();
-        mYoutubeView1.closePlayer();
-        mYoutubeView2.closePlayer();
+        mYoutubeView.closePlayer();
+        finish();
     }
 
     @Override

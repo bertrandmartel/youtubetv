@@ -1,6 +1,5 @@
 package fr.bmartel.youtubetv.showcase.samples;
 
-
 import android.app.Activity;
 import android.os.Bundle;
 
@@ -10,13 +9,13 @@ import fr.bmartel.youtubetv.showcase.R;
 /**
  * Created by akinaru on 04/11/16.
  */
-public class YoutubeTvViewDebug extends Activity {
+public class YoutubeTvViewFullScreen extends Activity {
 
     private YoutubeTvView mYoutubeView;
 
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_view_debug);
+        setContentView(R.layout.activity_viewfullscreen);
 
         mYoutubeView = (YoutubeTvView) findViewById(R.id.youtube_video);
 
@@ -33,6 +32,7 @@ public class YoutubeTvViewDebug extends Activity {
     public void onBackPressed() {
         super.onBackPressed();
         mYoutubeView.closePlayer();
+        finish();
     }
 
     @Override
