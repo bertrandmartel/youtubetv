@@ -24,7 +24,22 @@
 -dontwarn org.**
 -dontwarn javax.**
 
--keep class com.google.gdata.** { *; }
+##---------------Begin: proguard configuration for Gson  ----------
+# Gson uses generic type information stored in a class file when working with fields. Proguard
+# removes such information by default, so configure it to keep all of it.
+-keepattributes Signature
+
+# For using GSON @Expose annotation
+-keepattributes *Annotation*
+
+# Gson specific classes
+-keep class sun.misc.Unsafe { *; }
+#-keep class com.google.gson.stream.** { *; }
+
+# Application classes that will be serialized/deserialized over Gson
+-keep class com.google.gson.examples.android.model.** { *; }
+
+##---------------End: proguard configuration for Gson  ----------
 
 -keepnames class * implements java.io.Serializable
 
@@ -39,10 +54,7 @@
     java.lang.Object writeReplace();
     java.lang.Object readResolve();
 }
--keepclassmembers class * extends com.google.gdata.model.Element {
-    public static com.google.gdata.model.ElementKey KEY;
-    public static void registerMetadata(com.google.gdata.model.MetadataRegistry);
-}
+
 -keep class fr.bmartel.youtubetv.JavascriptInterface { *; }
 
 -keepclassmembers,allowobfuscation class fr.bmartel.youtubetv.JavascriptInterface.** {
