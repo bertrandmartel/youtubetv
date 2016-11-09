@@ -6,3 +6,5 @@
 .DS_Store
 /build
 signing.properties
+example/src/production
+example/fabric.properties
