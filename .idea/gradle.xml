@@ -9,14 +9,14 @@
           <set>
             <option value="$PROJECT_DIR$" />
             <option value="$PROJECT_DIR$/example" />
-            <option value="$PROJECT_DIR$/library" />
+            <option value="$PROJECT_DIR$/youtubetv" />
           </set>
         </option>
         <option name="myModules">
           <set>
             <option value="$PROJECT_DIR$" />
             <option value="$PROJECT_DIR$/example" />
-            <option value="$PROJECT_DIR$/library" />
+            <option value="$PROJECT_DIR$/youtubetv" />
           </set>
         </option>
       </GradleProjectSettings>

@@ -3,8 +3,8 @@
   <component name="ProjectModuleManager">
     <modules>
       <module fileurl="file://$PROJECT_DIR$/example/example.iml" filepath="$PROJECT_DIR$/example/example.iml" />
-      <module fileurl="file://$PROJECT_DIR$/library/library.iml" filepath="$PROJECT_DIR$/library/library.iml" />
       <module fileurl="file://$PROJECT_DIR$/youtube-androidtv.iml" filepath="$PROJECT_DIR$/youtube-androidtv.iml" />
+      <module fileurl="file://$PROJECT_DIR$/youtubetv/youtubetv.iml" filepath="$PROJECT_DIR$/youtubetv/youtubetv.iml" />
     </modules>
   </component>
 </project>
