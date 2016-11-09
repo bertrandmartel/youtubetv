@@ -1,9 +1,9 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
-    package="fr.bmartel.youtubetv.example">
+    package="fr.bmartel.youtubetv.showcase">
 
     <uses-feature
         android:name="android.software.leanback"
-        android:required="false" />
+        android:required="true" />
 
     <uses-feature
         android:name="android.hardware.touchscreen"
@@ -19,7 +19,7 @@
         android:theme="@style/Theme.Leanback">
 
         <activity
-            android:name="fr.bmartel.youtubetv.example.YoutubeTvActivity"
+            android:name="fr.bmartel.youtubetv.showcase.YoutubeTvActivity"
             android:label="@string/app_name">
 
             <intent-filter>
@@ -31,23 +31,23 @@
         </activity>
 
         <activity
-            android:name=".samples.YoutubeActivityApiShowcase"
+            android:name="fr.bmartel.youtubetv.showcase.samples.YoutubeActivityApiShowcase"
             android:label="@string/app_name" />
 
         <activity
-            android:name=".samples.YoutubeActivityFragment"
+            android:name="fr.bmartel.youtubetv.showcase.samples.YoutubeActivityFragment"
             android:label="@string/app_name" />
 
         <activity
-            android:name=".samples.YoutubeTvViewFullScreen"
+            android:name="fr.bmartel.youtubetv.showcase.samples.YoutubeTvViewFullScreen"
             android:label="@string/app_name" />
 
         <activity
-            android:name=".samples.YoutubeTvViewSplitted"
+            android:name="fr.bmartel.youtubetv.showcase.samples.YoutubeTvViewSplitted"
             android:label="@string/app_name" />
 
         <activity
-            android:name=".samples.YoutubeTvViewDebug"
+            android:name="fr.bmartel.youtubetv.showcase.samples.YoutubeTvViewDebug"
             android:label="@string/app_name" />
 
     </application>
