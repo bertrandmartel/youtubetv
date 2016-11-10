@@ -1,5 +1,6 @@
 # YoutubeTV
 
+[![Build Status](https://travis-ci.org/bertrandmartel/youtubetv.svg?branch=master)](https://travis-ci.org/bertrandmartel/youtubetv)
 [![Download](https://api.bintray.com/packages/bertrandmartel/maven/youtubetv/images/download.svg) ](https://bintray.com/bertrandmartel/maven/youtubetv/_latestVersion)
 [![License](http://img.shields.io/:license-mit-blue.svg)](LICENSE.md)
 
@@ -25,6 +26,8 @@ with Gradle, from jcenter :
 ```
 compile 'fr.bmartel:youtubetv:1.0'
 ```
+
+Minimum SDK : 21
 
 ## YoutubeTvView
 
@@ -111,6 +114,7 @@ fTransaction.commit();
 
 ## Proguard
 
+The following is required to keep Javascript interface from obfuscation :
 ```
 -keep class fr.bmartel.youtubetv.JavascriptInterface { *; }
 
