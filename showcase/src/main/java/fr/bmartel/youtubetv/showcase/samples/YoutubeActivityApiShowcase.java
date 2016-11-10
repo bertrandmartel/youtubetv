@@ -113,13 +113,11 @@ public class YoutubeActivityApiShowcase extends Activity {
                 Log.i(TAG, "onPlayerStateChange : " + state.toString() + " | position : " + position + " | speed : " + speed);
             }
         });
-        requestVisibleBehind(true);
     }
 
     @Override
     protected void onResume() {
         super.onResume();
-        requestVisibleBehind(true);
     }
 
     @Override

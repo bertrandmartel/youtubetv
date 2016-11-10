@@ -53,7 +53,6 @@ public class YoutubeActivityFragment extends Activity {
         mYtFragment = YoutubeTvFragment.newInstance(args);
         fTransaction.replace(R.id.youtube_fragment, mYtFragment);
         fTransaction.commit();
-        requestVisibleBehind(true);
     }
 
     @Override
@@ -66,6 +65,5 @@ public class YoutubeActivityFragment extends Activity {
     @Override
     protected void onResume() {
         super.onResume();
-        requestVisibleBehind(true);
     }
 }

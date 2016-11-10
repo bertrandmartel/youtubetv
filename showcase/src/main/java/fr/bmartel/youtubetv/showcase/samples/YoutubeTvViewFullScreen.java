@@ -41,14 +41,11 @@ public class YoutubeTvViewFullScreen extends Activity {
         setContentView(R.layout.activity_viewfullscreen);
 
         mYoutubeView = (YoutubeTvView) findViewById(R.id.youtube_video);
-
-        requestVisibleBehind(true);
     }
 
     @Override
     protected void onResume() {
         super.onResume();
-        requestVisibleBehind(true);
     }
 
     @Override

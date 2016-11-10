@@ -42,14 +42,11 @@ public class YoutubeTvViewDebug extends Activity {
         setContentView(R.layout.activity_view_debug);
 
         mYoutubeView = (YoutubeTvView) findViewById(R.id.youtube_video);
-
-        requestVisibleBehind(true);
     }
 
     @Override
     protected void onResume() {
         super.onResume();
-        requestVisibleBehind(true);
     }
 
     @Override

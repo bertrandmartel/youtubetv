@@ -43,14 +43,11 @@ public class YoutubeTvViewSplitted extends Activity {
 
         mYoutubeView1 = (YoutubeTvView) findViewById(R.id.youtube_video1);
         mYoutubeView2 = (YoutubeTvView) findViewById(R.id.youtube_video2);
-
-        requestVisibleBehind(true);
     }
 
     @Override
     protected void onResume() {
         super.onResume();
-        requestVisibleBehind(true);
     }
 
     @Override
