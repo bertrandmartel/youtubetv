@@ -41,7 +41,6 @@ package fr.bmartel.youtubetv.media;
 import android.content.Context;
 import android.graphics.drawable.Drawable;
 import android.media.MediaPlayer;
-import android.net.Uri;
 import android.os.Handler;
 import android.support.v17.leanback.app.PlaybackControlGlue;
 import android.support.v17.leanback.app.PlaybackOverlayFragment;
@@ -88,7 +87,6 @@ public abstract class MediaPlayerGlue extends PlaybackControlGlue implements OnI
     protected final PlaybackControlsRow.ThumbsDownAction mThumbsDownAction;
     protected final PlaybackControlsRow.ThumbsUpAction mThumbsUpAction;
     */
-    private final Context mContext;
     private IYoutubeApi mPlayer;
     private final PlaybackControlsRow.RepeatAction mRepeatAction;
     private final PlaybackControlsRow.ShuffleAction mShuffleAction;
@@ -100,8 +98,6 @@ public abstract class MediaPlayerGlue extends PlaybackControlGlue implements OnI
     private Action mSelectedAction; // the action which is currently selected by the user
     private long mLastKeyDownEvent = 0L; // timestamp when the last DPAD_CENTER KEY_DOWN occurred
     private MetaData mMetaData;
-    private Uri mMediaSourceUri = null;
-    private String mMediaSourcePath = null;
     private int mCurrentTime;
     private int mVideoDuration;
     private boolean isPlaying;
@@ -109,11 +105,10 @@ public abstract class MediaPlayerGlue extends PlaybackControlGlue implements OnI
 
     public MediaPlayerGlue(Context context, PlaybackOverlayFragment fragment, IYoutubeApi youtubePlayer) {
         super(context, fragment, new int[]{1});
-        mContext = context;
         mPlayer = youtubePlayer;
         // Instantiate secondary actions
-        mShuffleAction = new PlaybackControlsRow.ShuffleAction(mContext);
-        mRepeatAction = new PlaybackControlsRow.RepeatAction(mContext);
+        mShuffleAction = new PlaybackControlsRow.ShuffleAction(context);
+        mRepeatAction = new PlaybackControlsRow.RepeatAction(context);
         /*
         mThumbsDownAction = new PlaybackControlsRow.ThumbsDownAction(mContext);
         mThumbsUpAction = new PlaybackControlsRow.ThumbsUpAction(mContext);
@@ -146,7 +141,7 @@ public abstract class MediaPlayerGlue extends PlaybackControlGlue implements OnI
      * not required to call this method before playing the first file. However you have to call it
      * before playing a second one.
      */
-    void reset() {
+    public void reset() {
         mInitialized = false;
         //mPlayer.reset();
     }
@@ -371,9 +366,8 @@ public abstract class MediaPlayerGlue extends PlaybackControlGlue implements OnI
             @Override
             public void onPlayerStateChange(final VideoState state, long position, float speed, float duration, final VideoInfo videoInfo) {
                 Log.i(TAG, "state : " + state);
-                if (state == VideoState.ENDED) {
-                    if (mInitialized && mMediaFileFinishedPlayingListener != null)
-                        mMediaFileFinishedPlayingListener.onMediaFileFinishedPlaying(mMetaData);
+                if (state == VideoState.ENDED && mInitialized && mMediaFileFinishedPlayingListener != null) {
+                    mMediaFileFinishedPlayingListener.onMediaFileFinishedPlaying(mMetaData);
                 }
                 if (state == VideoState.PLAYING) {
                     isPlaying = true;

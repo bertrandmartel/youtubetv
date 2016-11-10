@@ -124,16 +124,6 @@ public class YoutubeTvView extends FrameLayout implements IYoutubeApi {
     private int mDebug;
 
     /**
-     * actual view width.
-     */
-    private int mViewWidth;
-
-    /**
-     * actual view height.
-     */
-    private int mViewHeight;
-
-    /**
      * webview background color.
      */
     private int mLoadBackgroundColor = YoutubeTvConst.DEFAULT_LOADING_BG;
@@ -147,11 +137,6 @@ public class YoutubeTvView extends FrameLayout implements IYoutubeApi {
      * Youtube Webview.
      */
     private WebView mWebView;
-
-    /**
-     * handler to be used to interact with UI when called from JS.
-     */
-    private Handler mHandler;
 
     /**
      * autoplay mode.
@@ -235,7 +220,7 @@ public class YoutubeTvView extends FrameLayout implements IYoutubeApi {
      */
     public YoutubeTvView(Context context) {
         super(context);
-        initView(context);
+        initView();
     }
 
     /**
@@ -247,7 +232,7 @@ public class YoutubeTvView extends FrameLayout implements IYoutubeApi {
     public YoutubeTvView(Context context, AttributeSet attrs) {
         super(context, attrs);
         processAttr(context, attrs);
-        initView(context);
+        initView();
     }
 
     /**
@@ -260,7 +245,7 @@ public class YoutubeTvView extends FrameLayout implements IYoutubeApi {
     public YoutubeTvView(Context context, AttributeSet attrs, int defStyle) {
         super(context, attrs, defStyle);
         processAttr(context, attrs);
-        initView(context);
+        initView();
     }
 
     /**
@@ -311,21 +296,19 @@ public class YoutubeTvView extends FrameLayout implements IYoutubeApi {
     @Override
     public void onWindowFocusChanged(boolean hasFocus) {
         super.onWindowFocusChanged(hasFocus);
-        mViewWidth = getWidth();
-        mViewHeight = getHeight();
+        int viewWidth = getWidth();
+        int viewHeight = getHeight();
         if (mJavascriptInterface != null && mJavascriptInterface.isPageLoaded()) {
-            WebviewUtils.callJavaScript(mWebView, "setSize", mViewWidth, mViewHeight);
+            WebviewUtils.callJavaScript(mWebView, "setSize", viewWidth, viewHeight);
         } else {
-            mJavascriptInterface.setSizeOnLoad(mViewWidth, mViewHeight);
+            mJavascriptInterface.setSizeOnLoad(viewWidth, viewHeight);
         }
     }
 
     /**
      * Initialize Webview.
-     *
-     * @param context view context
      */
-    private void initView(final Context context) {
+    private void initView() {
 
         inflate(getContext(), R.layout.youtube_view, this);
 
@@ -343,7 +326,7 @@ public class YoutubeTvView extends FrameLayout implements IYoutubeApi {
         ImageView playIcon = (ImageView) findViewById(R.id.play_icon);
 
         ProgressBar loadingProgress = (ProgressBar) findViewById(R.id.progress_bar);
-        mHandler = new Handler();
+        Handler handler = new Handler();
 
         mWebView.setBackgroundColor(mLoadBackgroundColor);
 
@@ -385,7 +368,7 @@ public class YoutubeTvView extends FrameLayout implements IYoutubeApi {
         mWebView.setScrollbarFadingEnabled(true);
 
         mJavascriptInterface = new JavascriptInterface(mPlayerListenerList,
-                mHandler,
+                handler,
                 loadingProgress,
                 playIcon,
                 mWebView,
@@ -482,6 +465,8 @@ public class YoutubeTvView extends FrameLayout implements IYoutubeApi {
                     break;
                 case KeyEvent.KEYCODE_MEDIA_NEXT:
                     WebviewUtils.callJavaScript(mWebView, "nextVideo");
+                    break;
+                default:
                     break;
             }
         }
