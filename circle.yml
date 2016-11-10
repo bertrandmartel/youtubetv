@@ -7,8 +7,9 @@ test:
     - ./gradlew clean build
   post:
     - mkdir $CIRCLE_ARTIFACTS/apk
+    - mkdir $CIRCLE_ARTIFACTS/aar
     - mv showcase/build/outputs/apk/*.apk $CIRCLE_ARTIFACTS/apk
-    - mv youtubetv/build/outputs/apk/*.apk $CIRCLE_ARTIFACTS/apk
+    - mv youtubetv/build/outputs/aar/*.aar $CIRCLE_ARTIFACTS/aar
 
 dependencies:
   pre:
