@@ -1,0 +1,27 @@
+language: android
+
+jdk:
+  - openjdk7
+
+sudo: false
+
+android:
+  components:
+    - tools
+    - android-25
+    - build-tools-25.0.0
+    - extra-android-m2repository
+
+cache: false
+
+before_install:
+  - git submodule update --init --recursive
+install:
+  # Ensure Gradle wrapper is executable, download wrapper and show version
+  - chmod +x ./gradlew; ls -l gradlew; ./gradlew wrapper -v
+  # Download and show android dependencies
+  # - ./gradlew androidDependencies
+
+script:
+  - ./gradlew clean build
+  - make build
