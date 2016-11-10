@@ -49,6 +49,8 @@ import fr.bmartel.youtubetv.model.VideoQuality;
  */
 public class WebviewUtils {
 
+    private final static String TAG = WebviewUtils.class.getSimpleName();
+
     /**
      * Call javascript functions in webview.
      *
@@ -109,10 +111,8 @@ public class WebviewUtils {
                 check = true;
             }
 
-            if (check) {
-                if (isUrlExists(getThumbnailURL(videoId, YoutubeTvConst.THUMBNAIL_QUALITY_LIST.get(i)))) {
-                    return getThumbnailURL(videoId, YoutubeTvConst.THUMBNAIL_QUALITY_LIST.get(i));
-                }
+            if (check && isUrlExists(getThumbnailURL(videoId, YoutubeTvConst.THUMBNAIL_QUALITY_LIST.get(i)))) {
+                return getThumbnailURL(videoId, YoutubeTvConst.THUMBNAIL_QUALITY_LIST.get(i));
             }
         }
 
@@ -162,7 +162,7 @@ public class WebviewUtils {
                     playBackList.add(playBackArr.getInt(i));
                 }
             } catch (JSONException e) {
-                e.printStackTrace();
+                Log.e(TAG, "parse playback rates", e);
             }
         }
         return playBackList;
@@ -179,7 +179,7 @@ public class WebviewUtils {
                     qualityLevelList.add(VideoQuality.getVideoQuality(playBackArr.getString(i)));
                 }
             } catch (JSONException e) {
-                e.printStackTrace();
+                Log.e(TAG, "parse quality levels", e);
             }
         }
         return qualityLevelList;
@@ -198,7 +198,7 @@ public class WebviewUtils {
                     playlistRet.add(playBackArr.getString(i));
                 }
             } catch (JSONException e) {
-                e.printStackTrace();
+                Log.e(TAG, "parse playlist", e);
             }
         }
         return playlistRet;

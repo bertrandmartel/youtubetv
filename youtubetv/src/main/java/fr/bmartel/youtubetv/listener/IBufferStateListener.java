@@ -23,7 +23,6 @@
  */
 package fr.bmartel.youtubetv.listener;
 
-
 /**
  * Buffer state listener.
  *

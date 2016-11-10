@@ -58,7 +58,7 @@ import fr.bmartel.youtubetv.utils.WebviewUtils;
  */
 public class JavascriptInterface {
 
-    private final static String TAG = JavascriptInterface.class.getSimpleName();
+    private final String TAG = JavascriptInterface.class.getSimpleName();
 
     /**
      * Webview object.
@@ -355,6 +355,8 @@ public class JavascriptInterface {
                             previousPlayPause = false;
                             playbackState = PlaybackState.STATE_PLAYING;
                             break;
+                        default:
+                            break;
                     }
 
                     updateMediaSession(videoId, rebuildMedia, playbackState, position, speed, title, mYoutubeTvView.getMediaSession());
@@ -383,7 +385,7 @@ public class JavascriptInterface {
                 try {
                     thumbnailUrl = WebviewUtils.getThumbnailQuality(videoId[0], suggestedThumbnailQuality);
                 } catch (IOException e) {
-                    e.printStackTrace();
+                    Log.e(TAG, "getThumbnailQuality", e);
                 }
 
                 MediaMetadata.Builder mediaBuilder = null;
@@ -395,7 +397,7 @@ public class JavascriptInterface {
                         URL url = new URL(thumbnailUrl);
                         bitmap = BitmapFactory.decodeStream(url.openConnection().getInputStream());
                     } catch (IOException e) {
-                        e.printStackTrace();
+                        Log.e(TAG, "BitmapFactory.decodeStream", e);
                     }
 
                     mediaBuilder = new MediaMetadata.Builder();
@@ -564,7 +566,7 @@ public class JavascriptInterface {
         try {
             quality = WebviewUtils.getThumbnailQuality(videoId, thumbnailQuality);
         } catch (IOException e) {
-            e.printStackTrace();
+            Log.e(TAG, "getThumbnailQuality", e);
         }
         return quality;
     }
