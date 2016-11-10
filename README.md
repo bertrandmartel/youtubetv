@@ -1,6 +1,6 @@
 # YoutubeTV
 
-[![Build Status](https://travis-ci.org/bertrandmartel/youtubetv.svg?branch=master)](https://travis-ci.org/bertrandmartel/youtubetv)
+[![CircleCI](https://img.shields.io/circleci/project/bertrandmartel/youtubetv.svg?maxAge=2592000?style=plastic)](https://circleci.com/gh/bertrandmartel/youtubetv) 
 [![Download](https://api.bintray.com/packages/bertrandmartel/maven/youtubetv/images/download.svg) ](https://bintray.com/bertrandmartel/maven/youtubetv/_latestVersion)
 [![License](http://img.shields.io/:license-mit-blue.svg)](LICENSE.md)
 
