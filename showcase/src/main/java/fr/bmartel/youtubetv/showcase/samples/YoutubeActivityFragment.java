@@ -20,7 +20,6 @@ public class YoutubeActivityFragment extends Activity {
 
         setContentView(R.layout.activity_fragment);
 
-        // Begin the transaction
         FragmentTransaction fTransaction = getFragmentManager().beginTransaction();
 
         Bundle args = new Bundle();
@@ -29,8 +28,6 @@ public class YoutubeActivityFragment extends Activity {
         args.putBoolean("showRelatedVideos", false);
 
         mYtFragment = YoutubeTvFragment.newInstance(args);
-        //youtubeTvFragment.setPlayerBackgroundColor(ContextCompat.getColor(this, R.color.player_background_color));
-        //youtubeTvFragment.setPlayerProgressColor(ContextCompat.getColor(this, R.color.player_background_color));
         fTransaction.replace(R.id.youtube_fragment, mYtFragment);
         fTransaction.commit();
         requestVisibleBehind(true);
