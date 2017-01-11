@@ -31,7 +31,7 @@ import fr.bmartel.youtubetv.YoutubeTvView;
 import fr.bmartel.youtubetv.showcase.R;
 
 /**
- * Created by akinaru on 04/11/16.
+ * Created by bertrandmartel on 04/11/16.
  */
 public class YoutubeTvViewDebug extends Activity {
 

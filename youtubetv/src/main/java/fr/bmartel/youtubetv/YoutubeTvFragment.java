@@ -35,7 +35,7 @@ import fr.bmartel.youtubetv.media.VideoPlayerFragment;
 import fr.bmartel.youtubetv.media.VideoSurfaceFragment;
 
 /**
- * Created by akinaru on 03/11/16.
+ * Created by bertrandmartel on 03/11/16.
  */
 public class YoutubeTvFragment extends Fragment {
 
