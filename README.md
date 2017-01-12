@@ -14,6 +14,10 @@ YouTube embedded player library for Android TV
 * to embed Youtube videos in your own Android TV application with [Youtube Player API for iframe Embeds](https://developers.google.com/youtube/iframe_api_reference)
 * to provide an alternative to [the lack of Youtube Android Player API on Android TV platform](https://code.google.com/p/gdata-issues/issues/detail?id=6998)
 
+Download YoutubeTv library Showcase from Google Play :
+ 
+[![Download YoutubeTv library Showcase from Google Play](http://www.android.com/images/brand/android_app_on_play_large.png)](https://play.google.com/store/apps/details?id=fr.bmartel.youtubetv.showcase)
+
 ## Features
 
 * a custom view `YoutubeTvView` that embeds a Webview with Youtube iframe
