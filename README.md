@@ -2,7 +2,9 @@
 
 [![CircleCI](https://img.shields.io/circleci/project/bertrandmartel/youtubetv.svg?maxAge=2592000?style=plastic)](https://circleci.com/gh/bertrandmartel/youtubetv) 
 [![Download](https://api.bintray.com/packages/bertrandmartel/maven/youtubetv/images/download.svg) ](https://bintray.com/bertrandmartel/maven/youtubetv/_latestVersion)
+[![Maven Central](https://maven-badges.herokuapp.com/maven-central/fr.bmartel/youtubetv/badge.svg)](https://maven-badges.herokuapp.com/maven-central/fr.bmartel/youtubetv)
 [![Codacy Badge](https://api.codacy.com/project/badge/Grade/6dda219f0bf549058b6ba464311ec738)](https://www.codacy.com/app/bertrandmartel/youtubetv?utm_source=github.com&amp;utm_medium=referral&amp;utm_content=bertrandmartel/youtubetv&amp;utm_campaign=Badge_Grade)
+[![Javadoc](http://javadoc-badge.appspot.com/fr.bmartel/youtubetv.svg?label=javadoc)](http://javadoc-badge.appspot.com/fr.bmartel/youtubetv)
 [![License](http://img.shields.io/:license-mit-blue.svg)](LICENSE.md)
 
 YouTube embedded player library for Android TV
