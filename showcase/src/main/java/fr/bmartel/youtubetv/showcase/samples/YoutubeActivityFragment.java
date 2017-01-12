@@ -31,7 +31,7 @@ import fr.bmartel.youtubetv.YoutubeTvFragment;
 import fr.bmartel.youtubetv.showcase.R;
 
 /**
- * Created by akinaru on 03/11/16.
+ * Created by bertrandmartel on 03/11/16.
  */
 public class YoutubeActivityFragment extends Activity {
 

@@ -128,7 +128,7 @@ public class YoutubeTvConst {
     public final static int DEFAULT_JAVASCRIPT_TIMEOUT = 1500;
 
     /**
-     * Thumbnail quality list (https://gist.github.com/akinaru/052e7f120fcc5cdef771dd28b57ce756).
+     * Thumbnail quality list (https://gist.github.com/bertrandmartel/052e7f120fcc5cdef771dd28b57ce756).
      */
     public final static List<String> THUMBNAIL_QUALITY_LIST = new ArrayList<>();
 
