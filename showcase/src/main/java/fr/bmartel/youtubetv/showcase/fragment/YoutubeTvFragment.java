@@ -56,7 +56,7 @@ import fr.bmartel.youtubetv.showcase.utils.Utils;
  */
 public class YoutubeTvFragment extends VerticalGridFragment {
 
-    private static final int COLUMNS = 5;
+    private static final int COLUMNS = 3;
     private static final int ZOOM_FACTOR = FocusHighlight.ZOOM_FACTOR_MEDIUM;
 
     private ArrayObjectAdapter mAdapter;

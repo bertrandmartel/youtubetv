@@ -46,6 +46,7 @@ import android.view.View;
 import com.squareup.picasso.Picasso;
 
 import fr.bmartel.youtubetv.showcase.R;
+import fr.bmartel.youtubetv.showcase.SettingsActivity;
 import fr.bmartel.youtubetv.showcase.model.Card;
 import fr.bmartel.youtubetv.showcase.samples.YoutubeActivityApiShowcase;
 import fr.bmartel.youtubetv.showcase.samples.YoutubeActivityFragment;
@@ -103,6 +104,10 @@ public class ImageCardViewPresenter extends AbstractCardPresenter<ImageCardView>
                         break;
                     case YOUTUBETV_DEBUG:
                         intent = new Intent(getContext(), YoutubeTvViewDebug.class);
+                        getContext().startActivity(intent);
+                        break;
+                    case YOUTUBE_LICENSE:
+                        intent = new Intent(getContext(), SettingsActivity.class);
                         getContext().startActivity(intent);
                         break;
                     default:

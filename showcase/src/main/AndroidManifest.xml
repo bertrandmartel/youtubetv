@@ -50,6 +50,11 @@
             android:name="fr.bmartel.youtubetv.showcase.samples.YoutubeTvViewDebug"
             android:label="@string/app_name" />
 
+        <activity
+            android:name="fr.bmartel.youtubetv.showcase.SettingsActivity"
+            android:exported="true"
+            android:theme="@style/Theme.Example.LeanbackPreferences" />
+
     </application>
 
     <uses-permission android:name="android.permission.INTERNET" />

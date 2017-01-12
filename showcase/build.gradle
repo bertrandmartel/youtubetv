@@ -18,7 +18,7 @@ repositories {
 
 android {
     compileSdkVersion 25
-    buildToolsVersion "25.0.0"
+    buildToolsVersion "25.0.1"
     signingConfigs {
         playStore
     }
@@ -27,7 +27,7 @@ android {
         applicationId "fr.bmartel.youtubetv.showcase"
         minSdkVersion 21
         targetSdkVersion 25
-        versionCode 1
+        versionCode 2
         versionName "1.0"
     }
     buildTypes {
@@ -81,8 +81,8 @@ if (build_param != "production") {
 
 dependencies {
     compile fileTree(dir: 'libs', include: ['*.jar'])
-    compile "com.android.support:leanback-v17:25.0.0"
-    compile 'fr.bmartel:youtubetv:1.0'
+    //compile 'fr.bmartel:youtubetv:1.0'
+    compile project(':youtubetv')
     compile 'com.google.code.gson:gson:2.8.0'
     compile 'com.squareup.picasso:picasso:2.5.2'
     compile('com.crashlytics.sdk.android:crashlytics:2.6.5@aar') {
@@ -91,6 +91,12 @@ dependencies {
     compile('com.crashlytics.sdk.android:answers:1.3.10@aar') {
         transitive = true;
     }
+
+    // leanback & preference
+    compile 'com.android.support:leanback-v17:25.0.1'
+    compile 'com.android.support:preference-v14:25.0.1'
+    compile 'com.android.support:preference-leanback-v17:25.0.1'
+    compile 'com.android.support:preference-v7:25.0.1'
 }
 
 def Properties props = new Properties()

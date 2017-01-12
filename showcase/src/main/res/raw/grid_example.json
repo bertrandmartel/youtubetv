@@ -29,6 +29,12 @@
       "title": "YoutubeTvView Debug",
       "description": "display debug mode",
       "localImageResource": "debug"
+    },
+    {
+      "type": "YOUTUBE_LICENSE",
+      "title": "About",
+      "description": "",
+      "localImageResource": "about"
     }
   ]
 }

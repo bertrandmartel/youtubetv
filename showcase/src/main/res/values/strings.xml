@@ -1,4 +1,5 @@
 <resources>
     <string name="app_name">YoutubeTv Showcase</string>
     <string name="grid_title">YoutubeTv Showcase</string>
+    <string name="dialog_title_license">License</string>
 </resources>

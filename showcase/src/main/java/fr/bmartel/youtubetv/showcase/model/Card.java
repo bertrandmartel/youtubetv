@@ -124,7 +124,8 @@ public class Card {
         YOUTUBETV_FULLSCREEN,
         YOUTUBETV_API,
         YOUTUBETV_SPLITTED,
-        YOUTUBETV_DEBUG
+        YOUTUBETV_DEBUG,
+        YOUTUBE_LICENSE
     }
 
 }
