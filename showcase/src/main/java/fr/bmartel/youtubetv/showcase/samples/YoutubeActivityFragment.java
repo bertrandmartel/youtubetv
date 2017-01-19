@@ -46,7 +46,7 @@ public class YoutubeActivityFragment extends Activity {
         FragmentTransaction fTransaction = getFragmentManager().beginTransaction();
 
         Bundle args = new Bundle();
-        args.putString("videoId", "gdgHZi347hU");
+        args.putString("videoId", "6pxRHBw-k8M");
         args.putString("videoQuality", "hd1080");
         args.putBoolean("showRelatedVideos", false);
 

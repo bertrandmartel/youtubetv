@@ -23,7 +23,7 @@
         app:showVideoInfo="false"
         app:videoAnnotation="false"
         app:videoId="bdnHKdb-Oss"
-        app:videoQuality="hd720" />
+        app:videoQuality="hd1080" />
 
     <RelativeLayout
         android:layout_width="match_parent"
