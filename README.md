@@ -31,7 +31,7 @@ Download YoutubeTv library Showcase from Google Play :
 
 with Gradle, from jcenter :
 ```
-compile 'fr.bmartel:youtubetv:1.0'
+compile 'fr.bmartel:youtubetv:1.2'
 ```
 
 Minimum SDK : 21
@@ -47,57 +47,57 @@ Minimum SDK : 21
     android:id="@+id/youtube_video"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    app:videoId="4a5m4qF1e6Q" />
+    app:yt_videoId="4a5m4qF1e6Q" />
 ```
 
 #### Attribute list
 
 | attribute name |  format     | default value |  description   |
 |----------------|-------------|---------------|----------------|
-| videoId        | string      |               | Youtube video Id |
-| playlistId     | string      |               | playlist Id (if video is part of a playlist) |
-| videoQuality   | enum        |    hd1080     | suggested quality |
-| showNowPlayingCard | boolean |     true      | define if now playing card must be shown or not |
-| showRelatedVideos | boolean  |     false     | display related video when video ends |
-| showVideoInfo    | boolean  |      false     | show video info before playing video |
-| showControls   | enum |            none      | define if iframe control bar is shown (auto/always/none) |
-| autoHide  | enum | alwaysVisible | control iframe control bar visibility (auto/always/none) |
-| closedCaptions | boolean | false  | display closed captions |
-| closedCaptionLangPref | string |  | closed captions preference language |
-| playerLanguage | string |  | youtube player language |
-| videoAnnotation | boolean | false | display video annotations |
-| debug | boolean | false | active/disactive debug mode |
-| loadingBackgroundColor | integer | #00000000 | set loading background color |
-| autoplay | boolean | true | autoplay the video or initiate on click |
-| userAgentString | string | iphone(*) | user agent string used for the Webview | 
-| showBorder | boolean | false | define if a thin border is shown when the View is selected |
-| borderWidth | integer | 2 | selection border width in dp (no effect if showBorder not set) |
-| borderColor | color | Color.BLUE | selection border color (no effect if showBorder not set)
-| thumbnailQuality | enum |  maxresdefault | suggested quality for the thumbnail displayed before the video plays | 
-| javascriptTimeout | integer | 1500 | timeout value in ms for Javascript API that return values from JS side |
+| yt_videoId        | string      |               | Youtube video Id |
+| yt_playlistId     | string      |               | playlist Id (if video is part of a playlist) |
+| yt_videoQuality   | enum        |    hd1080     | suggested quality |
+| yt_showNowPlayingCard | boolean |     true      | define if now playing card must be shown or not |
+| yt_showRelatedVideos | boolean  |     false     | display related video when video ends |
+| yt_showVideoInfo    | boolean  |      false     | show video info before playing video |
+| yt_showControls   | enum |            none      | define if iframe control bar is shown (auto/always/none) |
+| yt_autoHide  | enum | alwaysVisible | control iframe control bar visibility (auto/always/none) |
+| yt_closedCaptions | boolean | false  | display closed captions |
+| yt_closedCaptionLangPref | string |  | closed captions preference language |
+| yt_playerLanguage | string |  | youtube player language |
+| yt_videoAnnotation | boolean | false | display video annotations |
+| yt_debug | boolean | false | active/disactive debug mode |
+| yt_loadingBackgroundColor | integer | #00000000 | set loading background color |
+| yt_autoplay | boolean | true | autoplay the video or initiate on click |
+| yt_userAgentString | string | iphone(*) | user agent string used for the Webview | 
+| yt_showBorder | boolean | false | define if a thin border is shown when the View is selected |
+| yt_borderWidth | integer | 2 | selection border width in dp (no effect if showBorder not set) |
+| yt_borderColor | color | Color.BLUE | selection border color (no effect if showBorder not set)
+| yt_thumbnailQuality | enum |  maxresdefault | suggested quality for the thumbnail displayed before the video plays | 
+| yt_javascriptTimeout | integer | 1500 | timeout value in ms for Javascript API that return values from JS side |
 
 (*) There is currently a bug on regular `android` user agent string that restricts video quality to `large` and below. The bug doesn't affect `desktop`, `iphone` or `ipad` user agent string. So, in order to have quality `hd720` or `hd1080` we must change user agent string.
 
 * suggested `videoQuality`
 
- * auto
- * tiny
- * small
- * medium
- * large
- * hd720
- * hd1080
- * highres
- * hd1440
- * hd2160
+  * auto
+  * tiny
+  * small
+  * medium
+  * large
+  * hd720
+  * hd1080
+  * highres
+  * hd1440
+  * hd2160
 
 * suggested `thumbnailQuality`
 
- * auto
- * hqdefault
- * mqdefault
- * sddefault
- * maxresdefault
+  * auto
+  * hqdefault
+  * mqdefault
+  * sddefault
+  * maxresdefault
 
 ## YoutubeTvFragment
 
