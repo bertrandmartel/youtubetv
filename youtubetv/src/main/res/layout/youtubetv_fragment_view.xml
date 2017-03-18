@@ -14,5 +14,5 @@
         android:layout_height="match_parent"
         android:focusable="false"
         android:focusableInTouchMode="false"
-        app:debug="false" />
+        app:yt_debug="false" />
 </FrameLayout>

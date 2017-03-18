@@ -9,15 +9,15 @@
         android:id="@+id/youtube_video"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        app:autoHide="auto"
-        app:autoplay="true"
-        app:debug="true"
-        app:showControls="none"
-        app:showNowPlayingCard="true"
-        app:showRelatedVideos="false"
-        app:showVideoInfo="false"
-        app:videoAnnotation="false"
-        app:videoId="6pxRHBw-k8M"
-        app:videoQuality="hd1080" />
+        app:yt_autoHide="auto"
+        app:yt_autoplay="true"
+        app:yt_debug="true"
+        app:yt_showControls="none"
+        app:yt_showNowPlayingCard="true"
+        app:yt_showRelatedVideos="false"
+        app:yt_showVideoInfo="false"
+        app:yt_videoAnnotation="false"
+        app:yt_videoId="6pxRHBw-k8M"
+        app:yt_videoQuality="hd1080" />
 
 </LinearLayout>

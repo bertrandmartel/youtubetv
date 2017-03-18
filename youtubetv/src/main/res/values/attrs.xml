@@ -1,9 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <declare-styleable name="YoutubeTvView">
-        <attr name="videoId" format="string" />
-        <attr name="playlistId" format="string" />
-        <attr name="videoQuality" format="enum">
+        <attr name="yt_videoId" format="string" />
+        <attr name="yt_playlistId" format="string" />
+        <attr name="yt_videoQuality" format="enum">
             <enum name="auto" value="0" />
             <enum name="tiny" value="1" />
             <enum name="small" value="2" />
@@ -15,43 +15,43 @@
             <enum name="hd1440" value="8" />
             <enum name="hd2160" value="9" />
         </attr>
-        <attr name="showRelatedVideos" format="boolean" />
-        <attr name="showVideoInfo" format="boolean" />
-        <attr name="showControls" format="enum">
+        <attr name="yt_showRelatedVideos" format="boolean" />
+        <attr name="yt_showVideoInfo" format="boolean" />
+        <attr name="yt_showControls" format="enum">
             <enum name="auto" value="1" />
             <enum name="always" value="2" />
             <enum name="none" value="0" />
         </attr>
-        <attr name="autoHide" format="enum">
+        <attr name="yt_autoHide" format="enum">
             <enum name="auto" value="0" />
             <enum name="displayAuto" value="1" />
             <enum name="alwaysVisible" value="2" />
         </attr>
-        <attr name="closedCaptions" format="boolean" />
-        <attr name="videoAnnotation" format="boolean" />
-        <attr name="debug" format="boolean" />
-        <attr name="loadingBackgroundColor" format="integer" />
-        <attr name="autoplay" format="boolean" />
-        <attr name="userAgentString" format="enum">
+        <attr name="yt_closedCaptions" format="boolean" />
+        <attr name="yt_videoAnnotation" format="boolean" />
+        <attr name="yt_debug" format="boolean" />
+        <attr name="yt_loadingBackgroundColor" format="integer" />
+        <attr name="yt_autoplay" format="boolean" />
+        <attr name="yt_userAgentString" format="enum">
             <enum name="auto" value="0" />
             <enum name="iphone" value="1" />
             <enum name="ipad" value="2" />
             <enum name="desktop" value="3" />
             <enum name="mobileDesktop" value="4" />
         </attr>
-        <attr name="showBorder" format="boolean" />
-        <attr name="borderWidth" format="integer" />
-        <attr name="borderColor" format="color" />
-        <attr name="thumbnailQuality" format="enum">
+        <attr name="yt_showBorder" format="boolean" />
+        <attr name="yt_borderWidth" format="integer" />
+        <attr name="yt_borderColor" format="color" />
+        <attr name="yt_thumbnailQuality" format="enum">
             <enum name="auto" value="0" />
             <enum name="hqdefault" value="1" />
             <enum name="mqdefault" value="2" />
             <enum name="sddefault" value="3" />
             <enum name="maxresdefault" value="4" />
         </attr>
-        <attr name="closedCaptionLangPref" format="string" />
-        <attr name="playerLanguage" format="string" />
-        <attr name="javascriptTimeout" format="integer" />
-        <attr name="showNowPlayingCard" format="boolean" />
+        <attr name="yt_closedCaptionLangPref" format="string" />
+        <attr name="yt_playerLanguage" format="string" />
+        <attr name="yt_javascriptTimeout" format="integer" />
+        <attr name="yt_showNowPlayingCard" format="boolean" />
     </declare-styleable>
 </resources>

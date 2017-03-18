@@ -262,27 +262,27 @@ public class YoutubeTvView extends FrameLayout implements IYoutubeApi {
                 0, 0);
 
         try {
-            mVideoId = styledAttr.getString(R.styleable.YoutubeTvView_videoId);
-            mVideoQuality = VideoQuality.getVideoQuality(styledAttr.getInteger(R.styleable.YoutubeTvView_videoQuality, YoutubeTvConst.DEFAULT_VIDEO_QUALITY.getIndex()));
-            mShowRelatedVideos = styledAttr.getBoolean(R.styleable.YoutubeTvView_showRelatedVideos, YoutubeTvConst.DEFAULT_SHOW_RELATED_VIDEOS) ? 1 : 0;
-            mShowVideoInfo = styledAttr.getBoolean(R.styleable.YoutubeTvView_showVideoInfo, YoutubeTvConst.DEFAULT_SHOW_VIDEO_INFO) ? 1 : 0;
-            mShowControls = VideoControls.getVideoControls(styledAttr.getInteger(R.styleable.YoutubeTvView_showControls, YoutubeTvConst.DEFAULT_SHOW_CONTROLS.getIndex()));
-            mClosedCaptions = styledAttr.getBoolean(R.styleable.YoutubeTvView_closedCaptions, YoutubeTvConst.DEFAULT_CLOSED_CAPTION) ? 1 : 0;
-            mVideoAnnotation = styledAttr.getBoolean(R.styleable.YoutubeTvView_videoAnnotation, YoutubeTvConst.DEFAULT_VIDEO_ANNOTATION) ? 1 : 3;
-            mAutohide = VideoAutoHide.getVideoControls(styledAttr.getInteger(R.styleable.YoutubeTvView_autoHide, YoutubeTvConst.DEFAULT_AUTOHIDE.getIndex()));
-            mDebug = styledAttr.getBoolean(R.styleable.YoutubeTvView_debug, YoutubeTvConst.DEFAULT_DEBUG_MODE) ? 1 : 0;
-            mLoadBackgroundColor = styledAttr.getInteger(R.styleable.YoutubeTvView_loadingBackgroundColor, YoutubeTvConst.DEFAULT_LOADING_BG);
-            mAutoPlay = styledAttr.getBoolean(R.styleable.YoutubeTvView_autoplay, YoutubeTvConst.DEFAULT_AUTOPLAY) ? 1 : 0;
-            mUserAgent = UserAgents.getUserAgent(styledAttr.getInteger(R.styleable.YoutubeTvView_userAgentString, YoutubeTvConst.DEFAULT_USER_AGENT.getIndex()));
-            mShowBorder = styledAttr.getBoolean(R.styleable.YoutubeTvView_showBorder, YoutubeTvConst.DEFAULT_SHOW_BORDER);
-            mBorderWidth = styledAttr.getInteger(R.styleable.YoutubeTvView_borderWidth, YoutubeTvConst.DEFAULT_BORDER_WIDTH);
-            mBorderColor = styledAttr.getColor(R.styleable.YoutubeTvView_borderColor, YoutubeTvConst.DEFAULT_BORDER_COLOR);
-            mThumbnailQuality = ThumbnailQuality.getThumbnail(styledAttr.getInteger(R.styleable.YoutubeTvView_thumbnailQuality, YoutubeTvConst.DEFAULT_THUMBNAIL_QUALITY.getIndex()));
-            mClosedCaptionLangPref = styledAttr.getString(R.styleable.YoutubeTvView_closedCaptionLangPref);
-            mPlayerLanguage = styledAttr.getString(R.styleable.YoutubeTvView_playerLanguage);
-            mJavascriptTimeout = styledAttr.getInteger(R.styleable.YoutubeTvView_javascriptTimeout, YoutubeTvConst.DEFAULT_JAVASCRIPT_TIMEOUT);
-            mPlaylistId = styledAttr.getString(R.styleable.YoutubeTvView_playlistId);
-            mShowNowPlayingCard = styledAttr.getBoolean(R.styleable.YoutubeTvView_showNowPlayingCard, YoutubeTvConst.DEFAULT_SHOW_NOWPLAYINGCARD);
+            mVideoId = styledAttr.getString(R.styleable.YoutubeTvView_yt_videoId);
+            mVideoQuality = VideoQuality.getVideoQuality(styledAttr.getInteger(R.styleable.YoutubeTvView_yt_videoQuality, YoutubeTvConst.DEFAULT_VIDEO_QUALITY.getIndex()));
+            mShowRelatedVideos = styledAttr.getBoolean(R.styleable.YoutubeTvView_yt_showRelatedVideos, YoutubeTvConst.DEFAULT_SHOW_RELATED_VIDEOS) ? 1 : 0;
+            mShowVideoInfo = styledAttr.getBoolean(R.styleable.YoutubeTvView_yt_showVideoInfo, YoutubeTvConst.DEFAULT_SHOW_VIDEO_INFO) ? 1 : 0;
+            mShowControls = VideoControls.getVideoControls(styledAttr.getInteger(R.styleable.YoutubeTvView_yt_showControls, YoutubeTvConst.DEFAULT_SHOW_CONTROLS.getIndex()));
+            mClosedCaptions = styledAttr.getBoolean(R.styleable.YoutubeTvView_yt_closedCaptions, YoutubeTvConst.DEFAULT_CLOSED_CAPTION) ? 1 : 0;
+            mVideoAnnotation = styledAttr.getBoolean(R.styleable.YoutubeTvView_yt_videoAnnotation, YoutubeTvConst.DEFAULT_VIDEO_ANNOTATION) ? 1 : 3;
+            mAutohide = VideoAutoHide.getVideoControls(styledAttr.getInteger(R.styleable.YoutubeTvView_yt_autoHide, YoutubeTvConst.DEFAULT_AUTOHIDE.getIndex()));
+            mDebug = styledAttr.getBoolean(R.styleable.YoutubeTvView_yt_debug, YoutubeTvConst.DEFAULT_DEBUG_MODE) ? 1 : 0;
+            mLoadBackgroundColor = styledAttr.getInteger(R.styleable.YoutubeTvView_yt_loadingBackgroundColor, YoutubeTvConst.DEFAULT_LOADING_BG);
+            mAutoPlay = styledAttr.getBoolean(R.styleable.YoutubeTvView_yt_autoplay, YoutubeTvConst.DEFAULT_AUTOPLAY) ? 1 : 0;
+            mUserAgent = UserAgents.getUserAgent(styledAttr.getInteger(R.styleable.YoutubeTvView_yt_userAgentString, YoutubeTvConst.DEFAULT_USER_AGENT.getIndex()));
+            mShowBorder = styledAttr.getBoolean(R.styleable.YoutubeTvView_yt_showBorder, YoutubeTvConst.DEFAULT_SHOW_BORDER);
+            mBorderWidth = styledAttr.getInteger(R.styleable.YoutubeTvView_yt_borderWidth, YoutubeTvConst.DEFAULT_BORDER_WIDTH);
+            mBorderColor = styledAttr.getColor(R.styleable.YoutubeTvView_yt_borderColor, YoutubeTvConst.DEFAULT_BORDER_COLOR);
+            mThumbnailQuality = ThumbnailQuality.getThumbnail(styledAttr.getInteger(R.styleable.YoutubeTvView_yt_thumbnailQuality, YoutubeTvConst.DEFAULT_THUMBNAIL_QUALITY.getIndex()));
+            mClosedCaptionLangPref = styledAttr.getString(R.styleable.YoutubeTvView_yt_closedCaptionLangPref);
+            mPlayerLanguage = styledAttr.getString(R.styleable.YoutubeTvView_yt_playerLanguage);
+            mJavascriptTimeout = styledAttr.getInteger(R.styleable.YoutubeTvView_yt_javascriptTimeout, YoutubeTvConst.DEFAULT_JAVASCRIPT_TIMEOUT);
+            mPlaylistId = styledAttr.getString(R.styleable.YoutubeTvView_yt_playlistId);
+            mShowNowPlayingCard = styledAttr.getBoolean(R.styleable.YoutubeTvView_yt_showNowPlayingCard, YoutubeTvConst.DEFAULT_SHOW_NOWPLAYINGCARD);
         } finally {
             styledAttr.recycle();
         }

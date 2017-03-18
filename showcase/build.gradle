@@ -81,9 +81,7 @@ if (build_param != "production") {
 
 dependencies {
     compile fileTree(dir: 'libs', include: ['*.jar'])
-    //compile 'fr.bmartel:youtubetv:1.0'
     compile project(':youtubetv')
-    compile 'fr.bmartel:youtubetv:1.1'
     compile 'com.google.code.gson:gson:2.8.0'
     compile 'com.squareup.picasso:picasso:2.5.2'
     compile('com.crashlytics.sdk.android:crashlytics:2.6.5@aar') {
