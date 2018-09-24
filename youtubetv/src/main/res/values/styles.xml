@@ -1,7 +1,0 @@
-<?xml version="1.0" encoding="utf-8"?>
-<resources>
-
-    <style name="Theme.Example.LeanbackWizard" parent="Theme.Leanback.GuidedStep">
-        <item name="guidedActionsBackground">@color/app_guidedstep_actions_background</item>
-    </style>
-</resources>

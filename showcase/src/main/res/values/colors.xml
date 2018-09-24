@@ -1,8 +1,0 @@
-<?xml version="1.0" encoding="utf-8"?>
-<resources>
-    <color name="colorPrimary">#3F51B5</color>
-    <color name="player_progress_color">#feab91</color>
-    <color name="player_background_color">#00FF00</color>
-    <color name="default_color">#e52d27</color>
-    <color name="colorAccent">#FF4400</color>
-</resources>

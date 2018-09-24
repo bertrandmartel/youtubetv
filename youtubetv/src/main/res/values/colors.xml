@@ -1,6 +1,0 @@
-<?xml version="1.0" encoding="utf-8"?>
-<resources>
-    <color name="player_progress_color_default">#feab91</color>
-    <color name="player_background_color_default">#db2a0f</color>
-    <color name="app_guidedstep_actions_background">#111111</color>
-</resources>
